@@ -6,6 +6,7 @@ import rateLimit from "express-rate-limit";
 import bodyParser from "body-parser";
 
 import { PORT } from "./util/config.js";
+import animeRouter from "./routes/anime.js";
 
 const app = express();
 
@@ -22,5 +23,7 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
+
+app.use("/anime", animeRouter);
 
 app.listen(PORT || 8000);
