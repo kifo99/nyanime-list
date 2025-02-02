@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 
+import SearchIcon from "../../assets/icons/search/search.svg";
+
 export default function Search({ onSetAnimeList }) {
   const [animeName, setAnimeName] = useState("");
   const [searchRes, setSearchRes] = useState("");
@@ -13,6 +15,7 @@ export default function Search({ onSetAnimeList }) {
   function handleSubmitAnime(e) {
     e.preventDefault();
     setAnimeName(searchRes);
+    setSearchRes("");
   }
 
   useEffect(
@@ -43,17 +46,21 @@ export default function Search({ onSetAnimeList }) {
   );
 
   return (
-    <div className="search-bar">
-      <div className="search-btn">
-        <button className="btn-primary" onClick={(e) => handleSubmitAnime(e)}>
-          Search
-        </button>
-      </div>
-      <div className="search-form">
-        <form>
-          <input value={searchRes} onChange={(e) => handleSearchAnime(e)} />
-        </form>
-      </div>
+    <div className="flex  p-2 justify-content items-center w-full">
+      <input
+        type="text"
+        placeholder="Search..."
+        className="w-full py-1 px-4 rounded-full focus:outline-none bg-emerald-200 text-emerald-950"
+        value={searchRes}
+        onChange={(e) => handleSearchAnime(e)}
+      />
+
+      <button
+        className="ml-2 bg-emerald-500 p-2 rounded-full hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+        onClick={(e) => handleSubmitAnime(e)}
+      >
+        <img width={24} height={24} src={SearchIcon} alt="svg search icon" />
+      </button>
     </div>
   );
 }

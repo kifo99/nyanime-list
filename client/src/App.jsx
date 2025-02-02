@@ -7,10 +7,14 @@ export default function App() {
   console.log(animeList);
 
   return (
-    <div>
-      <Search onSetAnimeList={setAnimeList} />
+    <div className="Container mx-auto px-4 ">
+      <div className="flex justify-center">
+        <div className="w-[70%]">
+          <Search onSetAnimeList={setAnimeList} />
+        </div>
+      </div>
 
-      <div>
+      <div className="Container">
         <ul>
           {animeList.map((anime) => (
             <Anime anime={anime} key={anime.id} />
