@@ -11,7 +11,7 @@ import animeRouter from "./routes/anime.js";
 const app = express();
 
 app.use(helmet());
-app.use(cors({ origin: "http://localhost:3000/" }));
+app.use(cors({ origin: "http://localhost:3000" }));
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 
