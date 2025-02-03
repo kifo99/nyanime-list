@@ -25,7 +25,7 @@ export default function Search({ onSetAnimeList }) {
         try {
           if (!animeName.length < 1) {
             const { data } = await axios.get(
-              `http://localhost:8080/anime/search/${animeName}`,
+              `http://localhost:8080/anime/search/anime/${animeName}`,
               {
                 cancelToken: source.token,
               }
