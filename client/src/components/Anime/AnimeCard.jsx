@@ -6,13 +6,15 @@ export default function AnimeCard({ anime, onGetAnime, onSelect }) {
     e.preventDefault();
     try {
       if (!animeId) throw new Error("Id not valid");
-      const data = await axios.get(`url`);
+      const data = await axios.get(
+        `http://localhost:8080/anime/select/${animeId}`
+      );
 
       if (!data) throw new Error("No data fetched");
 
-      // console.log(data);
+      console.log(data.data.anime);
 
-      onGetAnime(data.data.data.anime);
+      onGetAnime(data.data.anime);
       onSelect(true);
     } catch (error) {
       console.error(error);
