@@ -1,9 +1,12 @@
 import { useState } from "react";
 import Search from "./components/Search/Search";
 import Anime from "./components/Anime/Anime";
+import AnimeCard from "./components/Anime/AnimeCard";
 
 export default function App() {
   const [animeList, setAnimeList] = useState([]);
+  const [anime, setAnime] = useState({});
+  const [isSelected, setIsSelected] = useState(false);
   console.log(animeList);
 
   return (
@@ -15,11 +18,22 @@ export default function App() {
       </div>
 
       <div className="Container">
-        <ul>
-          {animeList.map((anime) => (
-            <Anime anime={anime} key={anime.id} />
-          ))}
-        </ul>
+        {!isSelected ? (
+          <ul>
+            {animeList.map((anime) => (
+              <AnimeCard
+                anime={anime}
+                onGetAnime={setAnime}
+                onSelect={setIsSelected}
+                key={anime.id}
+              />
+            ))}
+          </ul>
+        ) : (
+          <div>
+            <Anime anime={anime} />
+          </div>
+        )}
       </div>
     </div>
   );

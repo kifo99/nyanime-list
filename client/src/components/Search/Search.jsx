@@ -30,6 +30,8 @@ export default function Search({ onSetAnimeList }) {
                 cancelToken: source.token,
               }
             );
+
+            if (!data) throw new Error("No data fetched");
             onSetAnimeList(data.anime);
           }
         } catch (error) {
@@ -50,13 +52,13 @@ export default function Search({ onSetAnimeList }) {
       <input
         type="text"
         placeholder="Search..."
-        className="w-full py-1 px-4 rounded-full focus:outline-none bg-emerald-200 text-emerald-950"
+        className="w-full h-14 py-1 font-semibold px-4 text-xl rounded-full focus:outline-none bg-amber-300 text-amber-50"
         value={searchRes}
         onChange={(e) => handleSearchAnime(e)}
       />
 
       <button
-        className="ml-2 bg-emerald-500 p-2 rounded-full hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+        className="ml-2 h-10 w-10 bg-amber-300 p-2 rounded-full hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all items-center"
         onClick={(e) => handleSubmitAnime(e)}
       >
         <img width={24} height={24} src={SearchIcon} alt="svg search icon" />
