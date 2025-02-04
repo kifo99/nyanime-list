@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 export default function Navbar({ logedIn, hasAccount }) {
   return (
@@ -6,28 +7,28 @@ export default function Navbar({ logedIn, hasAccount }) {
       <div className="flex w-full justify-between items-center px-3 ">
         <ul className="list-style-none me-auto flex flex-col ps-0 lg:flex-row">
           <li className="mb-4 lg:mb-0 lg:pe-2">
-            <a
+            <Link
               className="text-amber-700 font-bold transition duration-200 hover:text-amber-950 hover:ease-in-out focus:text-amber-950 active:text-amber-950 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
-              href="#"
+              to="/"
             >
               Home
-            </a>
+            </Link>
           </li>
           <li className="mb-4 lg:mb-0 lg:pe-2">
-            <a
+            <Link
               className="text-amber-700 font-bold transition duration-200 hover:text-amber-950 hover:ease-in-out focus:text-amber-950 active:text-amber-950 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
-              href="#"
+              to="/watchlist"
             >
               My watch list
-            </a>
+            </Link>
           </li>
           <li className="mb-4 lg:mb-0 lg:pe-2">
-            <a
+            <Link
               className="text-amber-700 font-bold transition duration-200 hover:text-amber-950 hover:ease-in-out focus:text-amber-950 active:text-amber-950 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
-              href="#"
+              to="/review"
             >
               My review
-            </a>
+            </Link>
           </li>
         </ul>
 
