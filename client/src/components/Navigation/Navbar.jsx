@@ -1,7 +1,18 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-export default function Navbar({ logedIn, hasAccount }) {
+export default function Navbar({
+  logedIn,
+  hasAccount,
+  onShowSignup,
+  showSignup,
+}) {
+  function handleShowSignup(e) {
+    e.preventDefault();
+
+    onShowSignup(!showSignup);
+  }
+
   return (
     <nav className="flex-nowrap relative flex h-14 w-full items-center justify-between bg-amber-300 py-2 shadow-dark-mild dark:bg-amber-800 lg:flex-wrap lg:justify-start lg:py-4 ">
       <div className="flex w-full justify-between items-center px-3 ">
@@ -34,15 +45,18 @@ export default function Navbar({ logedIn, hasAccount }) {
 
         <div className="flex items-center justify-center ">
           {!hasAccount ? (
-            <button className="text-amber-700 font-bold hover:text-amber-950 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all ">
+            <button
+              className="text-amber-700 font-bold hover:text-amber-950 outline-none focus:outline-none transition-all"
+              onClick={(e) => handleShowSignup(e)}
+            >
               Signin
             </button>
           ) : logedIn ? (
-            <button className="text-amber-700 font-bold hover:text-amber-950 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all ">
+            <button className="text-amber-700 font-bold hover:text-amber-950 outline-none focus:outline-none transition-all ">
               Logout
             </button>
           ) : (
-            <button className="text-amber-700 font-bold hover:text-amber-950 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all ">
+            <button className="text-amber-700 font-bold hover:text-amber-950 outline-none focus:outline-none transition-all ">
               Login
             </button>
           )}
@@ -55,4 +69,6 @@ export default function Navbar({ logedIn, hasAccount }) {
 Navbar.propTypes = {
   logedIn: PropTypes.bool,
   hasAccount: PropTypes.bool,
+  onShowSignup: PropTypes.func,
+  showSignup: PropTypes.bool,
 };

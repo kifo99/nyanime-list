@@ -12,11 +12,16 @@ export default function App() {
   const [isSelected, setIsSelected] = useState(false);
   const [logedIn, setLogedIn] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
-  console.log(animeList);
+  const [showSignup, setShowSignup] = useState(false);
 
   return (
     <>
-      <Navbar logedIn={logedIn} hasAccount={hasAccount} />
+      <Navbar
+        logedIn={logedIn}
+        hasAccount={hasAccount}
+        onShowSignup={setShowSignup}
+        showSignup={showSignup}
+      />
       <div className="Container mx-auto px-4 ">
         <div className="flex justify-center">
           <div className="w-[70%]">
@@ -44,7 +49,7 @@ export default function App() {
         </div>
       </div>
       <div className="flex justify-center items-center mt-5">
-        <Signup />
+        <Signup showSignup={showSignup} />
       </div>
       <AppRoutes />
     </>
