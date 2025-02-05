@@ -5,6 +5,7 @@ import AnimeCard from "./components/Anime/AnimeCard";
 import Navbar from "./components/Navigation/Navbar";
 import AppRoutes from "./components/AppRoutes/AppRoutes";
 import Signup from "./components/Modal/Signup";
+import AvatarPicker from "./components/AvatarPicker/AvatarPicker";
 
 export default function App() {
   const [animeList, setAnimeList] = useState([]);
@@ -50,6 +51,10 @@ export default function App() {
       </div>
       <div className="flex justify-center items-center mt-5">
         <Signup showSignup={showSignup} />
+      </div>
+
+      <div>
+        <AvatarPicker />
       </div>
       <AppRoutes />
     </>
