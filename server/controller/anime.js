@@ -25,7 +25,7 @@ export const getAnime = async (req, res, next) => {
 
     if (!animeList.length) throw new Error("Failed to create anime list.");
 
-    res.json({
+    res.status(200).json({
       message: "Anime list is fetched.",
       anime: animeList,
     });
@@ -77,11 +77,26 @@ export const getAnimeWithId = async (req, res, next) => {
 
     if (!anime) throw new Error("Failed to create anime.");
 
-    res.json({
+    res.status(200).json({
       message: "Anime is fetched.",
       anime: anime,
     });
   } catch (err) {
     console.error(err);
   }
+};
+
+export const getAvatar = (req, res, next) => {
+  const name = req.params.name;
+
+  const data = axios.get(
+    `https://api.dicebear.com/9.x/initials/svg?seed=${name}`
+  );
+
+  // console.log(data);
+
+  res.status(200).json({
+    message: "Avatar fetched",
+    avatar: data,
+  });
 };
