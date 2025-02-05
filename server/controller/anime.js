@@ -86,17 +86,19 @@ export const getAnimeWithId = async (req, res, next) => {
   }
 };
 
-export const getAvatar = (req, res, next) => {
-  const name = req.params.name;
+export const getAvatar = async (req, res, next) => {
+  try {
+    const name = req.params.name;
 
-  const data = axios.get(
-    `https://api.dicebear.com/9.x/initials/svg?seed=${name}`
-  );
+    const { data } = await axios.get(
+      `https://api.dicebear.com/9.x/initials/svg?seed=${name}`
+    );
 
-  // console.log(data);
-
-  res.status(200).json({
-    message: "Avatar fetched",
-    avatar: data,
-  });
+    res.status(200).json({
+      message: "Avatar fetched",
+      svg: data,
+    });
+  } catch (err) {
+    console.error(err);
+  }
 };
