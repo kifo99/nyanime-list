@@ -16,47 +16,49 @@ export default function App() {
   const [showSignup, setShowSignup] = useState(false);
 
   return (
-    <>
+    <div>
       <Navbar
         logedIn={logedIn}
         hasAccount={hasAccount}
         onShowSignup={setShowSignup}
         showSignup={showSignup}
       />
-      <div className="Container mx-auto px-4 ">
-        <div className="flex justify-center">
-          <div className="w-[70%]">
-            <Search onSetAnimeList={setAnimeList} />
+      <div className={showSignup ? "blur-xs" : ""}>
+        <div className="Container mx-auto px-4 ">
+          <div className="flex justify-center">
+            <div className="w-[70%]">
+              <Search onSetAnimeList={setAnimeList} />
+            </div>
+          </div>
+
+          <div className="Container">
+            {!isSelected ? (
+              <ul>
+                {animeList.map((anime) => (
+                  <AnimeCard
+                    anime={anime}
+                    onGetAnime={setAnime}
+                    onSelect={setIsSelected}
+                    key={anime.id}
+                  />
+                ))}
+              </ul>
+            ) : (
+              <div>
+                <Anime anime={anime} />
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="Container">
-          {!isSelected ? (
-            <ul>
-              {animeList.map((anime) => (
-                <AnimeCard
-                  anime={anime}
-                  onGetAnime={setAnime}
-                  onSelect={setIsSelected}
-                  key={anime.id}
-                />
-              ))}
-            </ul>
-          ) : (
-            <div>
-              <Anime anime={anime} />
-            </div>
-          )}
+        <div>
+          <AvatarPicker name={"gambit"} />
         </div>
       </div>
       <div className="flex justify-center items-center mt-5">
         <Signup showSignup={showSignup} />
       </div>
-
-      <div>
-        <AvatarPicker name={"gambit"} />
-      </div>
       <AppRoutes />
-    </>
+    </div>
   );
 }

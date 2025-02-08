@@ -5,11 +5,17 @@ import { useEffect, useRef } from "react";
 export default function Signup({ showSignup }) {
   const signupRef = useRef();
 
-  useEffect(function () {
-    if (showSignup && signupRef.current) {
-      signupRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  });
+  useEffect(
+    function () {
+      if (showSignup && signupRef.current) {
+        signupRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    },
+    [showSignup]
+  );
 
   return (
     <div className="h-screen w-screen flex justify-center items-center">
