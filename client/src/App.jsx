@@ -54,7 +54,7 @@ export default function App() {
       </div>
 
       <div>
-        <AvatarPicker />
+        <AvatarPicker name={"gambit"} />
       </div>
       <AppRoutes />
     </>
