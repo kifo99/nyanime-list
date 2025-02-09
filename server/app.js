@@ -4,9 +4,12 @@ import cors from "cors";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 import bodyParser from "body-parser";
+import mongoose from "mongoose";
 
 import { PORT } from "./util/config.js";
 import animeRouter from "./routes/anime.js";
+import authRouter from "./routes/auth.js";
+import { MONGODB_URL } from "./util/config.js";
 
 const app = express();
 
@@ -25,5 +28,12 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use("/anime", animeRouter);
+app.use("/admin", authRouter);
 
-app.listen(PORT || 8000);
+try {
+  await mongoose.connect(MONGODB_URL);
+  console.log("Connected");
+  app.listen(PORT || 8000);
+} catch (err) {
+  console.error(err);
+}
