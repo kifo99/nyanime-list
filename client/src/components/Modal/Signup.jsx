@@ -10,8 +10,6 @@ export default function Signup({ showSignup }) {
     password: "",
   });
 
-  const signupRef = useRef();
-
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
@@ -20,11 +18,14 @@ export default function Signup({ showSignup }) {
     e.preventDefault();
 
     try {
-      await axios.get(`http://localhost:8080/admin/signup`, formData);
+      await axios.post(`http://localhost:8080/admin/signup`, formData);
     } catch (error) {
       console.log(error);
     }
   }
+
+  const signupRef = useRef();
+
   useEffect(
     function () {
       if (showSignup && signupRef.current) {
@@ -76,7 +77,10 @@ export default function Signup({ showSignup }) {
             placeholder=" Password"
             className=" m-9  w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
           />
-          <button className="flex items-center  text-amber-950 font-bold justify-center mb-11 h-9 w-36 bg-amber-200 p-2 rounded-full hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all  ">
+          <button
+            type="submit"
+            className="flex items-center  text-amber-950 font-bold justify-center mb-11 h-9 w-36 bg-amber-200 p-2 rounded-full hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all  "
+          >
             Sign in
           </button>
         </form>
