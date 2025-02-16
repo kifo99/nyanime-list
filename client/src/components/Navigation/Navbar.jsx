@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 export default function Navbar({
-  logedIn,
+  loggedIn,
   hasAccount,
   onShowSignup,
   showSignup,
@@ -51,7 +51,7 @@ export default function Navbar({
             >
               Signin
             </button>
-          ) : logedIn ? (
+          ) : loggedIn ? (
             <button className="text-amber-700 font-bold hover:text-amber-950 outline-none focus:outline-none transition-all ">
               Logout
             </button>
@@ -67,7 +67,7 @@ export default function Navbar({
 }
 
 Navbar.propTypes = {
-  logedIn: PropTypes.bool,
+  loggedIn: PropTypes.bool,
   hasAccount: PropTypes.bool,
   onShowSignup: PropTypes.func,
   showSignup: PropTypes.bool,

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
-export default function Signup({ showSignup }) {
+export default function Signup({ showSignup, onShowSignup }) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -12,6 +12,10 @@ export default function Signup({ showSignup }) {
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
+  function handleSignup(e) {
+    e.preventDefault();
+    onShowSignup(false);
   }
 
   async function handleSubmit(e) {
@@ -78,6 +82,7 @@ export default function Signup({ showSignup }) {
             className=" m-9  w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
           />
           <button
+            onClick={handleSignup}
             type="submit"
             className="flex items-center  text-amber-950 font-bold justify-center mb-11 h-9 w-36 bg-amber-200 p-2 rounded-full hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all  "
           >
@@ -91,4 +96,5 @@ export default function Signup({ showSignup }) {
 
 Signup.propTypes = {
   showSignup: PropTypes.bool,
+  onShowSignup: PropTypes.func,
 };
