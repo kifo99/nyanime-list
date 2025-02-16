@@ -12,11 +12,14 @@ router.post(
     body("name").trim().not().isEmpty(),
     body("email")
       .isEmail()
+      .withMessage("Please enter a valid email")
       .custom(async (value, { req }) => {
         console.log("Triggered");
 
         const userDoc = await User.findOne({ email: value });
-        if (userDoc) return new Promise.reject("Email address already exist!");
+        if (userDoc) {
+          return Promise.reject("Email address already exist!");
+        }
       })
       .normalizeEmail(),
     body("password").trim().isLength({ min: 5 }),
