@@ -9,7 +9,19 @@ const router = express.Router();
 router.post(
   "/signup",
   [
-    body("name").trim().not().isEmpty(),
+    body("name")
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage("Invalid name!")
+      .custom(async (value, { req }) => {
+        console.log("Triggered");
+
+        const userDoc = await User.findOne({ name: value });
+        if (userDoc) {
+          return Promise.reject("Name address already exist!");
+        }
+      }),
     body("email")
       .isEmail()
       .withMessage("Please enter a valid email")
@@ -22,7 +34,23 @@ router.post(
         }
       })
       .normalizeEmail(),
-    body("password").trim().isLength({ min: 5 }),
+    body("password")
+      .trim()
+      .isStrongPassword({
+        minLength: 6,
+        minUppercase: 1,
+        minLowercase: 1,
+        minSymbols: 1,
+        minNumbers: 1,
+        returnScore: false,
+        pointsPerUnique: 1,
+        pointsPerRepeat: 0.5,
+        pointsForContainingLower: 10,
+        pointsForContainingNumber: 10,
+        pointsForContainingUpper: 10,
+        pointsForContainingNumber: 10,
+      })
+      .withMessage("Password is not strong enough or is not valid"),
   ],
   signup
 );

@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import { validationResult } from "express-validator";
+import jwt from "jsonwebtoken";
 
 import { User } from "../model/user.js";
 import { errorHandler } from "../util/helpers.js";
@@ -12,7 +13,8 @@ export const signup = async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      errorHandler(errors, "Validation failed!", 422);
+      const message = errors.array().at(0).msg;
+      errorHandler(errors, message, 422);
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
