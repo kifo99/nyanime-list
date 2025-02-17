@@ -4,7 +4,7 @@ import Anime from "./components/Anime/Anime";
 import AnimeCard from "./components/Anime/AnimeCard";
 import Navbar from "./components/Navigation/Navbar";
 import AppRoutes from "./components/AppRoutes/AppRoutes";
-import Signup from "./components/Modal/Signup";
+import Signup from "./components/Form/Signup";
 import AvatarPicker from "./components/AvatarPicker/AvatarPicker";
 
 export default function App() {
