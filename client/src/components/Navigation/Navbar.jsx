@@ -1,20 +1,22 @@
 import PropTypes from "prop-types";
+import { forwardRef } from "react";
 import { Link } from "react-router-dom";
 
-export default function Navbar({
-  loggedIn,
-  hasAccount,
-  onShowSignup,
-  showSignup,
-}) {
+const Navbar = forwardRef(function Navbar(
+  { loggedIn, hasAccount, onShowSignup },
+  ref
+) {
   function handleShowSignup(e) {
     e.preventDefault();
 
-    onShowSignup(!showSignup);
+    onShowSignup(true);
   }
 
   return (
-    <nav className="flex-nowrap relative flex h-14 w-full items-center justify-between bg-amber-300 py-2 shadow-dark-mild dark:bg-amber-800 lg:flex-wrap lg:justify-start lg:py-4 ">
+    <nav
+      ref={ref}
+      className="flex-nowrap relative flex h-14 w-full items-center justify-between bg-amber-300 py-2 shadow-dark-mild dark:bg-amber-800 lg:flex-wrap lg:justify-start lg:py-4 "
+    >
       <div className="flex w-full justify-between items-center px-3 ">
         <ul className="list-style-none me-auto flex flex-col ps-0 lg:flex-row">
           <li className="mb-4 lg:mb-0 lg:pe-2">
@@ -64,11 +66,12 @@ export default function Navbar({
       </div>
     </nav>
   );
-}
+});
+
+export default Navbar;
 
 Navbar.propTypes = {
   loggedIn: PropTypes.bool,
   hasAccount: PropTypes.bool,
   onShowSignup: PropTypes.func,
-  showSignup: PropTypes.bool,
 };
