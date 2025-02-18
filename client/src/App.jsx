@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Search from "./components/Search/Search";
 import Anime from "./components/Anime/Anime";
 import AnimeCard from "./components/Anime/AnimeCard";
@@ -15,13 +15,15 @@ export default function App() {
   const [hasAccount, setHasAccount] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
 
+  const navRef = useRef(null);
+
   return (
     <div>
       <Navbar
         loggedIn={loggedIn}
         hasAccount={hasAccount}
         onShowSignup={setShowSignup}
-        showSignup={showSignup}
+        ref={navRef}
       />
       <div className={showSignup ? "blur-xs" : ""}>
         <div className="Container mx-auto px-4 ">
@@ -56,7 +58,11 @@ export default function App() {
         </div>
       </div>
       <div className="flex justify-center items-center mt-5">
-        <Signup showSignup={showSignup} onShowSignup={setShowSignup} />
+        <Signup
+          showSignup={showSignup}
+          onShowSignup={setShowSignup}
+          navRef={navRef}
+        />
       </div>
       <AppRoutes />
     </div>

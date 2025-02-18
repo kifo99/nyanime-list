@@ -5,22 +5,38 @@ import * as Yup from "yup";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
-export default function Signup({ showSignup, onShowSignup }) {
+export default function Signup({ showSignup, onShowSignup, navRef }) {
   const [error, setError] = useState(null);
 
   const validationSchema = Yup.object({
     name: Yup.string().required(),
     email: Yup.string().required().email(),
     password: Yup.string().required(),
+    confirmPassword: Yup.string()
+      .required()
+      .oneOf([Yup.ref("password"), null], "Password must be matched"),
   });
 
-  async function handleSubmit(values) {
+  function handleToggleSignupForm(e) {
+    e.preventDefault();
+    onShowSignup(false);
+    if (navRef.current) {
+      navRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }
+
+  async function handleSubmit(values, { resetForm }) {
     try {
       await axios.post(`http://localhost:8080/admin/signup`, values);
       onShowSignup(false);
     } catch (error) {
       console.log(error);
       setError("Failed to signup please try again later");
+    } finally {
+      resetForm();
     }
   }
 
@@ -33,6 +49,13 @@ export default function Signup({ showSignup, onShowSignup }) {
           behavior: "smooth",
           block: "center",
         });
+      } else {
+        if (navRef.current) {
+          navRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
       }
     },
     [showSignup]
@@ -46,12 +69,25 @@ export default function Signup({ showSignup, onShowSignup }) {
           showSignup ? "" : "hidden"
         }`}
       >
+        <div className="flex justify-end items-end mr-3.5">
+          <button
+            className="flex items-center  text-white font-bold justify-center  m-2 h-9 w-28 bg-red-600 p-2 rounded-full hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all  "
+            onClick={(e) => handleToggleSignupForm(e)}
+          >
+            Close
+          </button>
+        </div>
         <h1 className="text-amber-300 font-bold mb-4 text-center text-3xl p-7 ">
           Sign Up
         </h1>
         {error && <div className="text-red-600 mb-4 text-center">{error}</div>}
         <Formik
-          initialValues={{ name: "", email: "", password: "" }}
+          initialValues={{
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
@@ -59,9 +95,8 @@ export default function Signup({ showSignup, onShowSignup }) {
             <Field
               type="text"
               name="name"
-              // ref={nameRef}
               placeholder=" Name"
-              className=" m-9  w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
+              className=" m-7 w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
             />
             <ErrorMessage
               name="name"
@@ -71,9 +106,8 @@ export default function Signup({ showSignup, onShowSignup }) {
             <Field
               type="email"
               name="email"
-              // ref={emailRef}
               placeholder=" Email"
-              className=" m-3  w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
+              className="m-7 w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
             />
             <ErrorMessage
               name="email"
@@ -84,12 +118,23 @@ export default function Signup({ showSignup, onShowSignup }) {
             <Field
               type="password"
               name="password"
-              // ref={passwordRef}
               placeholder=" Password"
-              className=" m-9  w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
+              className="m-7 w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
             />
             <ErrorMessage
               name="password"
+              component="div"
+              className="text-red-600"
+            />
+
+            <Field
+              type="password"
+              name="confirmPassword"
+              placeholder=" Confirm Password"
+              className=" m-7 w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
+            />
+            <ErrorMessage
+              name="confirmPassword"
               component="div"
               className="text-red-600"
             />
@@ -110,4 +155,8 @@ export default function Signup({ showSignup, onShowSignup }) {
 Signup.propTypes = {
   showSignup: PropTypes.bool,
   onShowSignup: PropTypes.func,
+  navRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  ]),
 };
