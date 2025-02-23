@@ -5,7 +5,12 @@ import * as Yup from "yup";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
-export default function Signup({ showSignup, onShowSignup, navRef }) {
+export default function Signup({
+  showSignup,
+  onShowSignup,
+  onSetHasAccount,
+  navRef,
+}) {
   const [error, setError] = useState(null);
 
   const validationSchema = Yup.object({
@@ -31,6 +36,7 @@ export default function Signup({ showSignup, onShowSignup, navRef }) {
   async function handleSubmit(values, { resetForm }) {
     try {
       await axios.post(`http://localhost:8080/admin/signup`, values);
+      onSetHasAccount(true);
       onShowSignup(false);
     } catch (error) {
       console.log(error);
@@ -58,7 +64,7 @@ export default function Signup({ showSignup, onShowSignup, navRef }) {
         }
       }
     },
-    [showSignup]
+    [showSignup, navRef]
   );
 
   return (
@@ -155,6 +161,7 @@ export default function Signup({ showSignup, onShowSignup, navRef }) {
 Signup.propTypes = {
   showSignup: PropTypes.bool,
   onShowSignup: PropTypes.func,
+  onSetHasAccount: PropTypes.func,
   navRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) }),

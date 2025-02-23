@@ -61,6 +61,7 @@ export default function App() {
         <Signup
           showSignup={showSignup}
           onShowSignup={setShowSignup}
+          onSetHasAccount={setHasAccount}
           navRef={navRef}
         />
       </div>
