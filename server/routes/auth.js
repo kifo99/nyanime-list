@@ -1,6 +1,6 @@
 import express from "express";
 import { body } from "express-validator";
-import { signup } from "../controller/auth.js";
+import { signup, login } from "../controller/auth.js";
 
 import { User } from "../model/user.js";
 
@@ -51,8 +51,22 @@ router.post(
         pointsForContainingNumber: 10,
       })
       .withMessage("Password is not strong enough or is not valid"),
+
+    body("confirmPassword")
+      .trim()
+      .custom((value, { req }) => {
+        const password = req.body.password;
+
+        if (value !== password) {
+          console.error("Password needs to be the same");
+          throw new Error("Password needs to be the same");
+        }
+        return true;
+      }),
   ],
   signup
 );
+
+router.post("/login", login);
 
 export default router;

@@ -94,9 +94,32 @@ export const getAvatar = async (req, res, next) => {
       `https://api.dicebear.com/9.x/initials/svg?seed=${name}`
     );
 
+    if (!data) throw new Error("Failed to fetch data.");
+
     res.status(200).json({
       message: "Avatar fetched",
       svg: data,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const getMostPopular = async (req, res, next) => {
+  try {
+    const { data } = await axios.get(`https://api.jikan.moe/v4/top/anime`);
+
+    if (!data) throw new Error("Failed to fetch data.");
+
+    const topTenAnime = [];
+
+    for (let i = 0; i < 10; i++) {
+      topTenAnime.push(data.data.at(i));
+    }
+
+    res.status(200).json({
+      message: "Top 10 anime list is fetched",
+      topAnimeList: topTenAnime,
     });
   } catch (err) {
     console.error(err);
