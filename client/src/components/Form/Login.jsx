@@ -4,7 +4,12 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useEffect, useRef } from "react";
 
-export default function Login({ showLoginForm, onShowLoginForm, navRef }) {
+export default function Login({
+  showLoginForm,
+  onShowLoginForm,
+  onSetLoggedIn,
+  navRef,
+}) {
   const validationSchema = Yup.object({
     email: Yup.string().required().email(),
     password: Yup.string().required(),
@@ -14,20 +19,21 @@ export default function Login({ showLoginForm, onShowLoginForm, navRef }) {
 
   async function handleSubmit(values, { resetForm }) {
     try {
-      console.log(values);
+      await axios.post(
+        `http://localhost:8080/admin/login`,
+        {
+          email: values.email,
+          password: values.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      // await axios.post(
-      //   `http://localhost:8080/admin/login`,
-      //   {
-      //     email: values.email,
-      //     password: values.password,
-      //   },
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
+      onSetLoggedIn(true);
+      onShowLoginForm(false);
     } catch (error) {
       console.error(error);
     } finally {
@@ -134,6 +140,7 @@ export default function Login({ showLoginForm, onShowLoginForm, navRef }) {
 Login.propTypes = {
   showLoginForm: PropTypes.bool,
   onShowLoginForm: PropTypes.func,
+  onSetLoggedIn: PropTypes.func,
   navRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
