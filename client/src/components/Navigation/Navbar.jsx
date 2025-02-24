@@ -3,13 +3,18 @@ import { forwardRef } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = forwardRef(function Navbar(
-  { loggedIn, hasAccount, onShowSignup },
+  { loggedIn, hasAccount, onShowSignupForm, onShowLoginForm },
   ref
 ) {
   function handleShowSignup(e) {
     e.preventDefault();
 
-    onShowSignup(true);
+    onShowSignupForm(true);
+  }
+  function handleShowLogin(e) {
+    e.preventDefault();
+
+    onShowLoginForm(true);
   }
 
   return (
@@ -46,19 +51,24 @@ const Navbar = forwardRef(function Navbar(
         </ul>
 
         <div className="flex items-center justify-center ">
-          {!hasAccount ? (
+          {!hasAccount && (
             <button
-              className="text-amber-700 font-bold hover:text-amber-950 outline-none focus:outline-none transition-all"
+              className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none 
+              transition-all"
               onClick={(e) => handleShowSignup(e)}
             >
               Signin
             </button>
-          ) : loggedIn ? (
-            <button className="text-amber-700 font-bold hover:text-amber-950 outline-none focus:outline-none transition-all ">
+          )}
+          {loggedIn ? (
+            <button className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all ">
               Logout
             </button>
           ) : (
-            <button className="text-amber-700 font-bold hover:text-amber-950 outline-none focus:outline-none transition-all ">
+            <button
+              className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
+              onClick={(e) => handleShowLogin(e)}
+            >
               Login
             </button>
           )}
@@ -73,5 +83,6 @@ export default Navbar;
 Navbar.propTypes = {
   loggedIn: PropTypes.bool,
   hasAccount: PropTypes.bool,
-  onShowSignup: PropTypes.func,
+  onShowSignupForm: PropTypes.func,
+  onShowLoginForm: PropTypes.func,
 };

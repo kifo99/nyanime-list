@@ -5,6 +5,7 @@ import AnimeCard from "./components/Anime/AnimeCard";
 import Navbar from "./components/Navigation/Navbar";
 import AppRoutes from "./components/AppRoutes/AppRoutes";
 import Signup from "./components/Form/Signup";
+import Login from "./components/Form/Login";
 import AvatarPicker from "./components/AvatarPicker/AvatarPicker";
 
 export default function App() {
@@ -13,7 +14,8 @@ export default function App() {
   const [isSelected, setIsSelected] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
-  const [showSignup, setShowSignup] = useState(false);
+  const [showSignupForm, setShowSignupForm] = useState(false);
+  const [showLoginForm, setShowLoginForm] = useState(false);
 
   const navRef = useRef(null);
 
@@ -22,10 +24,11 @@ export default function App() {
       <Navbar
         loggedIn={loggedIn}
         hasAccount={hasAccount}
-        onShowSignup={setShowSignup}
+        onShowSignupForm={setShowSignupForm}
+        onShowLoginForm={setShowLoginForm}
         ref={navRef}
       />
-      <div className={showSignup ? "blur-xs" : ""}>
+      <div className={showSignupForm || showLoginForm ? "blur-xs" : ""}>
         <div className="Container mx-auto px-4 ">
           <div className="flex justify-center">
             <div className="w-[70%]">
@@ -57,11 +60,26 @@ export default function App() {
           <AvatarPicker name={"gambit"} />
         </div>
       </div>
-      <div className="flex justify-center items-center mt-5">
+      <div
+        className={
+          showSignupForm ? "flex justify-center items-center mt-5" : "hidden"
+        }
+      >
         <Signup
-          showSignup={showSignup}
-          onShowSignup={setShowSignup}
+          showSignupForm={showSignupForm}
+          onShowSignupForm={setShowSignupForm}
           onSetHasAccount={setHasAccount}
+          navRef={navRef}
+        />
+      </div>
+      <div
+        className={
+          showLoginForm ? "flex justify-center items-center mt-5" : "hidden"
+        }
+      >
+        <Login
+          showLoginForm={showLoginForm}
+          onShowLoginForm={setShowLoginForm}
           navRef={navRef}
         />
       </div>
