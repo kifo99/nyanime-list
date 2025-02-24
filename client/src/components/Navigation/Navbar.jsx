@@ -3,7 +3,7 @@ import { forwardRef } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = forwardRef(function Navbar(
-  { loggedIn, hasAccount, onShowSignupForm, onShowLoginForm },
+  { isAuth, hasAccount, onShowSignupForm, onShowLoginForm, onLogout },
   ref
 ) {
   function handleShowSignup(e) {
@@ -51,7 +51,32 @@ const Navbar = forwardRef(function Navbar(
         </ul>
 
         <div className="flex items-center justify-center ">
-          {!hasAccount && (
+          {isAuth ? (
+            <button
+              className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
+              onClick={onLogout}
+            >
+              Logout
+            </button>
+          ) : (
+            <>
+              <button
+                className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none 
+              transition-all"
+                onClick={(e) => handleShowSignup(e)}
+              >
+                Signin
+              </button>
+
+              <button
+                className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
+                onClick={(e) => handleShowLogin(e)}
+              >
+                Login
+              </button>
+            </>
+          )}
+          {/* {!hasAccount && (
             <button
               className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none 
               transition-all"
@@ -60,8 +85,11 @@ const Navbar = forwardRef(function Navbar(
               Signin
             </button>
           )}
-          {loggedIn ? (
-            <button className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all ">
+          {isAuth ? (
+            <button
+              className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
+              onClick={onLogout}
+            >
               Logout
             </button>
           ) : (
@@ -71,7 +99,7 @@ const Navbar = forwardRef(function Navbar(
             >
               Login
             </button>
-          )}
+          )} */}
         </div>
       </div>
     </nav>
@@ -81,8 +109,9 @@ const Navbar = forwardRef(function Navbar(
 export default Navbar;
 
 Navbar.propTypes = {
-  loggedIn: PropTypes.bool,
+  isAuth: PropTypes.bool,
   hasAccount: PropTypes.bool,
   onShowSignupForm: PropTypes.func,
   onShowLoginForm: PropTypes.func,
+  onLogout: PropTypes.func,
 };

@@ -1,13 +1,12 @@
 import PropTypes from "prop-types";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import { useEffect, useRef } from "react";
 
 export default function Login({
   showLoginForm,
   onShowLoginForm,
-  onSetLoggedIn,
+  onLogin,
   navRef,
 }) {
   const validationSchema = Yup.object({
@@ -16,30 +15,6 @@ export default function Login({
   });
 
   const loginRef = useRef();
-
-  async function handleSubmit(values, { resetForm }) {
-    try {
-      await axios.post(
-        `http://localhost:8080/admin/login`,
-        {
-          email: values.email,
-          password: values.password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      onSetLoggedIn(true);
-      onShowLoginForm(false);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      resetForm();
-    }
-  }
 
   function handleToggleLoginForm(e) {
     e.preventDefault();
@@ -97,7 +72,7 @@ export default function Login({
             password: "",
           }}
           validationSchema={validationSchema}
-          onSubmit={handleSubmit}
+          onSubmit={onLogin}
         >
           <Form className="flex flex-col justify-center items-center space-y-4 ">
             <Field
@@ -140,7 +115,7 @@ export default function Login({
 Login.propTypes = {
   showLoginForm: PropTypes.bool,
   onShowLoginForm: PropTypes.func,
-  onSetLoggedIn: PropTypes.func,
+  onLogin: PropTypes.func,
   navRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
