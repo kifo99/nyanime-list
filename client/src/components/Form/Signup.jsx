@@ -35,7 +35,11 @@ export default function Signup({
 
   async function handleSubmit(values, { resetForm }) {
     try {
-      await axios.post(`http://localhost:8080/admin/signup`, values);
+      await axios.post(`http://localhost:8080/admin/signup`, values, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       onSetHasAccount(true);
       onShowSignupForm(false);
     } catch (error) {
