@@ -80,6 +80,7 @@ export default function App() {
         <Login
           showLoginForm={showLoginForm}
           onShowLoginForm={setShowLoginForm}
+          onSetLoggedIn={setLoggedIn}
           navRef={navRef}
         />
       </div>
