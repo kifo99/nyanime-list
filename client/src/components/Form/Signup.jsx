@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 export default function Signup({
-  showSignup,
-  onShowSignup,
+  showSignupForm,
+  onShowSignupForm,
   onSetHasAccount,
   navRef,
 }) {
@@ -24,7 +24,7 @@ export default function Signup({
 
   function handleToggleSignupForm(e) {
     e.preventDefault();
-    onShowSignup(false);
+    onShowSignupForm(false);
     if (navRef.current) {
       navRef.current.scrollIntoView({
         behavior: "smooth",
@@ -37,7 +37,7 @@ export default function Signup({
     try {
       await axios.post(`http://localhost:8080/admin/signup`, values);
       onSetHasAccount(true);
-      onShowSignup(false);
+      onShowSignupForm(false);
     } catch (error) {
       console.log(error);
       setError("Failed to signup please try again later");
@@ -50,7 +50,7 @@ export default function Signup({
 
   useEffect(
     function () {
-      if (showSignup && signupRef.current) {
+      if (showSignupForm && signupRef.current) {
         signupRef.current.scrollIntoView({
           behavior: "smooth",
           block: "center",
@@ -64,7 +64,7 @@ export default function Signup({
         }
       }
     },
-    [showSignup, navRef]
+    [showSignupForm, navRef]
   );
 
   return (
@@ -72,7 +72,7 @@ export default function Signup({
       <div
         ref={signupRef}
         className={`scroll-smooth bg-gray-100 rounded-lg shadow-lg min-w-4xl shadow-amber-50 ${
-          showSignup ? "" : "hidden"
+          showSignupForm ? "" : "hidden"
         }`}
       >
         <div className="flex justify-end items-end mr-3.5">
@@ -149,7 +149,7 @@ export default function Signup({
               type="submit"
               className="flex items-center  text-amber-950 font-bold justify-center mb-11 h-9 w-36 bg-amber-200 p-2 rounded-full hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all  "
             >
-              Sign in
+              Sign up
             </button>
           </Form>
         </Formik>
@@ -159,8 +159,8 @@ export default function Signup({
 }
 
 Signup.propTypes = {
-  showSignup: PropTypes.bool,
-  onShowSignup: PropTypes.func,
+  showSignupForm: PropTypes.bool,
+  onShowSignupForm: PropTypes.func,
   onSetHasAccount: PropTypes.func,
   navRef: PropTypes.oneOfType([
     PropTypes.func,
