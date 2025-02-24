@@ -14,15 +14,20 @@ export default function Login({ showLoginForm, onShowLoginForm, navRef }) {
 
   async function handleSubmit(values, { resetForm }) {
     try {
-      await axios.post(`http://localhost:8080/admin/login`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: {
-          email: values.email,
-          password: values.password,
-        },
-      });
+      console.log(values);
+
+      // await axios.post(
+      //   `http://localhost:8080/admin/login`,
+      //   {
+      //     email: values.email,
+      //     password: values.password,
+      //   },
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
     } catch (error) {
       console.error(error);
     } finally {
