@@ -2,17 +2,15 @@
 import PropTypes from "prop-types";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import { useEffect, useRef} from "react";
 
 export default function Signup({
   showSignupForm,
   onShowSignupForm,
-  onSetHasAccount,
+  onSignup,
+  error,
   navRef,
 }) {
-  const [error, setError] = useState(null);
-
   const validationSchema = Yup.object({
     name: Yup.string().required(),
     email: Yup.string().required().email(),
@@ -30,23 +28,6 @@ export default function Signup({
         behavior: "smooth",
         block: "center",
       });
-    }
-  }
-
-  async function handleSubmit(values, { resetForm }) {
-    try {
-      await axios.post(`http://localhost:8080/admin/signup`, values, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      onSetHasAccount(true);
-      onShowSignupForm(false);
-    } catch (error) {
-      console.log(error);
-      setError("Failed to signup please try again later");
-    } finally {
-      resetForm();
     }
   }
 
@@ -99,7 +80,7 @@ export default function Signup({
             confirmPassword: "",
           }}
           validationSchema={validationSchema}
-          onSubmit={handleSubmit}
+          onSubmit={onSignup}
         >
           <Form className="flex flex-col justify-center items-center space-y-4 ">
             <Field
@@ -165,7 +146,8 @@ export default function Signup({
 Signup.propTypes = {
   showSignupForm: PropTypes.bool,
   onShowSignupForm: PropTypes.func,
-  onSetHasAccount: PropTypes.func,
+  onSignup: PropTypes.func,
+  error: PropTypes.string,
   navRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) }),

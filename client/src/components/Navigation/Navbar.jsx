@@ -3,7 +3,7 @@ import { forwardRef } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = forwardRef(function Navbar(
-  { isAuth, hasAccount, onShowSignupForm, onShowLoginForm, onLogout },
+  { isAuth,onShowSignupForm, onShowLoginForm, onLogout },
   ref
 ) {
   function handleShowSignup(e) {
