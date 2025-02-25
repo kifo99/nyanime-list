@@ -7,6 +7,7 @@ export default function Login({
   showLoginForm,
   onShowLoginForm,
   onLogin,
+  error,
   navRef,
 }) {
   const validationSchema = Yup.object({
@@ -65,7 +66,7 @@ export default function Login({
         <h1 className="text-amber-300 font-bold mb-4 text-center text-3xl p-7 ">
           Login
         </h1>
-
+        {error && <div className="text-red-600 mb-4 text-center">{error}</div>}
         <Formik
           initialValues={{
             email: "",
@@ -116,6 +117,7 @@ Login.propTypes = {
   showLoginForm: PropTypes.bool,
   onShowLoginForm: PropTypes.func,
   onLogin: PropTypes.func,
+  error: PropTypes.string,
   navRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) }),

@@ -14,13 +14,14 @@ export default function App() {
   const [animeList, setAnimeList] = useState([]);
   const [anime, setAnime] = useState({});
   const [isSelected, setIsSelected] = useState(false);
-  const [hasAccount, setHasAccount] = useState(false);
   const [showSignupForm, setShowSignupForm] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [token, setToken] = useState(null);
   const [userId, setUserId] = useState(null);
   const navRef = useRef(null);
+
+  const [error, setError] = useState(null);
 
   useEffect(function () {
     const token = localStorage.getItem("token");
@@ -55,10 +56,7 @@ export default function App() {
     try {
       const { data } = await axios.post(
         `http://localhost:8080/admin/login`,
-        {
-          email: values.email,
-          password: values.password,
-        },
+        values,
         {
           headers: {
             "Content-Type": "application/json",
@@ -82,11 +80,28 @@ export default function App() {
       resetForm();
     }
   }
+
+  async function handleSignup(values, { resetForm }) {
+    try {
+      await axios.post(`http://localhost:8080/admin/signup`, values, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setShowSignupForm(false);
+      setIsAuth(false);
+    } catch (error) {
+      console.log(error);
+      setError("Failed to signup please try again later");
+    } finally {
+      resetForm();
+    }
+  }
+
   return (
     <div>
       <Navbar
         isAuth={isAuth}
-        hasAccount={hasAccount}
         onShowSignupForm={setShowSignupForm}
         onShowLoginForm={setShowLoginForm}
         onLogout={logoutHandler}
@@ -130,7 +145,8 @@ export default function App() {
         <Signup
           showSignupForm={showSignupForm}
           onShowSignupForm={setShowSignupForm}
-          onSetHasAccount={setHasAccount}
+          onSignup={handleSignup}
+          error={error}
           navRef={navRef}
         />
       </div>
@@ -142,6 +158,7 @@ export default function App() {
         <Login
           showLoginForm={showLoginForm}
           onShowLoginForm={setShowLoginForm}
+          error={error}
           onLogin={handleLogin}
           navRef={navRef}
         />
