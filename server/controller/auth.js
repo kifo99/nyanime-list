@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
+import axios from "axios";
 
 import { User } from "../model/user.js";
 import { SECRET_KEY } from "../util/config.js";
@@ -13,6 +14,13 @@ export const signup = async (req, res, next) => {
     const password = req.body.password;
     const errors = validationResult(req);
 
+    const { data } = await axios.get(
+      `https://api.dicebear.com/9.x/initials/svg?seed=${name}`
+    );
+    if (!data) errorHandler(null, "Fetching Initials avatar failed!", 404);
+
+    const initialAvatar = `${data}`;
+
     if (!errors.isEmpty()) {
       const message = errors.array().at(0).msg;
       errorHandler(errors, message, 422);
@@ -24,8 +32,10 @@ export const signup = async (req, res, next) => {
       name: name,
       email: email,
       password: hashedPassword,
-      avatar: "images/avatar",
+      avatar: initialAvatar,
     });
+
+    console.log(user);
 
     const result = await user.save();
 
@@ -34,7 +44,7 @@ export const signup = async (req, res, next) => {
       user: result,
     });
   } catch (err) {
-    res.status(err.statusCode).json({
+    res.status(err.statusCode || 500).json({
       message: err.message,
     });
   }
