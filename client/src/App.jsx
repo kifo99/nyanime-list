@@ -8,7 +8,6 @@ import Navbar from "./components/Navigation/Navbar";
 import AppRoutes from "./components/AppRoutes/AppRoutes";
 import Signup from "./components/Form/Signup";
 import Login from "./components/Form/Login";
-import InitialAvatar from "./components/AvatarPicker/InitialAvatar";
 
 export default function App() {
   const [animeList, setAnimeList] = useState([]);
@@ -63,7 +62,7 @@ export default function App() {
           },
         }
       );
-      console.log(data.token);
+
       setIsAuth(true);
       setToken(data.token);
       setUserId(data.userId);
@@ -105,6 +104,7 @@ export default function App() {
         onShowSignupForm={setShowSignupForm}
         onShowLoginForm={setShowLoginForm}
         onLogout={logoutHandler}
+        userId={userId}
         ref={navRef}
       />
       <div className={showSignupForm || showLoginForm ? "blur-xs" : ""}>
