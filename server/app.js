@@ -9,6 +9,7 @@ import mongoose from "mongoose";
 import { PORT } from "./util/config.js";
 import animeRouter from "./routes/anime.js";
 import authRouter from "./routes/auth.js";
+import userRouter from "./routes/user.js";
 import { MONGODB_URL } from "./util/config.js";
 
 const app = express();
@@ -29,6 +30,7 @@ app.use(limiter);
 
 app.use("/anime", animeRouter);
 app.use("/admin", authRouter);
+app.use("/user", userRouter);
 
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
