@@ -1,13 +1,16 @@
 import PropTypes from "prop-types";
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
-import InitialAvatar from "../AvatarPicker/InitialAvatar";
+import InitialAvatar from "../Avatar/InitialAvatar";
 
 const Navbar = forwardRef(function Navbar(
-  { isAuth, onShowSignupForm, onShowLoginForm, onLogout, avatar },
+  { isAuth, onShowSignupForm, onShowLoginForm, onLogout, userId },
   ref
 ) {
+  const [avatar, setAvatar] = useState("");
+
   function handleShowSignup(e) {
     e.preventDefault();
 
@@ -18,6 +21,20 @@ const Navbar = forwardRef(function Navbar(
 
     onShowLoginForm(true);
   }
+
+  useEffect(() => {
+    async function fetchUser() {
+      if (!userId) return;
+      const { data } = await axios.get(
+        `http://localhost:8080/user/profile/${userId}`
+      );
+      const { user } = data;
+
+      setAvatar(user.avatar);
+    }
+
+    fetchUser();
+  }, [userId]);
 
   return (
     <nav
@@ -54,7 +71,7 @@ const Navbar = forwardRef(function Navbar(
 
         <div className="flex items-center justify-center ">
           {isAuth ? (
-            <>
+            <div className="flex justify-center items-center w-40">
               <InitialAvatar avatar={avatar} />
               <button
                 className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
@@ -62,7 +79,7 @@ const Navbar = forwardRef(function Navbar(
               >
                 Logout
               </button>
-            </>
+            </div>
           ) : (
             <>
               <button
@@ -95,5 +112,5 @@ Navbar.propTypes = {
   onShowSignupForm: PropTypes.func,
   onShowLoginForm: PropTypes.func,
   onLogout: PropTypes.func,
-  avatar: PropTypes.string,
+  userId: PropTypes.string,
 };
