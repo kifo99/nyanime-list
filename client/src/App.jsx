@@ -8,7 +8,7 @@ import Navbar from "./components/Navigation/Navbar";
 import AppRoutes from "./components/AppRoutes/AppRoutes";
 import Signup from "./components/Form/Signup";
 import Login from "./components/Form/Login";
-import AvatarPicker from "./components/AvatarPicker/AvatarPicker";
+import InitialAvatar from "./components/AvatarPicker/InitialAvatar";
 
 export default function App() {
   const [animeList, setAnimeList] = useState([]);
@@ -132,9 +132,6 @@ export default function App() {
               </div>
             )}
           </div>
-        </div>
-        <div>
-          <AvatarPicker name={"gambit"} />
         </div>
       </div>
       <div

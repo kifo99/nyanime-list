@@ -2,8 +2,10 @@ import PropTypes from "prop-types";
 import { forwardRef } from "react";
 import { Link } from "react-router-dom";
 
+import InitialAvatar from "../AvatarPicker/InitialAvatar";
+
 const Navbar = forwardRef(function Navbar(
-  { isAuth,onShowSignupForm, onShowLoginForm, onLogout },
+  { isAuth, onShowSignupForm, onShowLoginForm, onLogout, avatar },
   ref
 ) {
   function handleShowSignup(e) {
@@ -52,12 +54,15 @@ const Navbar = forwardRef(function Navbar(
 
         <div className="flex items-center justify-center ">
           {isAuth ? (
-            <button
-              className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
-              onClick={onLogout}
-            >
-              Logout
-            </button>
+            <>
+              <InitialAvatar avatar={avatar} />
+              <button
+                className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
+                onClick={onLogout}
+              >
+                Logout
+              </button>
+            </>
           ) : (
             <>
               <button
@@ -76,30 +81,6 @@ const Navbar = forwardRef(function Navbar(
               </button>
             </>
           )}
-          {/* {!hasAccount && (
-            <button
-              className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none 
-              transition-all"
-              onClick={(e) => handleShowSignup(e)}
-            >
-              Signin
-            </button>
-          )}
-          {isAuth ? (
-            <button
-              className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
-              onClick={onLogout}
-            >
-              Logout
-            </button>
-          ) : (
-            <button
-              className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
-              onClick={(e) => handleShowLogin(e)}
-            >
-              Login
-            </button>
-          )} */}
         </div>
       </div>
     </nav>
@@ -114,4 +95,5 @@ Navbar.propTypes = {
   onShowSignupForm: PropTypes.func,
   onShowLoginForm: PropTypes.func,
   onLogout: PropTypes.func,
+  avatar: PropTypes.string,
 };
