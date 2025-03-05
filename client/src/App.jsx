@@ -115,8 +115,10 @@ export default function App() {
               <Search onSetAnimeList={setAnimeList} />
             </div>
           </div>
+
           <div className="Container">
             <SeasonAnime />
+
             {!isSelected ? (
               <ul>
                 {animeList.map((anime) => (

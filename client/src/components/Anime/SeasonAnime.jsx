@@ -6,14 +6,27 @@ import SeasonAnimeCard from "./SeasonAnimeCard";
 export default function SeasonAnime() {
   const [anime, setAnime] = useState([]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const { data } = axios.get(``);
-  //   };
-  // });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          `http://localhost:8080/anime/seasonAnime`
+        );
+
+        setAnime(data.animeList);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <div>
-      <SeasonAnimeCard />
-    </div>
+    <ul>
+      {anime.forEach((anime) => (
+        <SeasonAnimeCard anime={anime} />
+      ))}
+    </ul>
   );
 }
