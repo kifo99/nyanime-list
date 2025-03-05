@@ -5,11 +5,13 @@ import {
   getAnimeWithId,
   getAvatar,
   getMostPopular,
+  getSeasonAnime,
 } from "../controller/anime.js";
 
 const router = express.Router();
 
 router.get("/mostPopular", getMostPopular);
+router.get("/seasonAnime", getSeasonAnime);
 router.get("/select/:animeId", getAnimeWithId);
 router.get("/avatar/:name", getAvatar);
 router.get("/search/anime/:name", getAnime);
