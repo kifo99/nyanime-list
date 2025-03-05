@@ -125,3 +125,28 @@ export const getMostPopular = async (req, res, next) => {
     console.error(err);
   }
 };
+
+export const getSeasonAnime = async (req, res, next) => {
+  try {
+    const { data } = await axios.get(`https://api.jikan.moe/v4/seasons/now`);
+
+    if (!data) throw new Error("Failed to fetch data.");
+
+    const animeList = [];
+
+    data.data.forEach((anime) => {
+      animeList.push({
+        id: anime.mal_id,
+        image: anime.images.jpg.image_url,
+        title: anime.title,
+      });
+    });
+
+    res.status(200).json({
+      message: "Top 10 anime list is fetched",
+      animeList: animeList,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
