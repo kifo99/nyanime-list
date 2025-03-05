@@ -8,6 +8,7 @@ import Navbar from "./components/Navigation/Navbar";
 import AppRoutes from "./components/AppRoutes/AppRoutes";
 import Signup from "./components/Form/Signup";
 import Login from "./components/Form/Login";
+import SeasonAnime from "./components/Anime/SeasonAnime";
 
 export default function App() {
   const [animeList, setAnimeList] = useState([]);
@@ -115,6 +116,7 @@ export default function App() {
             </div>
           </div>
           <div className="Container">
+            <SeasonAnime />
             {!isSelected ? (
               <ul>
                 {animeList.map((anime) => (
