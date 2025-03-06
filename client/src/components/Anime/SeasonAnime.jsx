@@ -22,11 +22,15 @@ export default function SeasonAnime() {
     fetchData();
   }, []);
 
+  console.log("This is inside of SeasonAnime");
+
   return (
-    <ul>
-      {anime.forEach((anime) => (
-        <SeasonAnimeCard anime={anime} />
-      ))}
-    </ul>
+    <div className="flex justify-center items-center">
+      <ul className="flex flex-row justify-between overflow-hidden scroll-smooth">
+        {anime.map((anime) => (
+          <SeasonAnimeCard anime={anime} key={anime.id} />
+        ))}
+      </ul>
+    </div>
   );
 }

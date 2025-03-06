@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
 
 export default function SeasonAnimeCard({ anime }) {
-  console.log(anime);
+  console.log("first");
+
+  console.log(`This is the anime: ${anime}`);
 
   return (
     <li className="flex justify-center items-center">
@@ -9,11 +11,11 @@ export default function SeasonAnimeCard({ anime }) {
         <img
           src={anime.image}
           alt={anime.title}
-          className="w-full h-auto rounded-lg shadow-lg"
-        ></img>
+          className="rounded-lg shadow-lg w-10 h-24"
+        />
       </div>
       <div>
-        <h1 className="text-2xl font-semibold text-gray-800">{anime.title}</h1>
+        <h1 className="text-xs font-semibold text-gray-800">{anime.title}</h1>
       </div>
     </li>
   );
