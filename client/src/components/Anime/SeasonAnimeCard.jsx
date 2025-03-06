@@ -1,12 +1,10 @@
 import PropTypes from "prop-types";
 
 export default function SeasonAnimeCard({ anime }) {
-  console.log("first");
-
-  console.log(`This is the anime: ${anime}`);
+  console.log(`${anime.title} id: ${anime.id}`);
 
   return (
-    <li className="flex justify-center items-center">
+    <li className="flex justify-center items-center w-2xs m-3">
       <div className="">
         <img
           src={anime.image}
