@@ -138,7 +138,7 @@ export const getSeasonAnime = async (req, res, next) => {
       animeList.push({
         id: anime.mal_id,
         image: anime.images.jpg.image_url,
-        title: anime.title,
+        title: anime.title_english,
       });
     });
 
