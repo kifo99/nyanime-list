@@ -11,17 +11,29 @@ export const getAnime = async (req, res, next) => {
 
     if (!data) throw new Error("Failed to fetch data.");
 
-    const animeList = data.data.map((anime) => ({
-      id: anime.mal_id,
-      image: anime.images.jpg.image_url,
-      title: anime.title,
-      rank: anime.rank,
-      score: anime.score,
-      rating: anime.rating,
-      popularity: anime.popularity,
-      duration: anime.duration,
-      episodes: anime.episodes,
-    }));
+    const seenIds = new Set();
+
+    const animeList = data.data
+      .filter((anime) => {
+        if (!seenIds.has(anime.mal_id)) {
+          seenIds.add(anime.mal_id);
+          return true;
+        }
+        return false;
+      })
+      .map((anime) => {
+        return {
+          id: anime.mal_id,
+          image: anime.images.jpg.image_url,
+          title: anime.title,
+          rank: anime.rank,
+          score: anime.score,
+          rating: anime.rating,
+          popularity: anime.popularity,
+          duration: anime.duration,
+          episodes: anime.episodes,
+        };
+      });
 
     if (!animeList.length) throw new Error("Failed to create anime list.");
 
