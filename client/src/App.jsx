@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 import Search from "./components/Search/Search";
-import Anime from "./components/Anime/Anime";
+// import Anime from "./components/Anime/Anime";
 import AnimeCard from "./components/Anime/AnimeCard";
 import Navbar from "./components/Navigation/Navbar";
 import AppRoutes from "./components/AppRoutes/AppRoutes";
@@ -119,22 +119,22 @@ export default function App() {
           <div className="Container">
             <SeasonAnime />
 
-            {!isSelected ? (
-              <ul>
-                {animeList.map((anime) => (
-                  <AnimeCard
-                    anime={anime}
-                    onGetAnime={setAnime}
-                    onSelect={setIsSelected}
-                    key={anime.id}
-                  />
-                ))}
-              </ul>
-            ) : (
+            {/* {!isSelected ? ( */}
+            <ul>
+              {animeList.map((anime) => (
+                <AnimeCard
+                  anime={anime}
+                  onGetAnime={setAnime}
+                  onSelect={setIsSelected}
+                  key={anime.id}
+                />
+              ))}
+            </ul>
+            {/* ) : (
               <div>
                 <Anime anime={anime} />
-              </div>
-            )}
+              </div> */}
+            {/* )} */}
           </div>
         </div>
       </div>

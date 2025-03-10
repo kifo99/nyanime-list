@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export default function AnimeCard({ anime, onGetAnime, onSelect }) {
+export default function AnimeCard({ anime, onGetAnime }) {
+  const navigate = useNavigate();
   async function handleShowMore(e, animeId) {
     e.preventDefault();
     try {
@@ -12,10 +14,9 @@ export default function AnimeCard({ anime, onGetAnime, onSelect }) {
 
       if (!data) throw new Error("No data fetched");
 
-      console.log(data.data.anime);
-
       onGetAnime(data.data.anime);
-      onSelect(true);
+
+      navigate(`/anime/${animeId}`);
     } catch (error) {
       console.error(error);
     }
@@ -83,5 +84,4 @@ AnimeCard.propTypes = {
   anime: PropTypes.object,
   animeId: PropTypes.number,
   onGetAnime: PropTypes.func,
-  onSelect: PropTypes.func,
 };
