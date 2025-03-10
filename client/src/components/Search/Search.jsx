@@ -64,7 +64,7 @@ export default function Search({ onSetAnimeList }) {
   return (
     <form
       onSubmit={(e) => handleSubmitAnime(e)}
-      className="flex  p-2 justify-content items-centerw-full"
+      className="flex  p-2 justify-content items-center w-full"
     >
       <input
         ref={inputEl}
