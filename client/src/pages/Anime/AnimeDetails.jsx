@@ -23,7 +23,7 @@ export default function AnimeDetails() {
     }
 
     fetchAnime();
-  }, [id, anime]);
+  }, [id]);
 
   if (!anime) {
     return <p>Loading anime details...</p>;
@@ -36,9 +36,9 @@ export default function AnimeDetails() {
           <p>Anime loading...</p>
         </div>
       ) : (
-        <div className="flex-col list-none p-4 border-b border-gray-300">
+        <div className="flex-col list-none p-4 ">
           {console.log(anime)}
-          <div className="flex flex-wrap items-start justify-between p-4 border-b border-gray-300">
+          <div className="flex flex-wrap items-start justify-between p-4 ">
             <div className="w-full md:w-1/3 lg:w-1/4 p-4">
               <img
                 src={anime.image}
@@ -46,6 +46,7 @@ export default function AnimeDetails() {
                 className="w-full h-auto rounded-lg shadow-lg"
               />
             </div>
+            <hr className="border-t border-gray-700 my-4" />
 
             <div className="w-full md:w-2/3 lg:w-3/4 p-4">
               <div className="space-y-2 text-center">
@@ -55,7 +56,7 @@ export default function AnimeDetails() {
                 <h2 className="text-xl text-gray-600">{anime.titleJapanese}</h2>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-1.5 mt-4">
                 <p className="font-medium text-gray-700">
                   <span className="font-semibold text-rose-600">Rank: </span>{" "}
                   {anime.rank}
@@ -76,6 +77,8 @@ export default function AnimeDetails() {
                 </p>
               </div>
 
+              <hr className="border-t border-gray-700 my-4" />
+
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
                 <p className="font-medium text-gray-700">
                   <span className="font-semibold text-rose-600">Type: </span>
@@ -90,6 +93,7 @@ export default function AnimeDetails() {
                   {anime.source}
                 </p>
               </div>
+              <hr className="border-t border-gray-700 my-4" />
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
                 <p className="font-medium text-gray-700">
@@ -105,6 +109,7 @@ export default function AnimeDetails() {
                   {anime.episodes}
                 </p>
               </div>
+              <hr className="border-t border-gray-700 my-4" />
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
                 <p className="font-medium text-gray-700">
@@ -112,6 +117,7 @@ export default function AnimeDetails() {
                   {anime.aired}
                 </p>
               </div>
+              <hr className="border-t border-gray-700 my-4" />
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
                 <span className="font-semibold text-rose-600">Producers: </span>
@@ -120,7 +126,10 @@ export default function AnimeDetails() {
                     {producer.name}
                   </p>
                 ))}
+              </div>
+              <hr className="border-t border-gray-700 my-4" />
 
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
                 <span className="font-semibold text-rose-600">Studios: </span>
 
                 {anime.studios.map((studio) => (
@@ -129,6 +138,7 @@ export default function AnimeDetails() {
                   </p>
                 ))}
               </div>
+              <hr className="border-t border-gray-700 my-4" />
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-1 mt-4">
                 <span className="font-semibold text-rose-600">Genres: </span>
@@ -139,6 +149,8 @@ export default function AnimeDetails() {
                   </p>
                 ))}
               </div>
+              <hr className="border-t border-gray-700 my-4" />
+
               <div className="grid grid-cols-2 md:grid-cols-3 gap-1 mt-4">
                 <span className="font-semibold text-rose-600">
                   Demographics:{" "}
@@ -150,6 +162,7 @@ export default function AnimeDetails() {
                   </p>
                 ))}
               </div>
+              <hr className="border-t border-gray-700 my-4" />
             </div>
           </div>
           <div className="flex justify-center items-center">

@@ -1,13 +1,12 @@
 import PropTypes from "prop-types";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function AnimeCard({ anime, onGetAnime }) {
-  const navigate = useNavigate();
-  async function handleShowMore(e, animeId) {
-    e.preventDefault();
+  async function handleShowMore(animeId) {
     try {
       if (!animeId) throw new Error("Id not valid");
+
       const data = await axios.get(
         `http://localhost:8080/anime/select/${animeId}`
       );
@@ -15,8 +14,6 @@ export default function AnimeCard({ anime, onGetAnime }) {
       if (!data) throw new Error("No data fetched");
 
       onGetAnime(data.data.anime);
-
-      navigate(`/anime/${animeId}`);
     } catch (error) {
       console.error(error);
     }
@@ -67,13 +64,14 @@ export default function AnimeCard({ anime, onGetAnime }) {
           </p>
         </div>
 
-        <div
-          className="flex justify-center items-center mt-20"
-          onClick={(e) => handleShowMore(e, anime.id)}
-        >
-          <button className="w-48 bg-amber-300 p-2 rounded-full text-amber-50 hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all ">
+        <div className="flex justify-center items-center mt-20">
+          <Link
+            onClick={() => handleShowMore(anime.id)}
+            className="w-48 bg-amber-300 p-2 rounded-full text-amber-50 hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all "
+            to={`/anime/${anime.id}`}
+          >
             Show more...
-          </button>
+          </Link>
         </div>
       </div>
     </li>

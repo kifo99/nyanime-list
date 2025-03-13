@@ -10,7 +10,10 @@ export default function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/watchlist" element={<Watchlist />} />
       <Route path="/reviews" element={<ReviewsPage />} />
-      <Route path="/anime/:id" element={<AnimeDetails />} />
+      <Route
+        path="/anime/:id"
+        element={<AnimeDetails key={window.location.pathname} />}
+      />
     </Routes>
   );
 }
