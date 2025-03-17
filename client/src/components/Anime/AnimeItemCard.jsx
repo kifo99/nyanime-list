@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
-export default function SeasonAnimeCard({ anime }) {
+export default function AnimeItemCard({ anime }) {
   return (
-    <li className="min-w-[400px] m-3">
+    <Link className="min-w-[400px] m-3" to={`anime/${anime.id}`}>
       <div className="flex justify-center items-center">
         <img
           src={anime.image}
@@ -15,10 +17,10 @@ export default function SeasonAnimeCard({ anime }) {
           {anime.title}
         </h1>
       </div>
-    </li>
+    </Link>
   );
 }
 
-SeasonAnimeCard.propTypes = {
+AnimeItemCard.propTypes = {
   anime: PropTypes.object,
 };
