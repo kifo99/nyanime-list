@@ -10,6 +10,7 @@ import List from "../../components/List/List";
 export default function Home() {
   const [animeList, setAnimeList] = useState([]);
   const [seasonAnimeList, setSeasonAnimeList] = useState([]);
+  const [recommendationAnimeList, setRecommendationAnimeList] = useState([]);
   const [anime, setAnime] = useState({});
   const [isSelected, setIsSelected] = useState(false);
 
@@ -29,6 +30,22 @@ export default function Home() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          `http://localhost:8080/anime/animeRecommendation`
+        );
+
+        setRecommendationAnimeList(data.animeList);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="Container mx-auto px-4 ">
       <div className="flex justify-center">
@@ -40,6 +57,14 @@ export default function Home() {
       <div className="Container">
         <List title={"Winter 2025 anime"} anime={seasonAnimeList}>
           {seasonAnimeList.map((anime) => (
+            <AnimeItemCard anime={anime} key={anime.id} />
+          ))}
+        </List>
+
+        <hr className="border-t border-gray-700 my-4" />
+
+        <List title={"Anime Recommendations"} anime={recommendationAnimeList}>
+          {recommendationAnimeList.map((anime) => (
             <AnimeItemCard anime={anime} key={anime.id} />
           ))}
         </List>

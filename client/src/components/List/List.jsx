@@ -1,15 +1,20 @@
 import PropTypes from "prop-types";
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import LeftIcon from "../../assets/icons/arrows/leftarrow.svg";
 import RightIcon from "../../assets/icons/arrows/rightarrow.svg";
 
 export default function List({ title, anime, children }) {
-  const [showScrollBtns, setShowScrollBtns] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const scrollContainer = useRef(null);
   const scrollAmount = 1200;
 
+  console.log(anime);
+  console.log(!scrollContainer.current);
+
   const handleScrolling = (direction) => {
+    console.log(anime.length);
+
     if (!scrollContainer.current || anime.length === 0) return;
 
     const container = scrollContainer.current;
@@ -39,16 +44,16 @@ export default function List({ title, anime, children }) {
 
   return (
     <div
-      onMouseEnter={() => setShowScrollBtns(true)}
-      onMouseLeave={() => setShowScrollBtns(false)}
-      className="flex-col justify-center items-center"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="flex-col justify-center items-center relative"
     >
       <div className="flex justify-center items-center m-4">
         <h1 className="text-3xl text-center font-bold text-gray-800">
           {title}
         </h1>
       </div>
-      {showScrollBtns && (
+      {isHovered && (
         <>
           <button
             onClick={() => handleScrolling("left")}
@@ -76,12 +81,12 @@ export default function List({ title, anime, children }) {
         </>
       )}
 
-      <ul
+      <div
         ref={scrollContainer}
-        className="flex flex-row justify-between overflow-x-auto scroll-smooth scrollbar-hide"
+        className="flex flex-row justify-between overflow-x-auto scroll-smooth scrollbar-hide relative"
       >
         {children}
-      </ul>
+      </div>
     </div>
   );
 }
