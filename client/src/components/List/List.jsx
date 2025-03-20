@@ -9,12 +9,7 @@ export default function List({ title, anime, children }) {
   const scrollContainer = useRef(null);
   const scrollAmount = 1200;
 
-  console.log(anime);
-  console.log(!scrollContainer.current);
-
   const handleScrolling = (direction) => {
-    console.log(anime.length);
-
     if (!scrollContainer.current || anime.length === 0) return;
 
     const container = scrollContainer.current;

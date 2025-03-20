@@ -15,10 +15,14 @@ export default function Home() {
   const [isSelected, setIsSelected] = useState(false);
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetchData = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:8080/anime/seasonAnime`
+          `http://localhost:8080/anime/seasonAnime`,
+          {
+            signal: controller.signal,
+          }
         );
 
         setSeasonAnimeList(data.animeList);
@@ -28,13 +32,22 @@ export default function Home() {
     };
 
     fetchData();
+
+    return () => {
+      setSeasonAnimeList([]);
+      controller.abort();
+    };
   }, []);
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetchData = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:8080/anime/animeRecommendation`
+          `http://localhost:8080/anime/animeRecommendation`,
+          {
+            signal: controller.signal,
+          }
         );
 
         setRecommendationAnimeList(data.animeList);
@@ -44,6 +57,11 @@ export default function Home() {
     };
 
     fetchData();
+
+    return () => {
+      setRecommendationAnimeList([]);
+      controller.abort();
+    };
   }, []);
 
   return (
