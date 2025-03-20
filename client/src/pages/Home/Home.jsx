@@ -13,56 +13,44 @@ export default function Home() {
   const [recommendationAnimeList, setRecommendationAnimeList] = useState([]);
   const [anime, setAnime] = useState({});
   const [isSelected, setIsSelected] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(
+        const seasonAnime = await axios.get(
           `http://localhost:8080/anime/seasonAnime`,
           {
             signal: controller.signal,
           }
         );
 
-        setSeasonAnimeList(data.animeList);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-
-    return () => {
-      setSeasonAnimeList([]);
-      controller.abort();
-    };
-  }, []);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(
+        const recommendationAnime = await axios.get(
           `http://localhost:8080/anime/animeRecommendation`,
           {
             signal: controller.signal,
           }
         );
 
-        setRecommendationAnimeList(data.animeList);
+        setSeasonAnimeList(seasonAnime.data.animeList);
+        setRecommendationAnimeList(recommendationAnime.data.animeList);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchData();
 
     return () => {
-      setRecommendationAnimeList([]);
       controller.abort();
     };
   }, []);
+
+ 
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="Container mx-auto px-4 ">
