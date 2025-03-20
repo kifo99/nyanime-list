@@ -3,7 +3,6 @@ import axios from "axios";
 export const getAnime = async (req, res, next) => {
   try {
     const name = req.params.name;
-    console.log(name);
 
     const { data } = await axios.get(
       `https://api.jikan.moe/v4/anime?q=${name}`
@@ -85,7 +84,6 @@ export const getAnimeWithId = async (req, res, next) => {
       })),
     };
 
-    console.log(anime);
 
     if (!anime) throw new Error("Failed to create anime.");
 
@@ -143,7 +141,6 @@ export const getSeasonAnime = async (req, res, next) => {
     const { data } = await axios.get(`https://api.jikan.moe/v4/seasons/now`);
 
     if (!data) throw new Error("Failed to fetch data.");
-    const seenIds = new Set();
 
     const animeList = filterData(data).map((anime) => {
       return {
