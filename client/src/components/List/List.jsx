@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 
 import LeftIcon from "../../assets/icons/arrows/leftarrow.svg";
 import RightIcon from "../../assets/icons/arrows/rightarrow.svg";
