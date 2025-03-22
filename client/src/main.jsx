@@ -6,6 +6,7 @@ import App from "./App.jsx";
 import "./style.css";
 import AnimeDetails from "./pages/Anime/AnimeDetails.jsx";
 import Home from "./pages/Home/Home.jsx";
+import Browse from "./pages/Browse/Browse.jsx";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,14 @@ const router = createBrowserRouter([
     element: (
       <App>
         <Home />
+      </App>
+    ),
+  },
+  {
+    path: "/browse",
+    element: (
+      <App>
+        <Browse />
       </App>
     ),
   },

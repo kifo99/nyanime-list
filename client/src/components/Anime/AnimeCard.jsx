@@ -20,7 +20,11 @@ export default function AnimeCard({ anime, onGetAnime }) {
   }
 
   return (
-    <li className="flex flex-wrap items-start justify-between p-4 border-b border-gray-300">
+    <Link
+      onClick={() => handleShowMore(anime.id)}
+      className="flex flex-wrap items-start justify-between p-4 border-b border-gray-300"
+      to={`/anime/${anime.id}`}
+    >
       <div className="w-full md:w-1/3 lg:w-1/4 p-4">
         <img
           src={anime.image}
@@ -63,18 +67,8 @@ export default function AnimeCard({ anime, onGetAnime }) {
             {anime.episodes}
           </p>
         </div>
-
-        <div className="flex justify-center items-center mt-20">
-          <Link
-            onClick={() => handleShowMore(anime.id)}
-            className="w-48 bg-amber-300 p-2 rounded-full text-amber-50 hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all "
-            to={`/anime/${anime.id}`}
-          >
-            Show more...
-          </Link>
-        </div>
       </div>
-    </li>
+    </Link>
   );
 }
 
