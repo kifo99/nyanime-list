@@ -84,7 +84,6 @@ export const getAnimeWithId = async (req, res, next) => {
       })),
     };
 
-
     if (!anime) throw new Error("Failed to create anime.");
 
     res.status(200).json({
@@ -176,6 +175,63 @@ export const getRecommendation = async (req, res, next) => {
     res.status(200).json({
       message: "Data fetched",
       animeList: animeList,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const getAnimeGenres = async (req, res, next) => {
+  try {
+    const { data } = await axios.get(`https://api.jikan.moe/v4/genres/anime`);
+
+    if (!data) throw new Error("Failed to fetch data.");
+
+    const genreList = filterData(data).map((genre) => {
+      return {
+        id: genre.mal_id,
+        name: genre.name,
+        count: genre.count,
+      };
+    });
+
+    res.status(200).json({
+      message: "Genres fetched",
+      data: genreList,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const getAnimeByGenre = async (req, res, next) => {
+  try {
+    const id = req.params.genreId;
+
+    const { data } = await axios.get(
+      `https://api.jikan.moe/v4/anime?genres=${id}`
+    );
+
+    if (!data) throw new Error("Failed to fetch data.");
+
+    const animeList = filterData(data).map((anime) => {
+      return {
+        id: anime.mal_id,
+        image: anime.images.jpg.image_url,
+        title: anime.title,
+        rank: anime.rank,
+        score: anime.score,
+        rating: anime.rating,
+        popularity: anime.popularity,
+        duration: anime.duration,
+        episodes: anime.episodes,
+        background: anime.background,
+      };
+    });
+
+    res.status(200).json({
+      message: "Fetched anime.",
+      data: animeList,
     });
   } catch (err) {
     console.error(err);
