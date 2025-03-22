@@ -47,10 +47,16 @@ app.use((error, req, res, next) => {
   });
 });
 
-try {
-  await mongoose.connect(MONGODB_URL);
-  console.log("Connected");
-  app.listen(PORT || 8000);
-} catch (err) {
-  console.error(err);
-}
+const startServer = async function () {
+  try {
+    await mongoose.connect(MONGODB_URL);
+    console.log("Connected");
+    app.listen(PORT || 8000, () =>
+      console.log(`🚀 Server running on port ${PORT || 8000}`)
+    );
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+startServer();
