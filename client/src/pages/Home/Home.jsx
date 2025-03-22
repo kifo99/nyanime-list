@@ -2,11 +2,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import AnimeCard from "../../components/Anime/AnimeCard";
 import AnimeItemCard from "../../components/Anime/AnimeItemCard";
-import Search from "../../components/Search/Search";
 import List from "../../components/List/List";
 import Hero from "../../components/Hero/Hero";
+import Genres from "../../components/Genres/Genres";
 
 export default function Home() {
   const [seasonAnimeList, setSeasonAnimeList] = useState([]);
@@ -68,6 +67,8 @@ export default function Home() {
             <AnimeItemCard anime={anime} key={anime.id} />
           ))}
         </List>
+
+        {/* <Genres /> */}
       </div>
     </div>
   );
