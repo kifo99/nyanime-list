@@ -10,29 +10,19 @@ export const getAnime = async (req, res, next) => {
 
     if (!data) throw new Error("Failed to fetch data.");
 
-    const seenIds = new Set();
-
-    const animeList = data.data
-      .filter((anime) => {
-        if (!seenIds.has(anime.mal_id)) {
-          seenIds.add(anime.mal_id);
-          return true;
-        }
-        return false;
-      })
-      .map((anime) => {
-        return {
-          id: anime.mal_id,
-          image: anime.images.jpg.image_url,
-          title: anime.title,
-          rank: anime.rank,
-          score: anime.score,
-          rating: anime.rating,
-          popularity: anime.popularity,
-          duration: anime.duration,
-          episodes: anime.episodes,
-        };
-      });
+    const animeList = filterData(data).map((anime) => {
+      return {
+        id: anime.mal_id,
+        image: anime.images.jpg.image_url,
+        title: anime.title,
+        rank: anime.rank,
+        score: anime.score,
+        rating: anime.rating,
+        popularity: anime.popularity,
+        duration: anime.duration,
+        episodes: anime.episodes,
+      };
+    });
 
     if (!animeList.length) throw new Error("Failed to create anime list.");
 
@@ -108,27 +98,6 @@ export const getAvatar = async (req, res, next) => {
     res.status(200).json({
       message: "Avatar fetched",
       svg: data,
-    });
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-export const getMostPopular = async (req, res, next) => {
-  try {
-    const { data } = await axios.get(`https://api.jikan.moe/v4/top/anime`);
-
-    if (!data) throw new Error("Failed to fetch data.");
-
-    const topTenAnime = [];
-
-    for (let i = 0; i < 10; i++) {
-      topTenAnime.push(data.data.at(i));
-    }
-
-    res.status(200).json({
-      message: "Top 10 anime list is fetched",
-      topAnimeList: topTenAnime,
     });
   } catch (err) {
     console.error(err);

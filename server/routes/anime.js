@@ -4,7 +4,6 @@ import {
   getAnime,
   getAnimeWithId,
   getAvatar,
-  getMostPopular,
   getSeasonAnime,
   getRecommendation,
   getAnimeGenres,
@@ -13,7 +12,6 @@ import {
 
 const router = express.Router();
 
-router.get("/mostPopular", getMostPopular);
 router.get("/seasonAnime", getSeasonAnime);
 router.get("/animeRecommendation", getRecommendation);
 router.get("/genres", getAnimeGenres);
