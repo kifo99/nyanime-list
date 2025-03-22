@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function Genres() {
+  console.log("Genres is rendering");
   const [genres, setGenres] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -16,9 +17,8 @@ export default function Genres() {
         });
 
         if (!data) throw new Error("Failed to fetch data!");
-        console.log(data);
 
-        setGenres(data);
+        setGenres(data.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -34,17 +34,14 @@ export default function Genres() {
   }, []);
 
   if (isLoading) return <div>Loading...</div>;
-
-  console.log(genres);
-
   return (
     <div>
       <div>
-        {/* {genres.map((genre) => (
+        {genres.map((genre) => (
           <Link key={genre.id}>
             <p>{genre.name}</p>
           </Link>
-        ))} */}
+        ))}
       </div>
     </div>
   );

@@ -13,48 +13,48 @@ export default function Home() {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const fetchData = async () => {
-      try {
-        const seasonAnime = await axios.get(
-          `http://localhost:8080/anime/seasonAnime`,
-          {
-            signal: controller.signal,
-          }
-        );
+  // useEffect(() => {
+  //   const controller = new AbortController();
+  //   const fetchData = async () => {
+  //     try {
+  //       const seasonAnime = await axios.get(
+  //         `http://localhost:8080/anime/seasonAnime`,
+  //         {
+  //           signal: controller.signal,
+  //         }
+  //       );
 
-        const recommendationAnime = await axios.get(
-          `http://localhost:8080/anime/animeRecommendation`,
-          {
-            signal: controller.signal,
-          }
-        );
+  //       const recommendationAnime = await axios.get(
+  //         `http://localhost:8080/anime/animeRecommendation`,
+  //         {
+  //           signal: controller.signal,
+  //         }
+  //       );
 
-        setSeasonAnimeList(seasonAnime.data.animeList);
-        setRecommendationAnimeList(recommendationAnime.data.animeList);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  //       setSeasonAnimeList(seasonAnime.data.animeList);
+  //       setRecommendationAnimeList(recommendationAnime.data.animeList);
+  //     } catch (error) {
+  //       console.error(error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    fetchData();
+  //   fetchData();
 
-    return () => {
-      controller.abort();
-    };
-  }, []);
+  //   return () => {
+  //     controller.abort();
+  //   };
+  // }, []);
 
-  if (isLoading) return <div>Loading...</div>;
+  // if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="Container mx-auto px-4 ">
       <div className="Container">
         <Hero />
 
-        <List title={"Winter 2025 anime"} anime={seasonAnimeList}>
+        {/* <List title={"Winter 2025 anime"} anime={seasonAnimeList}>
           {seasonAnimeList.map((anime) => (
             <AnimeItemCard anime={anime} key={anime.id} />
           ))}
@@ -66,9 +66,9 @@ export default function Home() {
           {recommendationAnimeList.map((anime) => (
             <AnimeItemCard anime={anime} key={anime.id} />
           ))}
-        </List>
+        </List> */}
 
-        {/* <Genres /> */}
+        <Genres />
       </div>
     </div>
   );
