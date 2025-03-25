@@ -6,69 +6,116 @@ import AnimeItemCard from "../../components/Anime/AnimeItemCard";
 import List from "../../components/List/List";
 import Hero from "../../components/Hero/Hero";
 import Genres from "../../components/Genres/Genres";
+import { useQuery } from "react-query";
 
 export default function Home() {
   const [seasonAnimeList, setSeasonAnimeList] = useState([]);
   const [recommendationAnimeList, setRecommendationAnimeList] = useState([]);
   const [genres, setGenres] = useState([]);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [seasonAnimeIsLoading, setSeasonAnimeIsLoading] = useState(true);
+  const [recommendationAnimeIsLoading, setRecommendationAnimeIsLoading] =
+    useState(true);
+  const [genresIsLoading, setGenresIsLoading] = useState(true);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const fetchData = async () => {
-      try {
-        // const seasonAnime = await axios.get(
-        //   `http://localhost:8080/anime/seasonAnime`,
-        //   {
-        //     signal: controller.signal,
-        //   }
-        // );
+  const fetchSeasonAnime = async function () {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:8080/anime/seasonAnime`
+      );
 
-        // const recommendationAnime = await axios.get(
-        //   `http://localhost:8080/anime/animeRecommendation`,
-        //   {
-        //     signal: controller.signal,
-        //   }
-        // );
+      return data.animeList;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-        // const genres = await axios.get(`http://localhost:8080/anime/genres`, {
-        //   signal: controller.signal,
-        // });
+  const { data: seasonAnime, isLoading } = useQuery({
+    queryKey: ["seasonAnime"],
+    queryFn: fetchSeasonAnime,
+    staleTime: 1000 * 60 * 5,
+  });
 
-        const [seasonAnime, recommendationAnime, genres] = await Promise.all([
-          axios.get(`http://localhost:8080/anime/seasonAnime`, {
-            signal: controller.signal,
-          }),
-          axios.get(`http://localhost:8080/anime/animeRecommendation`, {
-            signal: controller.signal,
-          }),
-          axios.get(`http://localhost:8080/anime/genres`, {
-            signal: controller.signal,
-          }),
-        ]);
+  // useEffect(() => {
+  //   const controller = new AbortController();
 
-        console.log(seasonAnime);
-        console.log(recommendationAnime);
-        console.log(genres);
+  //   const fetchSeasonAnime = async function () {
+  //     try {
+  //       const { data } = await axios.get(
+  //         `http://localhost:8080/anime/seasonAnime`,
+  //         {
+  //           signal: controller.signal,
+  //         }
+  //       );
 
-        setSeasonAnimeList(seasonAnime.data.animeList);
-        setRecommendationAnimeList(recommendationAnime.data.animeList);
-        setGenres(genres.data.data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  //       setSeasonAnimeList(data.animeList);
+  //     } catch (error) {
+  //       console.error(error);
+  //     } finally {
+  //       setSeasonAnimeIsLoading(false);
+  //     }
+  //   };
 
-    fetchData();
+  //   fetchSeasonAnime();
 
-    return () => {
-      controller.abort();
-    };
-  }, []);
+  //   return () => {
+  //     controller.abort();
+  //   };
+  // }, []);
 
+  // useEffect(() => {
+  //   const controller = new AbortController();
+
+  //   const fetchRecommendationAnime = async function () {
+  //     try {
+  //       const { data } = await axios.get(
+  //         `http://localhost:8080/anime/animeRecommendation`,
+  //         {
+  //           signal: controller.signal,
+  //         }
+  //       );
+
+  //       setRecommendationAnimeList(data.animeList);
+  //     } catch (error) {
+  //       console.error(error);
+  //     } finally {
+  //       setRecommendationAnimeIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchRecommendationAnime();
+
+  //   return () => {
+  //     controller.abort();
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   const controller = new AbortController();
+
+  //   const fetchGenres = async function () {
+  //     try {
+  //       const { data } = await axios.get(`http://localhost:8080/anime/genres`, {
+  //         signal: controller.signal,
+  //       });
+
+  //       setGenres(data.data);
+  //     } catch (error) {
+  //       console.error(error);
+  //     } finally {
+  //       setGenresIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchGenres();
+
+  //   return () => {
+  //     controller.abort();
+  //   };
+  // }, []);
+
+  // if (seasonAnimeIsLoading) return <div>Loading...</div>;
+  // if (recommendationAnimeIsLoading) return <div>Loading...</div>;
   if (isLoading) return <div>Loading...</div>;
 
   return (
@@ -76,8 +123,8 @@ export default function Home() {
       <div className="Container">
         <Hero />
 
-        <List title={"Winter 2025 anime"} anime={seasonAnimeList}>
-          {seasonAnimeList.map((anime) => (
+        <List title={"Winter 2025 anime"} anime={seasonAnime}>
+          {seasonAnime.map((anime) => (
             <AnimeItemCard anime={anime} key={anime.id} />
           ))}
         </List>
