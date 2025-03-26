@@ -8,6 +8,7 @@ import "./style.css";
 import AnimeDetails from "./pages/Anime/AnimeDetails.jsx";
 import Home from "./pages/Home/Home.jsx";
 import Browse from "./pages/Browse/Browse.jsx";
+import Genre from "./pages/Genre/Genre.jsx";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,14 @@ const router = createBrowserRouter([
     element: (
       <App>
         <AnimeDetails />{" "}
+      </App>
+    ),
+  },
+  {
+    path: "/genre/:id",
+    element: (
+      <App>
+        <Genre />
       </App>
     ),
   },

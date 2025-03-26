@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-export default function AnimeCard({ anime, onGetAnime }) {
+export default function AnimeCard({ anime, onGetAnime = null }) {
   async function handleShowMore(animeId) {
     try {
       if (!animeId) throw new Error("Id not valid");
