@@ -21,6 +21,7 @@ export const getAnime = async (req, res, next) => {
         popularity: anime.popularity,
         duration: anime.duration,
         episodes: anime.episodes,
+        background: anime.background,
       };
     });
 
@@ -106,7 +107,19 @@ export const getAvatar = async (req, res, next) => {
 
 export const getSeasonAnime = async (req, res, next) => {
   try {
-    const { data } = await axios.get(`https://api.jikan.moe/v4/seasons/now`);
+    const year = new Date().getFullYear();
+    const getSeason = function () {
+      const month = new Date().getMonth() + 1;
+
+      if (month >= 3 && month <= 5) return "spring";
+      if (month >= 6 && month <= 8) return "summer";
+      if (month >= 9 && month <= 11) return "autumn";
+      return "winter";
+    };
+
+    const { data } = await axios.get(
+      `https://api.jikan.moe/v4/seasons/${year}/${getSeason()}`
+    );
 
     if (!data) throw new Error("Failed to fetch data.");
 
@@ -120,6 +133,8 @@ export const getSeasonAnime = async (req, res, next) => {
 
     res.status(200).json({
       message: "Top 10 anime list is fetched",
+      year: year,
+      season: getSeason(),
       animeList: animeList,
     });
   } catch (err) {
