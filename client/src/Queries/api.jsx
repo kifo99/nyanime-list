@@ -5,7 +5,7 @@ const fetchSeasonAnime = async function () {
   try {
     const { data } = await axios.get(`http://localhost:8080/anime/seasonAnime`);
 
-    return data?.animeList || [];
+    return data || [];
   } catch (error) {
     console.error(error);
     return [];

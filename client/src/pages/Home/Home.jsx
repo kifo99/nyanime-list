@@ -24,9 +24,12 @@ export default function Home() {
       <div className="Container">
         <Hero />
 
-        {seasonAnime && seasonAnime.length > 0 ? (
-          <List title={"Winter 2025 anime"} anime={seasonAnime}>
-            {seasonAnime.map((anime) => (
+        {seasonAnime && seasonAnime.animeList.length > 0 ? (
+          <List
+            title={`${seasonAnime.year} ${seasonAnime.season} anime`}
+            anime={seasonAnime.animeList}
+          >
+            {seasonAnime.animeList.map((anime) => (
               <AnimeItemCard anime={anime} key={anime.id} />
             ))}
           </List>
