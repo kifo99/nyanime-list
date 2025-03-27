@@ -46,6 +46,8 @@ export default function Home() {
           <div>Loading anime...</div>
         )}
 
+        <hr className="border-t border-gray-700 my-4" />
+
         {genres && genres.length > 0 ? (
           <Genres genres={genres} />
         ) : (

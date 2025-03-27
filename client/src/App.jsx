@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 
 import Navbar from "./components/Navigation/Navbar";
+import Footer from "./components/Footer/Footer";
 import Signup from "./components/Form/Signup";
 import Login from "./components/Form/Login";
 export default function App({ children }) {
@@ -103,6 +104,7 @@ export default function App({ children }) {
       <div className={showSignupForm || showLoginForm ? "blur-xs" : ""}>
         {children}
       </div>
+      <Footer />
       <div
         className={
           showSignupForm ? "flex justify-center items-center mt-5" : "hidden"
