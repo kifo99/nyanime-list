@@ -1,26 +1,16 @@
 import PropTypes from "prop-types";
-import { forwardRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
 import InitialAvatar from "../Avatar/InitialAvatar";
 
-const Navbar = forwardRef(function Navbar(
-  { isAuth, onShowSignupForm, onShowLoginForm, onLogout, userId },
-  ref
-) {
+import useAuthStore from "../../store/useAuthStore";
+
+export default function Navbar({ onLogout }) {
+  const { isAuth, userId } = useAuthStore();
+
   const [avatar, setAvatar] = useState("");
-
-  function handleShowSignup(e) {
-    e.preventDefault();
-
-    onShowSignupForm(true);
-  }
-  function handleShowLogin(e) {
-    e.preventDefault();
-
-    onShowLoginForm(true);
-  }
 
   useEffect(() => {
     async function fetchUser() {
@@ -37,10 +27,7 @@ const Navbar = forwardRef(function Navbar(
   }, [userId]);
 
   return (
-    <nav
-      ref={ref}
-      className="flex-nowrap relative flex h-14 w-full items-center justify-between bg-amber-300 py-2 shadow-dark-mild dark:bg-amber-800 lg:flex-wrap lg:justify-start lg:py-4 "
-    >
+    <nav className="flex-nowrap relative flex h-14 w-full items-center justify-between bg-amber-300 py-2 shadow-dark-mild dark:bg-amber-800 lg:flex-wrap lg:justify-start lg:py-4 ">
       <div className="flex w-full justify-between items-center px-3 ">
         <ul className="list-style-none me-auto flex flex-col ps-0 lg:flex-row">
           <li className="mb-4 lg:mb-0 lg:pe-2">
@@ -82,35 +69,28 @@ const Navbar = forwardRef(function Navbar(
             </div>
           ) : (
             <>
-              <button
+              <Link
                 className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none 
               transition-all"
-                onClick={(e) => handleShowSignup(e)}
+                to="/signup"
               >
                 Signin
-              </button>
+              </Link>
 
-              <button
+              <Link
                 className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
-                onClick={(e) => handleShowLogin(e)}
+                to="/login"
               >
                 Login
-              </button>
+              </Link>
             </>
           )}
         </div>
       </div>
     </nav>
   );
-});
-
-export default Navbar;
+}
 
 Navbar.propTypes = {
-  isAuth: PropTypes.bool,
-  hasAccount: PropTypes.bool,
-  onShowSignupForm: PropTypes.func,
-  onShowLoginForm: PropTypes.func,
   onLogout: PropTypes.func,
-  userId: PropTypes.string,
 };

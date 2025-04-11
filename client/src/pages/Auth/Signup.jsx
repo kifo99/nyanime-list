@@ -1,79 +1,86 @@
-import PropTypes from "prop-types";
 import { Formik, Field, Form, ErrorMessage } from "formik";
+import axios from "axios";
 import * as Yup from "yup";
-import { useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-import { useLoginState } from "../../store/useFormStore";
+import useAuthStore from "../../store/useAuthStore";
 
-export default function Login({ onLogin, error, navRef }) {
-  const { isLoggedIn, setIsLoggedIn } = useLoginState();
+export default function Signup() {
+  const [error, setError] = useState(null);
+
+  const { setIsAuth } = useAuthStore();
+
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
+    name: Yup.string().required(),
     email: Yup.string().required().email(),
     password: Yup.string().required(),
+    confirmPassword: Yup.string()
+      .required()
+      .oneOf([Yup.ref("password"), null], "Password must be matched"),
   });
 
-  const loginRef = useRef();
-
-  function handleToggleLoginForm(e) {
-    e.preventDefault();
-    setIsLoggedIn(false);
-    if (navRef.current) {
-      navRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
+  async function handleSignup(values, { resetForm }) {
+    try {
+      await axios.post(`http://localhost:8080/admin/signup`, values, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+      navigate("/login");
+      setIsAuth(false);
+    } catch (error) {
+      console.log(error);
+      setError("Failed to signup please try again later");
+    } finally {
+      resetForm();
     }
   }
 
-  useEffect(
-    function () {
-      if (isLoggedIn && loginRef.current) {
-        loginRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      } else {
-        if (navRef.current) {
-          navRef.current.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-        }
-      }
-    },
-    [isLoggedIn, navRef]
-  );
-
   return (
-    <div className="h-screen w-screen flex justify-center items-center">
+    <div
+      className="h-screen w-screen flex justify-center items-center
+    "
+    >
       <div
-        ref={loginRef}
-        className={`scroll-smooth bg-gray-100 rounded-lg shadow-lg min-w-4xl shadow-amber-50 ${
-          isLoggedIn ? "" : "hidden"
-        }`}
+        className={`scroll-smooth bg-gray-100 rounded-lg shadow-lg min-w-4xl shadow-amber-50 `}
       >
         <div className="flex justify-end items-end mr-3.5">
-          <button
+          <Link
             className="flex items-center  text-white font-bold justify-center  m-2 h-9 w-28 bg-red-600 p-2 rounded-full hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all  "
-            onClick={(e) => handleToggleLoginForm(e)}
+            to="/"
           >
             Close
-          </button>
+          </Link>
         </div>
         <h1 className="text-amber-300 font-bold mb-4 text-center text-3xl p-7 ">
-          Login
+          Sign Up
         </h1>
         {error && <div className="text-red-600 mb-4 text-center">{error}</div>}
         <Formik
           initialValues={{
+            name: "",
             email: "",
             password: "",
+            confirmPassword: "",
           }}
           validationSchema={validationSchema}
-          onSubmit={onLogin}
+          onSubmit={handleSignup}
         >
           <Form className="flex flex-col justify-center items-center space-y-4 ">
+            <Field
+              type="text"
+              name="name"
+              placeholder=" Name"
+              className=" m-7 w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
+            />
+            <ErrorMessage
+              name="name"
+              component="div"
+              className="text-red-600"
+            />
             <Field
               type="email"
               name="email"
@@ -98,11 +105,23 @@ export default function Login({ onLogin, error, navRef }) {
               className="text-red-600"
             />
 
+            <Field
+              type="password"
+              name="confirmPassword"
+              placeholder=" Confirm Password"
+              className=" m-7 w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
+            />
+            <ErrorMessage
+              name="confirmPassword"
+              component="div"
+              className="text-red-600"
+            />
+
             <button
               type="submit"
               className="flex items-center  text-amber-950 font-bold justify-center mb-11 h-9 w-36 bg-amber-200 p-2 rounded-full hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all  "
             >
-              Login
+              Sign up
             </button>
           </Form>
         </Formik>
@@ -110,12 +129,3 @@ export default function Login({ onLogin, error, navRef }) {
     </div>
   );
 }
-
-Login.propTypes = {
-  onLogin: PropTypes.func,
-  error: PropTypes.string,
-  navRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
-  ]),
-};

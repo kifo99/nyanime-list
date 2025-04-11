@@ -2,15 +2,13 @@
 import PropTypes from "prop-types";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 
-export default function Signup({
-  showSignupForm,
-  onShowSignupForm,
-  onSignup,
-  error,
-  navRef,
-}) {
+import { useSignupState } from "../../store/useFormStore";
+
+export default function Signup({ onSignup, error, navRef }) {
+  const { isSignedUp, setIsSignedUp } = useSignupState();
+
   const validationSchema = Yup.object({
     name: Yup.string().required(),
     email: Yup.string().required().email(),
@@ -22,7 +20,7 @@ export default function Signup({
 
   function handleToggleSignupForm(e) {
     e.preventDefault();
-    onShowSignupForm(false);
+    setIsSignedUp(false);
     if (navRef.current) {
       navRef.current.scrollIntoView({
         behavior: "smooth",
@@ -35,7 +33,7 @@ export default function Signup({
 
   useEffect(
     function () {
-      if (showSignupForm && signupRef.current) {
+      if (isSignedUp && signupRef.current) {
         signupRef.current.scrollIntoView({
           behavior: "smooth",
           block: "center",
@@ -49,7 +47,7 @@ export default function Signup({
         }
       }
     },
-    [showSignupForm, navRef]
+    [isSignedUp, navRef]
   );
 
   return (
@@ -57,7 +55,7 @@ export default function Signup({
       <div
         ref={signupRef}
         className={`scroll-smooth bg-gray-100 rounded-lg shadow-lg min-w-4xl shadow-amber-50 ${
-          showSignupForm ? "" : "hidden"
+          isSignedUp ? "" : "hidden"
         }`}
       >
         <div className="flex justify-end items-end mr-3.5">
@@ -144,8 +142,6 @@ export default function Signup({
 }
 
 Signup.propTypes = {
-  showSignupForm: PropTypes.bool,
-  onShowSignupForm: PropTypes.func,
   onSignup: PropTypes.func,
   error: PropTypes.string,
   navRef: PropTypes.oneOfType([

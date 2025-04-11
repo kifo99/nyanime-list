@@ -1,65 +1,95 @@
-import PropTypes from "prop-types";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-import { useLoginState } from "../../store/useFormStore";
+import useAuthStore from "../../store/useAuthStore";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Login({ onLogin, error, navRef }) {
-  const { isLoggedIn, setIsLoggedIn } = useLoginState();
+export default function Login() {
+  const [error, setError] = useState(null);
+
+  const { setToken, setIsAuth, setUserId } = useAuthStore();
+
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     email: Yup.string().required().email(),
     password: Yup.string().required(),
   });
 
-  const loginRef = useRef();
+  const setAutoLogout = (milliseconds) => {
+    setTimeout(logoutHandler, milliseconds);
+  };
 
-  function handleToggleLoginForm(e) {
-    e.preventDefault();
-    setIsLoggedIn(false);
-    if (navRef.current) {
-      navRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+  const logoutHandler = () => {
+    setIsAuth(false);
+    setToken(null);
+    localStorage.removeItem("token");
+    localStorage.removeItem("expiryDate");
+    localStorage.removeItem("userId");
+  };
+
+  useEffect(function () {
+    const token = localStorage.getItem("token");
+    const expiryDate = localStorage.getItem("expiryDate");
+    if (!token || !expiryDate) return;
+    if (new Date(expiryDate) <= new Date()) {
+      logoutHandler();
+      return;
+    }
+    const userId = localStorage.getItem("userId");
+    const remainingMilliseconds =
+      new Date(expiryDate).getTime() - new Date().getTime();
+    setIsAuth(true);
+    setToken(token);
+    setUserId(userId);
+    setAutoLogout(remainingMilliseconds);
+  }, []);
+
+  async function handleLogin(values, { resetForm }) {
+    try {
+      const { data } = await axios.post(
+        `http://localhost:8080/admin/login`,
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(data.token, data.userId);
+
+      setIsAuth(true);
+      setToken(data.token);
+      setUserId(data.userId);
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.userId);
+      const remainingMilliseconds = 60 * 60 * 1000;
+      const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
+      localStorage.setItem("expiryDate", expiryDate.toISOString());
+      navigate("/");
+      setAutoLogout(remainingMilliseconds);
+    } catch (error) {
+      console.error(error.message);
+      setError("Failed to login please try again later");
+    } finally {
+      resetForm();
     }
   }
-
-  useEffect(
-    function () {
-      if (isLoggedIn && loginRef.current) {
-        loginRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      } else {
-        if (navRef.current) {
-          navRef.current.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-        }
-      }
-    },
-    [isLoggedIn, navRef]
-  );
 
   return (
     <div className="h-screen w-screen flex justify-center items-center">
       <div
-        ref={loginRef}
-        className={`scroll-smooth bg-gray-100 rounded-lg shadow-lg min-w-4xl shadow-amber-50 ${
-          isLoggedIn ? "" : "hidden"
-        }`}
+        className={`scroll-smooth bg-gray-100 rounded-lg shadow-lg min-w-4xl shadow-amber-50 `}
       >
         <div className="flex justify-end items-end mr-3.5">
-          <button
+          <Link
             className="flex items-center  text-white font-bold justify-center  m-2 h-9 w-28 bg-red-600 p-2 rounded-full hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all  "
-            onClick={(e) => handleToggleLoginForm(e)}
+            to="/"
           >
             Close
-          </button>
+          </Link>
         </div>
         <h1 className="text-amber-300 font-bold mb-4 text-center text-3xl p-7 ">
           Login
@@ -71,7 +101,7 @@ export default function Login({ onLogin, error, navRef }) {
             password: "",
           }}
           validationSchema={validationSchema}
-          onSubmit={onLogin}
+          onSubmit={handleLogin}
         >
           <Form className="flex flex-col justify-center items-center space-y-4 ">
             <Field
@@ -110,12 +140,3 @@ export default function Login({ onLogin, error, navRef }) {
     </div>
   );
 }
-
-Login.propTypes = {
-  onLogin: PropTypes.func,
-  error: PropTypes.string,
-  navRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
-  ]),
-};
