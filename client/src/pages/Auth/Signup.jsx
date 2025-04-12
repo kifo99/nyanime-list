@@ -40,16 +40,11 @@ export default function Signup() {
   }
 
   return (
-    <div
-      className="h-screen w-screen flex justify-center items-center
-    "
-    >
-      <div
-        className={`scroll-smooth bg-gray-100 rounded-lg shadow-lg min-w-4xl shadow-amber-50 `}
-      >
-        <div className="flex justify-end items-end mr-3.5">
+    <div className="flex justify-center items-center m-5 p-5">
+      <div className="bg-gray-100 rounded-lg shadow-lg min-w-4xl shadow-amber-50">
+        <div className="flex justify-end items-end mr-3 mt-4">
           <Link
-            className="flex items-center  text-white font-bold justify-center  m-2 h-9 w-28 bg-red-600 p-2 rounded-full hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all  "
+            className="flex items-center  text-white font-bold justify-center  m-2 h-9 w-28 bg-red-600 p-2 rounded-full hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all"
             to="/"
           >
             Close

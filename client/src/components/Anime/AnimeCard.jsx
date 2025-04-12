@@ -2,7 +2,10 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+import useAuthStore from "../../store/useAuthStore";
+
 export default function AnimeCard({ anime, onGetAnime = null }) {
+  const { isAuth } = useAuthStore();
   async function handleShowMore(animeId) {
     try {
       if (!animeId) throw new Error("Id not valid");
@@ -67,6 +70,13 @@ export default function AnimeCard({ anime, onGetAnime = null }) {
             {anime.episodes}
           </p>
         </div>
+        <div className="flex-row  mt-4">
+          <h2 className="font-bold text-rose-600">Background:</h2>
+          <p className="font-medium text-gray-700">
+            {anime.background || "No background"}
+          </p>
+        </div>
+        <div>{isAuth && <button>Add to watchlist</button>}</div>
       </div>
     </Link>
   );

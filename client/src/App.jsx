@@ -1,17 +1,11 @@
-
 import PropTypes from "prop-types";
 
 import Navbar from "./components/Navigation/Navbar";
 import Footer from "./components/Footer/Footer";
-
-import { useSignupState, useLoginState } from "./store/useFormStore";
 import useAuthStore from "./store/useAuthStore";
 
 export default function App({ children }) {
   const { setToken, setIsAuth } = useAuthStore();
-
-  const { isSignedUp } = useSignupState();
-  const { isLoggedIn } = useLoginState();
 
   const logoutHandler = () => {
     setIsAuth(false);
@@ -22,11 +16,9 @@ export default function App({ children }) {
   };
 
   return (
-    <div>
-      <Navbar onLogout={logoutHandler}/>
-      <div className={isSignedUp || isLoggedIn ? "blur-xs" : ""}>
-        {children}
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <Navbar onLogout={logoutHandler} />
+      <main className="flex-grow">{children}</main>
       <Footer />
     </div>
   );
