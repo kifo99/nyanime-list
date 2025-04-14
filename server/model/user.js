@@ -18,6 +18,10 @@ const userSchema = new Schema({
   avatar: {
     type: String,
   },
+  watchlistId: {
+    type: Schema.Types.ObjectId,
+    ref: "Watchlist",
+  },
 });
 
 export const User = mongoose.model("User", userSchema);
