@@ -88,3 +88,36 @@ export const getWatchlist = async (req, res, next) => {
     });
   }
 };
+
+export const deleteFromWatchlist = async (req, res, next) => {
+  try {
+    const { userId, animeId } = req.params;
+
+    const user = await User.findById(userId);
+    if (!user) throw errorHandler(null, "User not founded!", 404);
+
+    const watchlist = await Watchlist.findById(user.watchlistId);
+    if (!watchlist) throw errorHandler(null, "Watchlist not founded!", 404);
+
+    const deleteAnime = watchlist.items.filter((item) => {
+      if (item.animeId.toString() === animeId) {
+        return item;
+      }
+    });
+    console.log(deleteAnime);
+
+    if (deleteAnime.length < 1)
+      throw errorHandler(null, "Anime is not in watchlist!", 404);
+
+    watchlist.items.pop(deleteAnime);
+    await watchlist.save();
+
+    res.status(200).json({
+      message: "Deleting anime from watchlist is finished!",
+    });
+  } catch (err) {
+    res.status(err.statusCode || 500).json({
+      message: err.message || "Something is wrong pleas try again later",
+    });
+  }
+};
