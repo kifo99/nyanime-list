@@ -63,8 +63,7 @@ export default function Login() {
       setIsAuth(true);
       setToken(data.token);
       setUserId(data.userId);
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("userId", data.userId);
+
       const remainingMilliseconds = 60 * 60 * 1000;
       const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
       localStorage.setItem("expiryDate", expiryDate.toISOString());

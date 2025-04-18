@@ -10,6 +10,7 @@ import Browse from "./pages/Browse/Browse.jsx";
 import Genre from "./pages/Genre/Genre.jsx";
 import Login from "./pages/Auth/Login.jsx";
 import Signup from "./pages/Auth/Signup.jsx";
+import Watchlist from "./pages/Watchlist/Watchlist.jsx";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,14 @@ const router = createBrowserRouter([
     element: (
       <App>
         <Signup />
+      </App>
+    ),
+  },
+  {
+    path: "/watchlist",
+    element: (
+      <App>
+        <Watchlist />
       </App>
     ),
   },

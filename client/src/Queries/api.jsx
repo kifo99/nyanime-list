@@ -36,6 +36,32 @@ const fetchGenres = async function () {
   }
 };
 
+const fetchAnimeById = async function ({ queryKey }) {
+  try {
+    const { _, id } = queryKey;
+
+    const { data } = await axios.get(`http://localhost:8080/anime/${id}`);
+
+    // console.log(data.items);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+const fetchUserWatchlist = async function ({ queryKey }) {
+  const [_, userId] = queryKey;
+
+  if (!userId) throw new Error("userId is wrong or doesn't exist!");
+
+  const { data } = await axios.get(
+    `http://localhost:8080/watchlist/get/${userId}`
+  );
+
+  return data.watchlist || [];
+};
+
 export const useSeasonAnime = () =>
   useQuery({
     queryKey: "seasonAnime",
@@ -61,4 +87,24 @@ export const useGenres = () =>
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 10,
     retry: 1,
+  });
+
+export const useAnimeById = (id) =>
+  useQuery({
+    queryKey: ["animeById", id],
+    queryFn: fetchAnimeById,
+    staleTime: 1000 * 10 * 5,
+    cacheTime: 1000 * 10 * 10,
+    retry: 1,
+    enabled: !!id,
+  });
+
+export const useUserWatchlist = (userId) =>
+  useQuery({
+    queryKey: ["userWatchlist", userId],
+    queryFn: fetchUserWatchlist,
+    staleTime: 1000 * 10 * 5,
+    cacheTime: 1000 * 10 * 10,
+    retry: 1,
+    enabled: !!userId,
   });
