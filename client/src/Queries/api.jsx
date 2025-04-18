@@ -41,6 +41,7 @@ export const useSeasonAnime = () =>
     queryKey: "seasonAnime",
     queryFn: fetchSeasonAnime,
     staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
     retry: 1,
   });
 
@@ -49,6 +50,7 @@ export const useRecommendationAnime = () =>
     queryKey: "recommendationAnime",
     queryFn: fetchRecommendationAnime,
     staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
     retry: 1,
   });
 
@@ -57,5 +59,6 @@ export const useGenres = () =>
     queryKey: "genres",
     queryFn: fetchGenres,
     staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
     retry: 1,
   });

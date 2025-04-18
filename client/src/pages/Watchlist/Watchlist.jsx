@@ -1,1 +1,3 @@
-export default function Watchlist() {}
+export default function Watchlist() {
+    
+}
