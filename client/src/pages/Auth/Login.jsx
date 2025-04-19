@@ -10,6 +10,7 @@ export default function Login() {
   const [error, setError] = useState(null);
 
   const { setToken, setIsAuth, setUserId } = useAuthStore();
+  const { logout } = useAuthStore.getState();
 
   const navigate = useNavigate();
 
@@ -19,23 +20,23 @@ export default function Login() {
   });
 
   const setAutoLogout = (milliseconds) => {
-    setTimeout(logoutHandler, milliseconds);
+    setTimeout(logout, milliseconds);
   };
 
-  const logoutHandler = () => {
-    setIsAuth(false);
-    setToken(null);
-    localStorage.removeItem("token");
-    localStorage.removeItem("expiryDate");
-    localStorage.removeItem("userId");
-  };
+  // const logoutHandler = () => {
+  //   setIsAuth(false);
+  //   setToken(null);
+  //   localStorage.removeItem("token");
+  //   localStorage.removeItem("expiryDate");
+  //   localStorage.removeItem("userId");
+  // };
 
   useEffect(function () {
     const token = localStorage.getItem("token");
     const expiryDate = localStorage.getItem("expiryDate");
     if (!token || !expiryDate) return;
     if (new Date(expiryDate) <= new Date()) {
-      logoutHandler();
+      logout();
       return;
     }
     const userId = localStorage.getItem("userId");

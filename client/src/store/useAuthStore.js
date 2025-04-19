@@ -11,6 +11,7 @@ const useAuthStore = create(
       setToken: (token) => set(() => ({ token: token })),
       setIsAuth: (isAuth) => set(() => ({ isAuth: isAuth })),
       setUserId: (userId) => set(() => ({ userId: userId })),
+      logout: () => set(() => ({ token: null, isAuth: false, userId: null })),
     }),
     {
       name: "auth-storage",

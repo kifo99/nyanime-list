@@ -38,12 +38,20 @@ const fetchGenres = async function () {
 
 const fetchAnimeById = async function ({ queryKey }) {
   try {
-    const { _, id } = queryKey;
+    const [_, watchlist] = queryKey;
 
-    const { data } = await axios.get(`http://localhost:8080/anime/${id}`);
+    if (!watchlist) throw new Error("Watchlist is wrong or doesn't exist!");
 
-    // console.log(data.items);
-    return data;
+    const animeList = await Promise.all(
+      watchlist.map(async (id) => {
+        const { data } = await axios.get(
+          `http://localhost:8080/anime/getAnime/${id}`
+        );
+        return data;
+      })
+    );
+
+    return animeList;
   } catch (error) {
     console.error(error);
     return [];
@@ -89,14 +97,14 @@ export const useGenres = () =>
     retry: 1,
   });
 
-export const useAnimeById = (id) =>
+export const useAnimeById = (watchlist) =>
   useQuery({
-    queryKey: ["animeById", id],
+    queryKey: ["animeById", watchlist],
     queryFn: fetchAnimeById,
     staleTime: 1000 * 10 * 5,
     cacheTime: 1000 * 10 * 10,
     retry: 1,
-    enabled: !!id,
+    enabled: !!watchlist,
   });
 
 export const useUserWatchlist = (userId) =>
