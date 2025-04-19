@@ -15,13 +15,14 @@ export const getAnime = async (req, res, next) => {
         id: anime.mal_id,
         image: anime.images.jpg.image_url,
         title: anime.title,
+        titleJapanese: anime.title_japanese,
         rank: anime.rank,
         score: anime.score,
         rating: anime.rating,
         popularity: anime.popularity,
         duration: anime.duration,
         episodes: anime.episodes,
-        background: anime.background,
+        background: anime.synopsis,
       };
     });
 
