@@ -36,38 +36,28 @@ const fetchGenres = async function () {
   }
 };
 
-const fetchAnimeById = async function ({ queryKey }) {
+const fetchUserWatchlist = async function ({ queryKey }) {
+  const [_, userId, token] = queryKey;
+
+  if (!userId || !token) throw new Error("userId is wrong or doesn't exist!");
+
   try {
-    const [_, watchlist] = queryKey;
-
-    if (!watchlist) throw new Error("Watchlist is wrong or doesn't exist!");
-
-    const animeList = await Promise.all(
-      watchlist.map(async (id) => {
-        const { data } = await axios.get(
-          `http://localhost:8080/anime/getAnime/${id}`
-        );
-        return data;
-      })
+    const { data } = await axios.get(
+      `http://localhost:8080/watchlist/get/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
 
-    return animeList;
+    console.log(data.watchlist);
+
+    return data.watchlist || [];
   } catch (error) {
-    console.error(error);
-    return [];
+    console.error("Error fetching watchlist:", error);
+    throw error;
   }
-};
-
-const fetchUserWatchlist = async function ({ queryKey }) {
-  const [_, userId] = queryKey;
-
-  if (!userId) throw new Error("userId is wrong or doesn't exist!");
-
-  const { data } = await axios.get(
-    `http://localhost:8080/watchlist/get/${userId}`
-  );
-
-  return data.watchlist || [];
 };
 
 export const useSeasonAnime = () =>
@@ -97,22 +87,12 @@ export const useGenres = () =>
     retry: 1,
   });
 
-export const useAnimeById = (watchlist) =>
+export const useUserWatchlist = (userId, token) =>
   useQuery({
-    queryKey: ["animeById", watchlist],
-    queryFn: fetchAnimeById,
-    staleTime: 1000 * 10 * 5,
-    cacheTime: 1000 * 10 * 10,
-    retry: 1,
-    enabled: !!watchlist,
-  });
-
-export const useUserWatchlist = (userId) =>
-  useQuery({
-    queryKey: ["userWatchlist", userId],
+    queryKey: ["userWatchlist", userId, token],
     queryFn: fetchUserWatchlist,
     staleTime: 1000 * 10 * 5,
     cacheTime: 1000 * 10 * 10,
     retry: 1,
-    enabled: !!userId,
+    enabled: !!userId && !!token,
   });

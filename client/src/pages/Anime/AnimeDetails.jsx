@@ -1,10 +1,37 @@
 import axios from "axios";
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-export default function AnimeDetails() {
+import useAuthStore from "../../store/useAuthStore";
+
+export default function AnimeDetails({ inWatchlist = false }) {
   const { id } = useParams();
   const [anime, setAnime] = useState(null);
+
+  const { token, isAuth, userId } = useAuthStore();
+
+  
+
+  async function handleAddToWatchlist() {
+    try {
+      if (!id) throw new Error("Id is not valid!");
+      if (!userId) throw new Error("User id is not valid!");
+
+      if (!isAuth) throw new Error("Not authenticated!");
+      await axios.post(
+        `http://localhost:8080/watchlist/add/${userId}/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   useEffect(() => {
     async function fetchAnime() {
@@ -170,11 +197,23 @@ export default function AnimeDetails() {
               {anime.synopsis}
             </p>
           </div>
+
+          {!inWatchlist && (
+            <div>
+              {isAuth && (
+                <button onClick={handleAddToWatchlist}>Add to watchlist</button>
+              )}
+            </div>
+          )}
         </div>
       )}
     </>
   );
 }
+
+AnimeDetails.propTypes = {
+  inWatchlist: PropTypes.bool,
+};
 
 /*
 <li 

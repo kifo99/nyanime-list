@@ -2,10 +2,11 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-import useAuthStore from "../../store/useAuthStore";
-
-export default function AnimeCard({ anime, onGetAnime = null }) {
-  const { isAuth } = useAuthStore();
+export default function AnimeCard({
+  anime,
+  onGetAnime = null,
+  
+}) {
   async function handleShowMore(animeId) {
     try {
       if (!animeId) throw new Error("Id not valid");
@@ -22,6 +23,7 @@ export default function AnimeCard({ anime, onGetAnime = null }) {
     }
   }
 
+  
   return (
     <Link
       onClick={() => handleShowMore(anime.id)}
@@ -71,12 +73,12 @@ export default function AnimeCard({ anime, onGetAnime = null }) {
           </p>
         </div>
         <div className="flex-row  mt-4">
-          <h2 className="font-bold text-rose-600">Background:</h2>
+          <h2 className="font-bold text-rose-600">Description:</h2>
           <p className="font-medium text-gray-700">
-            {anime.background || "No background"}
+            {anime.synopsis || "No description"}
           </p>
         </div>
-        <div>{isAuth && <button>Add to watchlist</button>}</div>
+        
       </div>
     </Link>
   );
@@ -84,6 +86,6 @@ export default function AnimeCard({ anime, onGetAnime = null }) {
 
 AnimeCard.propTypes = {
   anime: PropTypes.object,
-  animeId: PropTypes.number,
+  inWatchlist: PropTypes.bool,
   onGetAnime: PropTypes.func,
 };

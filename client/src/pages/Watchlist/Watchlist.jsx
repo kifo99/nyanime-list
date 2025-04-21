@@ -1,28 +1,21 @@
 import {
   Container,
   Box,
-  List,
-  ListItem,
   CircularProgress,
+  List,
   Typography,
 } from "@mui/material";
-import { useAnimeById, useUserWatchlist } from "../../Queries/api";
+import { useUserWatchlist } from "../../Queries/api";
 
 import useAuthStore from "../../store/useAuthStore";
 
+import AnimeCard from "../../components/Anime/AnimeCard";
+
 export default function Watchlist() {
-  const { userId } = useAuthStore();
+  const { token, userId } = useAuthStore();
+  const hasHydrated = useAuthStore.persist.hasHydrated();
 
-  const { data: watchlist, watchlistIsLoading } = useUserWatchlist(userId, {
-    enabled: !!userId,
-  });
-  const { data: anime, animeIsLoading } = useAnimeById(watchlist, {
-    enabled: !!watchlist,
-  });
-
-  console.log(anime);
-
-  if (watchlistIsLoading || animeIsLoading) {
+  if (!hasHydrated) {
     return (
       <Box
         display="flex"
@@ -35,7 +28,30 @@ export default function Watchlist() {
     );
   }
 
-  if (!anime || anime.length === 0) {
+  const { data: watchlist, watchlistIsLoading } = useUserWatchlist(
+    userId,
+    token,
+    {
+      enabled: !!userId && token,
+    }
+  );
+
+  console.log(watchlist);
+
+  if (watchlistIsLoading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="50vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (!watchlist || watchlist.length === 0) {
     return (
       <Box
         display="flex"
@@ -69,9 +85,13 @@ export default function Watchlist() {
           width: "100%",
         }}
       >
-        <List>
-          {anime.map((anime) => (
-            <ListItem key={anime.anime.id}>{anime.anime.title}</ListItem>
+        <List sx={{ width: "95%" }}>
+          {watchlist.map((anime) => (
+            <AnimeCard
+              anime={anime.anime}
+              inWatchlist={true}
+              key={anime.anime.id}
+            />
           ))}
         </List>
       </Box>
