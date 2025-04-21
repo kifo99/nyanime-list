@@ -14,6 +14,22 @@ const watchlistSchema = new Schema({
         type: String,
         require: true,
       },
+      name: {
+        type: String,
+        require: true,
+      },
+      image: {
+        type: String,
+        require: true,
+      },
+      score: {
+        type: String,
+        require: true,
+      },
+      episodes: {
+        type: Number,
+        require: true,
+      },
       addedOn: {
         type: Date,
         default: Date.now,
