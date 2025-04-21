@@ -2,11 +2,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-export default function AnimeCard({
-  anime,
-  onGetAnime = null,
-  
-}) {
+export default function AnimeCard({ anime, onGetAnime = null }) {
   async function handleShowMore(animeId) {
     try {
       if (!animeId) throw new Error("Id not valid");
@@ -23,7 +19,6 @@ export default function AnimeCard({
     }
   }
 
-  
   return (
     <Link
       onClick={() => handleShowMore(anime.id)}
@@ -78,7 +73,6 @@ export default function AnimeCard({
             {anime.synopsis || "No description"}
           </p>
         </div>
-        
       </div>
     </Link>
   );

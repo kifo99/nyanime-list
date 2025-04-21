@@ -9,24 +9,10 @@ import { useUserWatchlist } from "../../Queries/api";
 
 import useAuthStore from "../../store/useAuthStore";
 
-import AnimeCard from "../../components/Anime/AnimeCard";
+import WatchlistAnime from "../../components/Anime/WatchlistAnime";
 
 export default function Watchlist() {
   const { token, userId } = useAuthStore();
-  const hasHydrated = useAuthStore.persist.hasHydrated();
-
-  if (!hasHydrated) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="50vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
 
   const { data: watchlist, watchlistIsLoading } = useUserWatchlist(
     userId,
@@ -87,11 +73,9 @@ export default function Watchlist() {
       >
         <List sx={{ width: "95%" }}>
           {watchlist.map((anime) => (
-            <AnimeCard
-              anime={anime.anime}
-              inWatchlist={true}
-              key={anime.anime.id}
-            />
+            <li key={anime.animeId}>
+              <WatchlistAnime anime={anime} />
+            </li>
           ))}
         </List>
       </Box>
