@@ -2,6 +2,8 @@ import { Watchlist } from "../model/watchlist.js";
 import { User } from "../model/user.js";
 import { errorHandler } from "../util/helpers.js";
 
+import axios from "axios";
+
 export const addToWatchList = async (req, res, next) => {
   try {
     const { userId, animeId } = req.params;
@@ -74,9 +76,17 @@ export const getWatchlist = async (req, res, next) => {
 
     if (!watchlist) throw errorHandler(null, "Watchlist not founded!", 404);
 
-    const animeList = watchlist.items.map((item) => item.animeId);
+    const animeIdList = watchlist.items.map((item) => item.animeId);
 
-    console.log(animeList);
+    const animeList = await Promise.all(
+      animeIdList.map(async (id) => {
+        const { data } = await axios.get(
+          `http://localhost:8080/anime/getAnime/${id}`
+        );
+
+        return data;
+      })
+    );
 
     res.status(200).json({
       message: "Watchlist found",
