@@ -15,6 +15,13 @@ export const addToWatchList = async (req, res, next) => {
 
     const watchlist = await Watchlist.findById(user.watchlistId);
 
+    if (!animeId) {
+      throw errorHandler(null, "Anime doesn't exist!", 404);
+    }
+    const { data } = await axios.get(
+      `https://api.jikan.moe/v4/anime/${animeId}`
+    );
+
     if (watchlist && watchlist.userId.toString() === user._id.toString()) {
       const alreadyAdded = watchlist.items.some(
         (item) => item.animeId === animeId
@@ -23,6 +30,10 @@ export const addToWatchList = async (req, res, next) => {
       if (!alreadyAdded) {
         watchlist.items.push({
           animeId: animeId,
+          image: data.data.images.jpg.image_url,
+          name: data.data.title,
+          episodes: +data.data.episodes,
+          score: data.data.score,
           addedOn: Date.now(),
         });
         await watchlist.save();
@@ -44,6 +55,10 @@ export const addToWatchList = async (req, res, next) => {
       items: [
         {
           animeId: animeId,
+          image: data.data.images.jpg.image_url,
+          name: data.data.title,
+          episodes: +data.data.episodes,
+          score: data.data.score,
           addedOn: Date.now(),
         },
       ],
@@ -68,6 +83,8 @@ export const getWatchlist = async (req, res, next) => {
   try {
     const { userId } = req.params;
 
+    if (!userId) throw errorHandler(null, "Id not valid", 404);
+
     const user = await User.findById(userId);
 
     if (!user) throw errorHandler(null, "User not founded!", 404);
@@ -76,17 +93,9 @@ export const getWatchlist = async (req, res, next) => {
 
     if (!watchlist) throw errorHandler(null, "Watchlist not founded!", 404);
 
-    const animeIdList = watchlist.items.map((item) => item.animeId);
+    const animeList = watchlist.items;
 
-    const animeList = await Promise.all(
-      animeIdList.map(async (id) => {
-        const { data } = await axios.get(
-          `http://localhost:8080/anime/getAnime/${id}`
-        );
-
-        return data;
-      })
-    );
+    console.log(animeList);
 
     res.status(200).json({
       message: "Watchlist found",
