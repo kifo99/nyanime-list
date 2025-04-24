@@ -16,16 +16,30 @@ export default function Browse() {
         </div>
       </div>
 
-      <div className="flex justify-center items-center m-auto w-[60%]">
-        <ul>
+      {/* <div className="flex justify-center items-center m-auto w-[60%]"> */}
+      <ul className="flex justify-center items-center m-auto w-[60%]">
+        <li>
           {animeList.map((anime) => (
-            <AnimeCard anime={anime} imgClassName="w-16 h-20" key={anime.id}>
-              <p>{anime.episodes}</p>
-              <p>{anime.rank}</p>
+            <AnimeCard anime={anime} imgClassName="w-28 h-40" key={anime.id}>
+              <div className="flex justify-center items center">
+                <p className="m-4 text-gray-600">
+                  <span className="text-rose-600 font-bold w-">Type:</span>{" "}
+                  {anime.type}
+                </p>
+                <p className="m-4 text-gray-600 ">
+                  <span className="text-rose-600 font-bold">Aired: </span>{" "}
+                  {anime.aired}
+                </p>
+                <p className="m-4 text-gray-600">
+                  <span className="text-rose-600 font-bold">Episodes:</span>{" "}
+                  {anime.episodes}
+                </p>
+              </div>
             </AnimeCard>
           ))}
-        </ul>
-      </div>
+        </li>
+      </ul>
+      {/* </div> */}
     </div>
   );
 }
