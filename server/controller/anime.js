@@ -16,6 +16,8 @@ export const getAnime = async (req, res, next) => {
         image: anime.images.jpg.image_url,
         title: anime.title,
         titleJapanese: anime.title_japanese,
+        aired: anime.aired.string,
+        type: anime.type,
         rank: anime.rank,
         score: anime.score,
         rating: anime.rating,
