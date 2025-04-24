@@ -1,31 +1,35 @@
 import PropTypes from "prop-types";
-import axios from "axios";
 import { Link } from "react-router-dom";
 
-export default function AnimeCard({ anime, onGetAnime = null }) {
-  async function handleShowMore(animeId) {
-    try {
-      if (!animeId) throw new Error("Id not valid");
-
-      const data = await axios.get(
-        `http://localhost:8080/anime/select/${animeId}`
-      );
-
-      if (!data) throw new Error("No data fetched");
-
-      onGetAnime(data.data.anime);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
+export default function AnimeCard({ anime, imgClassName = "", children }) {
   return (
-    <Link
-      onClick={() => handleShowMore(anime.id)}
-      className="flex flex-wrap items-start justify-between p-4 border-b border-gray-300"
-      to={`/anime/${anime.id}`}
-    >
-      <div className="w-full md:w-1/3 lg:w-1/4 p-4">
+    <Link className="" to={`/anime/${anime.id}`}>
+      <div className="flex justify-between items-center gap-8">
+        <div className="flex flex-col items-center w-1/3">
+          <img
+            src={anime.image}
+            alt={anime.title}
+            className={`rounded-lg ${imgClassName}`}
+          />
+          <h1 className="mt-2 text-center text-base font-semibold">
+            {anime.title}
+          </h1>
+        </div>
+
+        <div className="flex justify-between">{children}</div>
+      </div>
+    </Link>
+  );
+}
+
+AnimeCard.propTypes = {
+  anime: PropTypes.object,
+  imgClassName: PropTypes.string,
+  children: PropTypes.node,
+};
+
+{
+  /* <div className="w-full md:w-1/3 lg:w-1/4 p-4">
         <img
           src={anime.image}
           alt={anime.title}
@@ -73,13 +77,5 @@ export default function AnimeCard({ anime, onGetAnime = null }) {
             {anime.synopsis || "No description"}
           </p>
         </div>
-      </div>
-    </Link>
-  );
+      </div> */
 }
-
-AnimeCard.propTypes = {
-  anime: PropTypes.object,
-  inWatchlist: PropTypes.bool,
-  onGetAnime: PropTypes.func,
-};
