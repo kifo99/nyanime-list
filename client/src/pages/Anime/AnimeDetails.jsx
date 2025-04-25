@@ -11,8 +11,6 @@ export default function AnimeDetails({ inWatchlist = false }) {
 
   const { token, isAuth, userId } = useAuthStore();
 
-  
-
   async function handleAddToWatchlist() {
     try {
       if (!id) throw new Error("Id is not valid!");
@@ -201,7 +199,12 @@ export default function AnimeDetails({ inWatchlist = false }) {
           {!inWatchlist && (
             <div>
               {isAuth && (
-                <button onClick={handleAddToWatchlist}>Add to watchlist</button>
+                <button
+                  className="bg-amber-400 text-rose-50 font-bold rounded-xl w-40 h-10 hover:w-44 hover:h-12 hover:bg-amber-300 hover:text-rose-600"
+                  onClick={handleAddToWatchlist}
+                >
+                  Add to watchlist
+                </button>
               )}
             </div>
           )}

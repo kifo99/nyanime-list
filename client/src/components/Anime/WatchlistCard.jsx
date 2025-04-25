@@ -10,7 +10,7 @@ export default function WatchlistCard({ anime }) {
       <div className="flex-row gap-1.5 ">
         <img src={anime.image} className="m-auto w-24 h-36" />
         <h1 className="text-gray-600 font-extrabold text-xl m-auto text-center">
-          {anime.name || anime.titleJapanese}
+          {anime.title || anime.titleJapanese}
         </h1>
       </div>
     </Link>

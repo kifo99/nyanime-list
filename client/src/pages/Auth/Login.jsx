@@ -1,6 +1,6 @@
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 import useAuthStore from "../../store/useAuthStore";
@@ -9,8 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 export default function Login() {
   const [error, setError] = useState(null);
 
-  const { setToken, setIsAuth, setUserId } = useAuthStore();
-  const { logout, setAuth } = useAuthStore.getState();
+  const { setAuth } = useAuthStore.getState();
 
   const navigate = useNavigate();
 
@@ -18,35 +17,6 @@ export default function Login() {
     email: Yup.string().required().email(),
     password: Yup.string().required(),
   });
-
-  const setAutoLogout = (milliseconds) => {
-    setTimeout(logout, milliseconds);
-  };
-
-  // const logoutHandler = () => {
-  //   setIsAuth(false);
-  //   setToken(null);
-  //   localStorage.removeItem("token");
-  //   localStorage.removeItem("expiryDate");
-  //   localStorage.removeItem("userId");
-  // };
-
-  // useEffect(function () {
-  //   const token = localStorage.getItem("token");
-  //   const expiryDate = localStorage.getItem("expiryDate");
-  //   if (!token || !expiryDate) return;
-  //   if (new Date(expiryDate) <= new Date()) {
-  //     logout();
-  //     return;
-  //   }
-  //   const userId = localStorage.getItem("userId");
-  //   const remainingMilliseconds =
-  //     new Date(expiryDate).getTime() - new Date().getTime();
-  //   setIsAuth(true);
-  //   setToken(token);
-  //   setUserId(userId);
-  //   setAutoLogout(remainingMilliseconds);
-  // }, []);
 
   async function handleLogin(values, { resetForm }) {
     try {
@@ -59,19 +29,12 @@ export default function Login() {
           },
         }
       );
-      // console.log(data.token, data.userId);
-
-      // setIsAuth(true);
-      // setToken(data.token);
-      // setUserId(data.userId);
 
       const remainingMilliseconds = 60 * 60 * 1000;
 
       setAuth(data.token, data.userId, remainingMilliseconds);
-      // const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
-      // localStorage.setItem("expiryDate", expiryDate.toISOString());
+
       navigate("/");
-      // setAutoLogout(remainingMilliseconds);
     } catch (error) {
       console.error(error.message);
       setError("Failed to login please try again later");

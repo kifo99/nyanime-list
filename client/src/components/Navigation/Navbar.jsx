@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -7,8 +6,8 @@ import InitialAvatar from "../Avatar/InitialAvatar";
 
 import useAuthStore from "../../store/useAuthStore";
 
-export default function Navbar({ onLogout }) {
-  const { isAuth, userId } = useAuthStore();
+export default function Navbar() {
+  const { isAuth, userId, logout } = useAuthStore();
 
   const [avatar, setAvatar] = useState("");
 
@@ -64,7 +63,7 @@ export default function Navbar({ onLogout }) {
               <InitialAvatar avatar={avatar} />
               <button
                 className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
-                onClick={onLogout}
+                onClick={logout}
               >
                 Logout
               </button>
@@ -92,7 +91,3 @@ export default function Navbar({ onLogout }) {
     </nav>
   );
 }
-
-Navbar.propTypes = {
-  onLogout: PropTypes.func,
-};
