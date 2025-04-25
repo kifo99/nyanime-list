@@ -31,7 +31,8 @@ export const addToWatchList = async (req, res, next) => {
         watchlist.items.push({
           animeId: animeId,
           image: data.data.images.jpg.image_url,
-          name: data.data.title,
+          title: data.data.title,
+          titleJapanese: data.data.title_japanese,
           episodes: +data.data.episodes,
           score: data.data.score,
           addedOn: Date.now(),

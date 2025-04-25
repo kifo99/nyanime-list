@@ -14,7 +14,11 @@ const watchlistSchema = new Schema({
         type: String,
         require: true,
       },
-      name: {
+      title: {
+        type: String,
+        require: true,
+      },
+      titleJapanese: {
         type: String,
         require: true,
       },
