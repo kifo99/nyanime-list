@@ -124,12 +124,13 @@ export const deleteFromWatchlist = async (req, res, next) => {
         return item;
       }
     });
-    console.log(deleteAnime);
 
     if (deleteAnime.length < 1)
       throw errorHandler(null, "Anime is not in watchlist!", 404);
 
-    watchlist.items.pop(deleteAnime);
+    const index = watchlist.items.indexOf(deleteAnime[0]);
+
+    watchlist.items.splice(index, 1);
     await watchlist.save();
 
     res.status(200).json({
