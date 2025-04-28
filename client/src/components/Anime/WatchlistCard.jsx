@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { Trash2, CircleX } from "lucide-react";
 import useAuthStore from "../../store/useAuthStore";
 
-export default function WatchlistCard({ anime }) {
+export default function WatchlistCard({ anime, onRefetch }) {
   const [showDeleteBtn, setShowDeleteBtn] = useState(false);
 
   const { userId, token } = useAuthStore();
@@ -21,6 +21,8 @@ export default function WatchlistCard({ anime }) {
           },
         }
       );
+
+      onRefetch();
     } catch (error) {
       console.error(error);
     }
@@ -57,4 +59,5 @@ export default function WatchlistCard({ anime }) {
 
 WatchlistCard.propTypes = {
   anime: PropTypes.object,
+  onRefetch: PropTypes.func,
 };

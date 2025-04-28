@@ -23,13 +23,15 @@ export default function Search({ onSetAnimeList }) {
   useEffect(() => {
     function callback(e) {
       if (e.code === "Enter") {
-        inputEl.current.focus();
+        if (inputEl.current) {
+          inputEl.current.focus();
+        }
       }
     }
 
     document.addEventListener("keydown", callback);
 
-    return () => document.addEventListener("keydown", callback);
+    return () => document.removeEventListener("keydown", callback);
   }, []);
 
   useEffect(

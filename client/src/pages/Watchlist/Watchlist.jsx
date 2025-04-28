@@ -8,13 +8,13 @@ import { useEffect } from "react";
 export default function Watchlist() {
   const { token, userId, isAuth } = useAuthStore();
 
-  const { data: watchlist, watchlistIsLoading } = useUserWatchlist(
-    userId,
-    token,
-    {
-      enabled: !!userId && token,
-    }
-  );
+  const {
+    data: watchlist,
+    watchlistIsLoading,
+    refetch,
+  } = useUserWatchlist(userId, token, {
+    enabled: !!userId && token,
+  });
 
   useEffect(() => {
     if (!isAuth) return;
@@ -46,7 +46,7 @@ export default function Watchlist() {
       <ul className="grid justify-center grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-6">
         {watchlist.map((anime) => (
           <li className="list-none" key={anime.animeId}>
-            <WatchlistCard anime={anime} />
+            <WatchlistCard anime={anime} onRefetch={refetch} />
           </li>
         ))}
       </ul>
