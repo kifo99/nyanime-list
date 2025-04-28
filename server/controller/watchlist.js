@@ -135,6 +135,7 @@ export const deleteFromWatchlist = async (req, res, next) => {
 
     res.status(200).json({
       message: "Deleting anime from watchlist is finished!",
+      anime: watchlist,
     });
   } catch (err) {
     res.status(err.statusCode || 500).json({
