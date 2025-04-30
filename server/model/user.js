@@ -22,6 +22,10 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Watchlist",
   },
+  reviewsId: {
+    type: Schema.Types.ObjectId,
+    ref: "Reviews",
+  },
 });
 
 export const User = mongoose.model("User", userSchema);
