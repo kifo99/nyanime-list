@@ -2,6 +2,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import useAuthStore from "../../store/useAuthStore";
 
@@ -207,6 +208,15 @@ export default function AnimeDetails({ inWatchlist = false }) {
                 </button>
               )}
             </div>
+          )}
+
+          {isAuth && (
+            <Link
+              className="bg-amber-400 text-rose-50 font-bold rounded-xl w-40 h-10 hover:w-44 hover:h-12 hover:bg-amber-300 hover:text-rose-600"
+              to="/addReview"
+            >
+              Add Review
+            </Link>
           )}
         </div>
       )}

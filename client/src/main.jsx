@@ -11,6 +11,7 @@ import Genre from "./pages/Genre/Genre.jsx";
 import Login from "./pages/Auth/Login.jsx";
 import Signup from "./pages/Auth/Signup.jsx";
 import Watchlist from "./pages/Watchlist/Watchlist.jsx";
+import AddReview from "./pages/ReviewsPage/AddReview.jsx";
 import ProtectedRoutes from "./components/ProtectedRouts/ProtectedRoutes.jsx";
 
 const router = createBrowserRouter([
@@ -68,6 +69,16 @@ const router = createBrowserRouter([
       <ProtectedRoutes>
         <App>
           <Watchlist />
+        </App>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/addReview",
+    element: (
+      <ProtectedRoutes>
+        <App>
+          <AddReview />
         </App>
       </ProtectedRoutes>
     ),
