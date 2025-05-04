@@ -1,6 +1,14 @@
 import { Heart, Star, StarHalf } from "lucide-react";
 
+import StarRating from "../../components/Star/StarRating";
+
+import useRatingStore from "../../store/useRatingStore";
+
 export default function AddReview() {
+  const { rating } = useRatingStore();
+
+  function handleAdd() {}
+
   return (
     <div className="flex-row gap-2 mt-6 w-full">
       <h1 className="font-bold text-center text-3xl text-rose-600 mt-4">
@@ -48,14 +56,8 @@ export default function AddReview() {
               />
             </div>
 
-            <div className="m-1">
-              <label>Rating</label>
-              <input
-                className="border rounded-lg border-gray-500"
-                type="number"
-                id="rating"
-                name="rating"
-              />
+            <div className="m-1 flex justify-center items-center">
+              <StarRating maxRating={5} color="yellow" />
             </div>
 
             <div className="m-1">
@@ -68,7 +70,7 @@ export default function AddReview() {
         </div>
       </div>
       <div className="flex justify-center items-center">
-        <button>Add</button>
+        <button onClick={handleAdd}>Add</button>
       </div>
     </div>
   );
