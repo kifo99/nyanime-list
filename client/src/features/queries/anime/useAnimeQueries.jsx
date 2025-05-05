@@ -36,27 +36,20 @@ const fetchGenres = async function () {
   }
 };
 
-const fetchUserWatchlist = async function ({ queryKey }) {
-  const [_, userId, token] = queryKey;
-
-  if (!userId || !token) throw new Error("userId is wrong or doesn't exist!");
-
+const fetchAnimeById = async function ({ queryKey }) {
   try {
+    const [_, animeId] = queryKey;
+
     const { data } = await axios.get(
-      `http://localhost:8080/watchlist/get/${userId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      `http://localhost:8080/anime/getAnime/${animeId}`
     );
 
-    console.log(data.watchlist);
+    console.log(data);
 
-    return data.watchlist || [];
+    return data?.anime || null;
   } catch (error) {
-    console.error("Error fetching watchlist:", error);
-    throw error;
+    console.error(error);
+    return [];
   }
 };
 
@@ -87,12 +80,12 @@ export const useGenres = () =>
     retry: 1,
   });
 
-export const useUserWatchlist = (userId, token) =>
+export const useGetAnime = (animeId) =>
   useQuery({
-    queryKey: ["userWatchlist", userId, token],
-    queryFn: fetchUserWatchlist,
-    staleTime: 1000 * 10 * 5,
-    cacheTime: 1000 * 10 * 10,
+    queryKey: ["getAnime", animeId],
+    queryFn: fetchAnimeById,
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
     retry: 1,
-    enabled: !!userId && !!token,
+    enabled: !!animeId,
   });

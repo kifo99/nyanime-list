@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-import useAuthStore from "../../store/useAuthStore";
+import useAuthStore from "../../features/auth/useAuthStore.js";
 
 export default function AnimeDetails({ inWatchlist = false }) {
   const { id } = useParams();
@@ -213,7 +213,7 @@ export default function AnimeDetails({ inWatchlist = false }) {
           {isAuth && (
             <Link
               className="bg-amber-400 text-rose-50 font-bold rounded-xl w-40 h-10 hover:w-44 hover:h-12 hover:bg-amber-300 hover:text-rose-600"
-              to="/addReview"
+              to={`/addReview/${anime.id}`}
             >
               Add Review
             </Link>

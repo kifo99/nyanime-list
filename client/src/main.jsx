@@ -74,7 +74,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/addReview",
+    path: "/addReview/:animeId",
     element: (
       <ProtectedRoutes>
         <App>

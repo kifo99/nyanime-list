@@ -1,9 +1,10 @@
-import { useUserWatchlist } from "../../Queries/api";
-
-import useAuthStore from "../../store/useAuthStore";
+import { useEffect } from "react";
 
 import WatchlistCard from "../../components/Anime/WatchlistCard";
-import { useEffect } from "react";
+
+import { useUserWatchlist } from "../../features/queries/watchlist/useWatchlistQueries.jsx";
+
+import useAuthStore from "../../features/auth/useAuthStore.js";
 
 export default function Watchlist() {
   const { token, userId, isAuth } = useAuthStore();

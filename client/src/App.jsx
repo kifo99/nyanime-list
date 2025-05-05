@@ -1,9 +1,10 @@
 import PropTypes from "prop-types";
+import { useEffect } from "react";
 
 import Navbar from "./components/Navigation/Navbar";
 import Footer from "./components/Footer/Footer";
-import useAuthStore from "./store/useAuthStore";
-import { useEffect } from "react";
+
+import useAuthStore from "./features/auth/useAuthStore";
 
 export default function App({ children }) {
   const rehydrate = useAuthStore((state) => state.rehydrate);

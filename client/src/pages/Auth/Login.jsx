@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { useState } from "react";
 import axios from "axios";
 
-import useAuthStore from "../../store/useAuthStore";
+import useAuthStore from "../../features/auth/useAuthStore.js";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {

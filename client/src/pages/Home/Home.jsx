@@ -8,7 +8,7 @@ import {
   useSeasonAnime,
   useRecommendationAnime,
   useGenres,
-} from "../../Queries/api";
+} from "../../features/queries/anime/useAnimeQueries.jsx";
 
 export default function Home() {
   const { data: seasonAnime, seasonAnimeIsLoading } = useSeasonAnime();

@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom";
-import useAuthStore from "../../store/useAuthStore";
 import PropTypes from "prop-types";
+
+import useAuthStore from "../../features/auth/useAuthStore.js";
 
 export default function ProtectedRoutes({ children }) {
   const { isAuth } = useAuthStore();

@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-import useAuthStore from "../../store/useAuthStore";
+import useAuthStore from "../../features/auth/useAuthStore.js";
 
 export default function Signup() {
   const [error, setError] = useState(null);

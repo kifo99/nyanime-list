@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { Star } from "lucide-react";
 
-import useRatingStore from "../../store/useRatingStore";
+import useRatingStore from "../../features/activity/useActivityStore.js";
 
 const containerStyle = {
   display: "flex",
@@ -24,11 +24,9 @@ export default function StarRating({
 }) {
   const { rating, tempRating, setRating, setTempRating } = useRatingStore();
 
-  //   setRating(defaultRating);
-  //   setTempRating(defaultRating);
-
   function handleRating(rating) {
     setRating(rating);
+    setTempRating;
   }
   return (
     <div style={containerStyle} className={className}>

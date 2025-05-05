@@ -4,7 +4,7 @@ import axios from "axios";
 
 import InitialAvatar from "../Avatar/InitialAvatar";
 
-import useAuthStore from "../../store/useAuthStore";
+import useAuthStore from "../../features/auth/useAuthStore.js";
 
 export default function Navbar() {
   const { isAuth, userId, logout } = useAuthStore();

@@ -3,8 +3,8 @@ import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Trash2, CircleX } from "lucide-react";
-import useAuthStore from "../../store/useAuthStore";
+import { CircleX } from "lucide-react";
+import useAuthStore from "../../features/auth/useAuthStore.js";
 
 export default function WatchlistCard({ anime, onRefetch }) {
   const [showDeleteBtn, setShowDeleteBtn] = useState(false);
