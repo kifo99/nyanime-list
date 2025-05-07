@@ -1,4 +1,3 @@
-import { useState } from "react";
 import PropTypes from "prop-types";
 
 import { Star } from "lucide-react";
@@ -21,12 +20,14 @@ export default function StarRating({
   size = 1,
   className = "",
   defaultRating = 0,
+  onChangeValue,
 }) {
   const { rating, tempRating, setRating, setTempRating } = useRatingStore();
 
   function handleRating(rating) {
     setRating(rating);
-    setTempRating;
+    setTempRating(0);
+    onChangeValue("rating", rating);
   }
   return (
     <div style={containerStyle} className={className}>
@@ -46,6 +47,7 @@ export default function StarRating({
   );
 }
 
+// eslint-disable-next-line react/prop-types
 function StarFunc({ onRate, full, onHoverIn, onHoverOut, color, size }) {
   const starStyle = {
     width: `${size}px`,
@@ -72,4 +74,5 @@ StarRating.propTypes = {
   defaultRating: PropTypes.number,
   color: PropTypes.string,
   className: PropTypes.string,
+  onChangeValue: PropTypes.func,
 };

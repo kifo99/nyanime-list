@@ -2,6 +2,7 @@ import { Heart } from "lucide-react";
 import axios from "axios";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 
 import StarRating from "../../components/Star/StarRating";
 
@@ -11,6 +12,8 @@ import { useGetAnime } from "../../features/queries/anime/useAnimeQueries.jsx";
 import { Form, Formik, Field } from "formik";
 
 export default function AddReview() {
+  const [error, setError] = useState(null);
+
   const { animeId } = useParams();
   const { rating, like, setLike, reset } = useRatingStore();
   const { userId } = useAuthStore();
@@ -29,9 +32,13 @@ export default function AddReview() {
 
   async function handleAdd(values, { resetForm }) {
     try {
+      const body = { ...values };
+
+      if (body.watchedBefore) body.watchedOn = "";
+
       await axios.post(
         `http://localhost:8080/reviews/add/${userId}/${animeId}`,
-        values,
+        body,
         {
           headers: {
             "Content-Type": "application/json",
@@ -40,6 +47,7 @@ export default function AddReview() {
       );
     } catch (error) {
       console.error(error);
+      setError("Failed to add review try again!");
     } finally {
       resetForm();
       reset();
@@ -75,6 +83,9 @@ export default function AddReview() {
               {`${anime.title} ${anime.year}`}{" "}
             </h1>
           </div>
+          {error && (
+            <div className="text-red-600 mb-4 text-center">{error}</div>
+          )}
           <Formik
             initialValues={{
               watchedOn: new Date().toISOString().split("T")[0],
@@ -126,7 +137,7 @@ export default function AddReview() {
                     name="review"
                     rows={10}
                     placeholder="Add review..."
-                    className="w-full border-2 border-gray-500 rounded-lg h-full"
+                    className="w-full border-2 border-gray-500 p-2 rounded-lg h-full"
                   />
                 </div>
                 <div className="flex justify-center items-center w-full">
@@ -135,10 +146,11 @@ export default function AddReview() {
                       Tags:
                     </label>
                     <Field
-                      className="border rounded-lg border-gray-500"
+                      className="border rounded-lg border-gray-500 p-2"
                       type="text"
                       id="tags"
                       name="tags"
+                      placeholder="eg. Netflix..."
                     />
                   </div>
 
@@ -147,7 +159,7 @@ export default function AddReview() {
                     <StarRating
                       maxRating={5}
                       color="yellow"
-                      onChange={() => setFieldValue("rating", rating)}
+                      onChangeValue={setFieldValue}
                     />
                   </div>
 
@@ -171,6 +183,9 @@ export default function AddReview() {
                   <button
                     className="border-2 font-bold text-2xl border-rose-500 w-[160px] h-[50px] min-w-[100px] m-2 rounded-lg text-rose-500 hover:bg-rose-500 hover:text-white"
                     type="submit"
+                    onClick={() =>
+                      values.watchedOn && setFieldValue("watchedOn", undefined)
+                    }
                   >
                     Add
                   </button>

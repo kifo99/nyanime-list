@@ -17,8 +17,6 @@ const fetchUserWatchlist = async function ({ queryKey }) {
       }
     );
 
-    console.log(data.watchlist);
-
     return data.watchlist || [];
   } catch (error) {
     console.error("Error fetching watchlist:", error);

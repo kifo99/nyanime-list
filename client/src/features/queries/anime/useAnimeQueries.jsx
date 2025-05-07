@@ -44,8 +44,6 @@ const fetchAnimeById = async function ({ queryKey }) {
       `http://localhost:8080/anime/getAnime/${animeId}`
     );
 
-    console.log(data);
-
     return data?.anime || null;
   } catch (error) {
     console.error(error);
