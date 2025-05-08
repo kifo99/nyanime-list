@@ -1,15 +1,18 @@
 import PropTypes from "prop-types";
 import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
-import { CircleX } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+
+import { CircleX, Heart, MessageCirclePlus } from "lucide-react";
 import useAuthStore from "../../features/auth/useAuthStore.js";
 
 export default function WatchlistCard({ anime, onRefetch }) {
   const [showDeleteBtn, setShowDeleteBtn] = useState(false);
 
   const { userId, token } = useAuthStore();
+
+  const navigate = useNavigate();
 
   async function handelRemoveAnime() {
     try {
@@ -27,6 +30,7 @@ export default function WatchlistCard({ anime, onRefetch }) {
       console.error(error);
     }
   }
+  console.log(anime);
 
   return (
     <div
@@ -34,25 +38,37 @@ export default function WatchlistCard({ anime, onRefetch }) {
       onMouseEnter={() => setShowDeleteBtn(true)}
       onMouseLeave={() => setShowDeleteBtn(false)}
     >
-      {showDeleteBtn && (
-        <CircleX
-          className="absolute top-1 right-1 p-1 text-red-600 hover:text-red-500 transition-all opacity-90 hover:opacity-100 cursor-pointer"
-          size={32}
-          strokeWidth={2.5}
-          onClick={handelRemoveAnime}
-        />
-      )}
       <div className=" flex-row gap-1.5 ">
         <Link to={`/anime/${anime.animeId}`}>
           <img
             src={anime.image}
             className="border border-transparent hover:border-solid hover:border-gray-600 hover:border-2 hover:rounded-lg m-auto w-24 h-36 hover:w-32 hover:h-44"
+            onMouseEnter={() => setShowDeleteBtn(false)}
+            onMouseLeave={() => setShowDeleteBtn(true)}
           />
         </Link>
         <h1 className="text-gray-600 font-extrabold text-xl m-auto text-center">
           {anime.title || anime.titleJapanese}
         </h1>
       </div>
+
+      {showDeleteBtn && (
+        <div className="flex justify-center items-center">
+          <MessageCirclePlus
+            size={32}
+            stroke="#4287f5"
+            className="hover:stroke-blue-800"
+            onClick={() => navigate(`/addReview/${anime.animeId}`)}
+          />
+          {/* <Heart size={32} stroke="red" className="hover:fill-red-600" /> */}
+          <CircleX
+            size={32}
+            stroke="#ff6d05"
+            className="hover:stroke-orange-700"
+            onClick={handelRemoveAnime}
+          />
+        </div>
+      )}
     </div>
   );
 }
