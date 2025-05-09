@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
-import { CircleX, Heart, MessageCirclePlus } from "lucide-react";
+import { CircleX, MessageCirclePlus } from "lucide-react";
 import useAuthStore from "../../features/auth/useAuthStore.js";
 
 export default function WatchlistCard({ anime, onRefetch }) {
