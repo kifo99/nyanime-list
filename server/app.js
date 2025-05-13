@@ -12,6 +12,7 @@ import authRouter from "./routes/auth.js";
 import userRouter from "./routes/user.js";
 import watchlistRouter from "./routes/watchlist.js";
 import reviewsRouter from "./routes/reviews.js";
+import activityRouter from "./routes/activity.js";
 import { MONGODB_URL } from "./util/config.js";
 
 const app = express();
@@ -35,6 +36,7 @@ app.use("/admin", authRouter);
 app.use("/user", userRouter);
 app.use("/watchlist", watchlistRouter);
 app.use("/reviews", reviewsRouter);
+app.use("/activity", activityRouter);
 
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
