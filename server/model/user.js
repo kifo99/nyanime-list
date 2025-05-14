@@ -26,6 +26,10 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Reviews",
   },
+  likesId: {
+    type: Schema.Types.ObjectId,
+    ref: "Likes",
+  },
 });
 
 export const User = mongoose.model("User", userSchema);

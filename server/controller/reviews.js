@@ -110,7 +110,6 @@ export const getReviews = async (req, res, next) => {
 
     const reviewsList = reviews.reviews;
 
-    console.log(reviewsList);
 
     res.status(200).json({
       message: "Reviews founded!",
