@@ -101,3 +101,34 @@ export const unlike = async (req, res, next) => {
     });
   }
 };
+
+export const isLiked = async (req, res, next) => {
+  try {
+    const { userId, animeId } = req.params;
+
+    if (!userId || !animeId)
+      throw errorHandler(null, "Something went wrong", 404);
+
+    const user = await User.findById(userId);
+    if (!user) throw errorHandler(null, "User not found", 404);
+
+    const likes = await Likes.findById(user.likesId);
+    if (!likes) throw errorHandler(null, "Liked anime not found", 404);
+
+    let isLiked = false;
+    const likedAnime = likes.likedAnime.filter((anime) => {
+      if (anime.animeId === animeId) {
+        isLiked = true;
+      }
+    });
+
+    res.status(200).json({
+      message: "Like status of anime.",
+      isLiked: isLiked,
+    });
+  } catch (err) {
+    res.status(err.statusCode || 500).json({
+      message: err.message || "Something is wrong pleas try again later",
+    });
+  }
+};
