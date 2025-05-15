@@ -7,7 +7,7 @@ import axios from "axios";
 export const addReview = async (req, res, next) => {
   try {
     const { userId, animeId } = req.params;
-    const { review, watchedOn, watchedBefore, rating, tags, like } = req.body;
+    const { review, watchedOn, watchedBefore, rating, tags } = req.body;
 
     if (!userId) throw errorHandler(null, "User id is not valid!", 401);
 
@@ -43,7 +43,6 @@ export const addReview = async (req, res, next) => {
           watchedBefore: watchedBefore,
           rating: rating,
           tags: tags,
-          like: like,
         });
 
         await reviews.save();
@@ -74,7 +73,6 @@ export const addReview = async (req, res, next) => {
           watchedBefore: watchedBefore,
           rating: rating,
           tags: tags,
-          like: like,
         },
       ],
     });
@@ -109,7 +107,6 @@ export const getReviews = async (req, res, next) => {
     if (!reviews) throw errorHandler(null, "Reviews was not found!", 404);
 
     const reviewsList = reviews.reviews;
-
 
     res.status(200).json({
       message: "Reviews founded!",

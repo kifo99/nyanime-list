@@ -49,10 +49,6 @@ const reviewsSchema = new Schema({
         type: String,
         default: null,
       },
-      like: {
-        type: Boolean,
-        default: false,
-      },
     },
   ],
 });
