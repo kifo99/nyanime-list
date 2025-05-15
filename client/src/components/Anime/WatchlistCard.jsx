@@ -32,7 +32,6 @@ export default function WatchlistCard({ anime, onRefetch }) {
       console.error(error);
     }
   }
-  console.log(anime);
 
   return (
     <div
@@ -62,7 +61,7 @@ export default function WatchlistCard({ anime, onRefetch }) {
             className="hover:stroke-blue-800"
             onClick={() => navigate(`/addReview/${anime.animeId}`)}
           />
-          <Like />
+          <Like userId={userId} animeId={anime.animeId} />
           <CircleX
             size={32}
             stroke="#ff6d05"
