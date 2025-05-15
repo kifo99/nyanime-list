@@ -2,7 +2,8 @@ import { Heart } from "lucide-react";
 import axios from "axios";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import StarRating from "../../components/Star/StarRating";
 import Like from "../../components/Like/Like.jsx";
@@ -15,6 +16,7 @@ import { Form, Formik, Field } from "formik";
 
 export default function AddReview() {
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const { animeId } = useParams();
   const { reset } = useRatingStore();
@@ -178,9 +180,10 @@ export default function AddReview() {
                   <button
                     className="border-2 font-bold text-2xl border-rose-500 w-[160px] h-[50px] min-w-[100px] m-2 rounded-lg text-rose-500 hover:bg-rose-500 hover:text-white"
                     type="submit"
-                    onClick={() =>
-                      values.watchedOn && setFieldValue("watchedOn", undefined)
-                    }
+                    onClick={() => {
+                      values.watchedOn && setFieldValue("watchedOn", undefined);
+                      navigate("/");
+                    }}
                   >
                     Add
                   </button>
