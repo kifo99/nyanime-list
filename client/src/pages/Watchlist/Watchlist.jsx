@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import WatchlistCard from "../../components/Anime/WatchlistCard";
 
-import { useUserWatchlist } from "../../features/queries/watchlist/useWatchlistQueries.jsx";
+import { useUserWatchlist } from "../../features/queries/activity/watchlist/useWatchlistQueries.jsx";
 
 import useAuthStore from "../../features/auth/useAuthStore.js";
 

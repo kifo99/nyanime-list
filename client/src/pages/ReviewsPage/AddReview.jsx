@@ -3,22 +3,29 @@ import axios from "axios";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import StarRating from "../../components/Star/StarRating";
+import Like from "../../components/Like/Like.jsx";
 
 import useRatingStore from "../../features/activity/useActivityStore";
 import useAuthStore from "../../features/auth/useAuthStore.js";
+import { useIsLiked } from "../../features/queries/activity/like/useLike.jsx";
 import { useGetAnime } from "../../features/queries/anime/useAnimeQueries.jsx";
 import { Form, Formik, Field } from "formik";
 
 export default function AddReview() {
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const { animeId } = useParams();
-  const { rating, like, setLike, reset } = useRatingStore();
+  const { reset } = useRatingStore();
   const { userId } = useAuthStore();
   const { data: anime, animeIsLoading } = useGetAnime(animeId, {
     enabled: !!animeId,
+  });
+  const { data: isLiked, isLikedLoading } = useIsLiked(userId, animeId, {
+    enabled: !!userId && !!animeId,
   });
 
   const validationSchema = Yup.object({
@@ -27,7 +34,6 @@ export default function AddReview() {
     watchedBefore: Yup.boolean(),
     rating: Yup.number(),
     tags: Yup.string(),
-    like: Yup.boolean(),
   });
 
   async function handleAdd(values, { resetForm }) {
@@ -66,7 +72,9 @@ export default function AddReview() {
     return <div>Anime not available</div>;
   }
 
-  console.log(rating);
+  if (isLikedLoading) {
+    console.log("still loading");
+  }
 
   return (
     <div className="flex-row gap-2 mt-6 mb-10 w-full">
@@ -164,28 +172,18 @@ export default function AddReview() {
                   </div>
 
                   <div className="m-1 flex items-center min-w-[100px]">
-                    <Heart
-                      className=" hover:fill-red-600"
-                      type="button"
-                      id="like"
-                      name="like"
-                      color="red"
-                      fill={like ? "red" : "none"}
-                      onClick={() => {
-                        setLike(!like);
-                        setFieldValue("like", !like);
-                      }}
-                    />
-                    <span className="ml-1">{like ? "Remove" : "Like"}</span>
+                    <Like userId={userId} animeId={animeId} />
+                    <span className="ml-1">{isLiked ? "Remove" : "Like"}</span>
                   </div>
                 </div>
                 <div className="flex justify-center items-center">
                   <button
                     className="border-2 font-bold text-2xl border-rose-500 w-[160px] h-[50px] min-w-[100px] m-2 rounded-lg text-rose-500 hover:bg-rose-500 hover:text-white"
                     type="submit"
-                    onClick={() =>
-                      values.watchedOn && setFieldValue("watchedOn", undefined)
-                    }
+                    onClick={() => {
+                      values.watchedOn && setFieldValue("watchedOn", undefined);
+                      navigate("/");
+                    }}
                   >
                     Add
                   </button>
