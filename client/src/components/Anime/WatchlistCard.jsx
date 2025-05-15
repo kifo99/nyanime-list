@@ -4,8 +4,10 @@ import { useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
-import { CircleX, MessageCirclePlus, Heart } from "lucide-react";
+import { CircleX, MessageCirclePlus } from "lucide-react";
 import useAuthStore from "../../features/auth/useAuthStore.js";
+
+import Like from "../Like/Like.jsx";
 
 export default function WatchlistCard({ anime, onRefetch }) {
   const [showDeleteBtn, setShowDeleteBtn] = useState(false);
@@ -13,12 +15,6 @@ export default function WatchlistCard({ anime, onRefetch }) {
   const { userId, token } = useAuthStore();
 
   const navigate = useNavigate();
-
-  async function handleLike() {
-    await axios.post(
-      `http://localhost:8080/activity/like/${userId}/${anime.animeId}`
-    );
-  }
 
   async function handelRemoveAnime() {
     try {
@@ -66,12 +62,7 @@ export default function WatchlistCard({ anime, onRefetch }) {
             className="hover:stroke-blue-800"
             onClick={() => navigate(`/addReview/${anime.animeId}`)}
           />
-          <Heart
-            size={32}
-            stroke="red"
-            className="hover:fill-red-600"
-            onClick={handleLike}
-          />
+          <Like />
           <CircleX
             size={32}
             stroke="#ff6d05"
