@@ -8,6 +8,19 @@ const watchlistSchema = new Schema({
     ref: "User",
     require: true,
   },
+  type: {
+    type: String,
+    enum: ["default", "custom"],
+    default: "default",
+  },
+
+  name: {
+    type: String,
+    required: function () {
+      return this.type === "custom";
+    },
+  },
+
   items: [
     {
       animeId: {
