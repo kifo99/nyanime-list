@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 
 import useAuthStore from "../../features/auth/useAuthStore.js";
 
+import CustomList from "../../components/CustomList/CustomList.jsx";
+
 export default function AnimeDetails({ inWatchlist = false }) {
   const { id } = useParams();
   const [anime, setAnime] = useState(null);
@@ -218,6 +220,8 @@ export default function AnimeDetails({ inWatchlist = false }) {
               Add Review
             </Link>
           )}
+
+          <CustomList />
         </div>
       )}
     </>
