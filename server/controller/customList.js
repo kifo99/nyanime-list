@@ -66,6 +66,30 @@ export const getCustomList = async (req, res, next) => {
   }
 };
 
+export const getAllCustomLists = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    if (!userId)
+      throw errorHandler(null, "User id nad list name are not provided.", 400);
+
+    const customLists = await Watchlist.find({
+      userId,
+      type: "custom",
+    });
+
+    if (!customLists.length)
+      throw errorHandler(null, "No custom lists found for this user.", 404);
+
+    res.status(200).json({
+      message: "Custom lists fetched.",
+      lists: customLists,
+    });
+  } catch (err) {
+    res.status(err.statusCode || 500).json({
+      message: err.message || "Something is wrong pleas try again later",
+    });
+  }
+};
 export const addToCustomList = async (req, res, next) => {
   try {
     const { userId, animeId, listName } = req.params;
