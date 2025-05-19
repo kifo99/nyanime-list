@@ -1,18 +1,30 @@
 import axios from "axios";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import useAuthStore from "../../features/auth/useAuthStore.js";
 
 import CustomList from "../../components/CustomList/CustomList.jsx";
+import ShowLists from "../../components/CustomList/ShowLists.jsx";
+import { useAllCustomLists } from "../../features/queries/activity/watchlist/useWatchlistQueries.jsx";
 
 export default function AnimeDetails({ inWatchlist = false }) {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [anime, setAnime] = useState(null);
+  const [showCustom, setShowCustom] = useState(false);
+  const [showLists, setShowLists] = useState(false);
 
   const { token, isAuth, userId } = useAuthStore();
+
+  const {
+    data: customLists,
+    isCustomListsLoading,
+    refetch,
+  } = useAllCustomLists(userId, {
+    enabled: !!userId,
+  });
 
   async function handleAddToWatchlist() {
     try {
@@ -57,6 +69,11 @@ export default function AnimeDetails({ inWatchlist = false }) {
     return <p>Loading anime details...</p>;
   }
 
+  if (isCustomListsLoading) {
+    console.log(isCustomListsLoading);
+
+    return <div>Loading..</div>;
+  }
   return (
     <>
       {!anime ? (
@@ -65,7 +82,6 @@ export default function AnimeDetails({ inWatchlist = false }) {
         </div>
       ) : (
         <div className="flex-col list-none p-4 ">
-          {console.log(anime)}
           <div className="flex flex-wrap items-start justify-between p-4 ">
             <div className="w-full md:w-1/3 lg:w-1/4 p-4">
               <img
@@ -199,29 +215,68 @@ export default function AnimeDetails({ inWatchlist = false }) {
             </p>
           </div>
 
-          {!inWatchlist && (
-            <div>
-              {isAuth && (
-                <button
-                  className="bg-amber-400 text-rose-50 font-bold rounded-xl w-40 h-10 hover:w-44 hover:h-12 hover:bg-amber-300 hover:text-rose-600"
-                  onClick={handleAddToWatchlist}
-                >
-                  Add to watchlist
-                </button>
-              )}
+          {isAuth && (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex justify-between items-center w-3/5">
+                {!inWatchlist && (
+                  <div>
+                    <button
+                      className="bg-amber-400 text-rose-50 font-bold rounded-xl w-40 h-10 hover:w-44 hover:h-12 hover:bg-amber-300 hover:text-rose-600"
+                      onClick={handleAddToWatchlist}
+                    >
+                      Add to watchlist
+                    </button>
+                  </div>
+                )}
+
+                <div>
+                  <button
+                    className="bg-amber-400 text-center text-rose-50 font-bold rounded-xl w-40 h-10 hover:w-44 hover:h-12 hover:bg-amber-300 hover:text-rose-600"
+                    onClick={() => navigate(`/addReview/${anime.id}`)}
+                  >
+                    Add Review
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <div>
+                  <button
+                    className="bg-amber-400 text-rose-50 font-bold rounded-xl w-40 h-10 hover:w-44 hover:h-12 hover:bg-amber-300 hover:text-rose-600"
+                    onClick={() => setShowCustom(true)}
+                  >
+                    Create Custom List
+                  </button>
+                </div>
+
+                {Array.isArray(customLists) && customLists.length > 0 && (
+                  <div>
+                    <button
+                      className="bg-amber-400 text-rose-50 font-bold rounded-xl w-40 h-10 hover:w-44 hover:h-12 hover:bg-amber-300 hover:text-rose-600"
+                      onClick={() => setShowLists(true)}
+                    >
+                      Add to list
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
-          {isAuth && (
-            <Link
-              className="bg-amber-400 text-rose-50 font-bold rounded-xl w-40 h-10 hover:w-44 hover:h-12 hover:bg-amber-300 hover:text-rose-600"
-              to={`/addReview/${anime.id}`}
-            >
-              Add Review
-            </Link>
+          {isAuth && showCustom && (
+            <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/30 z-50">
+              <CustomList
+                onSetShowCustom={setShowCustom}
+                onRefetchCustomList={refetch}
+              />
+            </div>
           )}
 
-          <CustomList />
+          {isAuth && showLists && (
+            <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/30 z-50">
+              <ShowLists onSetShowLists={setShowLists} animeId={anime.id} />
+            </div>
+          )}
         </div>
       )}
     </>

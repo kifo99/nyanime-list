@@ -24,6 +24,21 @@ const fetchUserWatchlist = async function ({ queryKey }) {
   }
 };
 
+const fetchAllCustomLists = async function ({ queryKey }) {
+  // eslint-disable-next-line no-unused-vars
+  const [_, userId] = queryKey;
+
+  try {
+    const { data } = await axios.get(
+      `http://localhost:8080/watchlist/users/${userId}/custom-lists`
+    );
+
+    return data.lists || [];
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const useUserWatchlist = (userId, token) =>
   useQuery({
     queryKey: ["userWatchlist", userId, token],
@@ -32,4 +47,14 @@ export const useUserWatchlist = (userId, token) =>
     cacheTime: 1000 * 10 * 10,
     retry: 1,
     enabled: !!userId && !!token,
+  });
+
+export const useAllCustomLists = (userId) =>
+  useQuery({
+    queryKey: ["allCustomLists", userId],
+    queryFn: fetchAllCustomLists,
+    staleTime: 1000 * 10 * 5,
+    cacheTime: 1000 * 10 * 10,
+    retry: 1,
+    enabled: !!userId,
   });
