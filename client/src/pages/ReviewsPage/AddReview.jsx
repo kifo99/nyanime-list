@@ -1,4 +1,3 @@
-import { Heart } from "lucide-react";
 import axios from "axios";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
