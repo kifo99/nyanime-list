@@ -1,8 +1,9 @@
 import express from "express";
 import { body } from "express-validator";
 import { signup, login } from "../controller/auth.js";
-import imageUpload from "../middleware/imageUpload.js";
 import { User } from "../model/user.js";
+
+
 
 const router = express.Router();
 
@@ -64,7 +65,6 @@ router.post(
         return true;
       }),
   ],
-  imageUpload.single("avatar"),
   signup
 );
 
