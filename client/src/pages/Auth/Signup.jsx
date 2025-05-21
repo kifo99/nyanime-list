@@ -1,5 +1,6 @@
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import axios from "axios";
+import { Plus } from "lucide-react";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -108,6 +109,24 @@ export default function Signup() {
             />
             <ErrorMessage
               name="confirmPassword"
+              component="div"
+              className="text-red-600"
+            />
+
+            <label
+              htmlFor="avatar"
+              className="flex flex-col items-center justify-center w-[140px] h-[140px] rounded-lg bg-amber-200 text-amber-800 cursor-pointer hover:bg-amber-300 transition-all m-7"
+            >
+              <Plus className="w-6 h-6 mb-2" />
+              <span className="text-sm text-center font-medium">
+                Choose your profile picture
+              </span>
+            </label>
+
+            <Field type="file" id="avatar" name="avatar" className="hidden" />
+
+            <ErrorMessage
+              name="avatar"
               component="div"
               className="text-red-600"
             />
