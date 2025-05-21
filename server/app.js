@@ -15,12 +15,16 @@ import reviewsRouter from "./routes/reviews.js";
 import activityRouter from "./routes/activity.js";
 import { MONGODB_URL } from "./util/config.js";
 
+import imageUpload from "./middleware/imageUpload.js";
+
 const app = express();
 
 app.use(helmet());
 app.use(cors({ origin: "http://localhost:3000" }));
 app.use(morgan("dev"));
+
 app.use(bodyParser.json());
+app.use(imageUpload.single("image"))
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
