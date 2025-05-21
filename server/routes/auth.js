@@ -2,13 +2,13 @@ import express from "express";
 import { body } from "express-validator";
 import { signup, login } from "../controller/auth.js";
 import { User } from "../model/user.js";
-
-
+import imageUpload from "../middleware/imageUpload.js";
 
 const router = express.Router();
 
 router.post(
   "/signup",
+  imageUpload.single("avatar"),
   [
     body("name")
       .trim()

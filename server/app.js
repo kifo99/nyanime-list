@@ -17,8 +17,6 @@ import { MONGODB_URL } from "./util/config.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import imageUpload from "./middleware/imageUpload.js";
-
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,7 +36,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use(bodyParser.json());
-app.use(imageUpload.single("image"));
+
 app.use(
   "/images/avatar",
   express.static(path.join(__dirname, "..", "images", "avatar"))
