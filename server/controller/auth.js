@@ -9,17 +9,25 @@ import { errorHandler } from "../util/helpers.js";
 
 export const signup = async (req, res, next) => {
   try {
-    const name = req.body.name;
-    const email = req.body.email;
-    const password = req.body.password;
+    const { name, email, password } = req.body;
+    const avatarFile = req.file;
+    // const name = req.body.name;
+    // const email = req.body.email;
+    // const password = req.body.password;
     const errors = validationResult(req);
 
-    const { data } = await axios.get(
-      `https://api.dicebear.com/9.x/initials/svg?seed=${name}`
-    );
-    if (!data) errorHandler(null, "Fetching Initials avatar failed!", 404);
+    // const { data } = await axios.get(
+    //   `https://api.dicebear.com/9.x/initials/svg?seed=${name}`
+    // );
+    // if (!data) errorHandler(null, "Fetching Initials avatar failed!", 404);
 
-    const initialAvatar = `${data}`;
+    // const initialAvatar = `${data}`;
+
+    let avatarPath;
+
+    if (avatarFile) {
+      avatarPath = `/images/avatar/${avatarFile.filename}`;
+    }
 
     if (!errors.isEmpty()) {
       const message = errors.array().at(0).msg;
@@ -32,7 +40,7 @@ export const signup = async (req, res, next) => {
       name: name,
       email: email,
       password: hashedPassword,
-      avatar: initialAvatar,
+      avatar: avatarPath,
     });
 
     console.log(user);
