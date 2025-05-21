@@ -14,13 +14,17 @@ import watchlistRouter from "./routes/watchlist.js";
 import reviewsRouter from "./routes/reviews.js";
 import activityRouter from "./routes/activity.js";
 import { MONGODB_URL } from "./util/config.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(helmet());
 app.use(cors({ origin: "http://localhost:3000" }));
 app.use(morgan("dev"));
-app.use(bodyParser.json());
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -30,6 +34,23 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
+
+app.use(bodyParser.json());
+
+app.use(
+  "/images/avatar",
+  express.static(path.join(__dirname, "..", "images", "avatar"))
+);
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
 app.use("/anime", animeRouter);
 app.use("/admin", authRouter);

@@ -1,5 +1,6 @@
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import axios from "axios";
+import { Plus } from "lucide-react";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -24,11 +25,16 @@ export default function Signup() {
 
   async function handleSignup(values, { resetForm }) {
     try {
-      await axios.post(`http://localhost:8080/admin/signup`, values, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("email", values.email);
+      formData.append("password", values.password);
+      formData.append("confirmPassword", values.confirmPassword);
+      if (values.avatar) {
+        formData.append("avatar", values.avatar);
+      }
+
+      await axios.post(`http://localhost:8080/admin/signup`, formData);
       navigate("/login");
       setIsAuth(false);
     } catch (error) {
@@ -60,65 +66,88 @@ export default function Signup() {
             email: "",
             password: "",
             confirmPassword: "",
+            avatar: null,
           }}
           validationSchema={validationSchema}
           onSubmit={handleSignup}
         >
-          <Form className="flex flex-col justify-center items-center space-y-4 ">
-            <Field
-              type="text"
-              name="name"
-              placeholder=" Name"
-              className=" m-7 w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
-            />
-            <ErrorMessage
-              name="name"
-              component="div"
-              className="text-red-600"
-            />
-            <Field
-              type="email"
-              name="email"
-              placeholder=" Email"
-              className="m-7 w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
-            />
-            <ErrorMessage
-              name="email"
-              component="div"
-              className="text-red-600"
-            />
+          {({ setFieldValue }) => (
+            <Form className="flex flex-col justify-center items-center space-y-4 ">
+              <Field
+                type="text"
+                name="name"
+                placeholder=" Name"
+                className=" m-7 w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
+              />
+              <ErrorMessage
+                name="name"
+                component="div"
+                className="text-red-600"
+              />
+              <Field
+                type="email"
+                name="email"
+                placeholder=" Email"
+                className="m-7 w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
+              />
+              <ErrorMessage
+                name="email"
+                component="div"
+                className="text-red-600"
+              />
 
-            <Field
-              type="password"
-              name="password"
-              placeholder=" Password"
-              className="m-7 w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
-            />
-            <ErrorMessage
-              name="password"
-              component="div"
-              className="text-red-600"
-            />
+              <Field
+                type="password"
+                name="password"
+                placeholder=" Password"
+                className="m-7 w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
+              />
+              <ErrorMessage
+                name="password"
+                component="div"
+                className="text-red-600"
+              />
 
-            <Field
-              type="password"
-              name="confirmPassword"
-              placeholder=" Confirm Password"
-              className=" m-7 w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
-            />
-            <ErrorMessage
-              name="confirmPassword"
-              component="div"
-              className="text-red-600"
-            />
+              <Field
+                type="password"
+                name="confirmPassword"
+                placeholder=" Confirm Password"
+                className=" m-7 w-3/4 h-11 rounded-lg bg-amber-200 text-amber-800 border-none focus:border-amber-800  focus:ring-amber-800 focus:ring-2 outline-none focus:bg-amber-300 "
+              />
+              <ErrorMessage
+                name="confirmPassword"
+                component="div"
+                className="text-red-600"
+              />
 
-            <button
-              type="submit"
-              className="flex items-center  text-amber-950 font-bold justify-center mb-11 h-9 w-36 bg-amber-200 p-2 rounded-full hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all  "
-            >
-              Sign up
-            </button>
-          </Form>
+              <label
+                htmlFor="avatar"
+                className="flex flex-col items-center justify-center w-[140px] h-[140px] rounded-lg bg-amber-200 text-amber-800 cursor-pointer hover:bg-amber-300 transition-all m-7"
+              >
+                <Plus className="w-6 h-6 mb-2" />
+                <span className="text-sm text-center font-medium">
+                  Choose your profile picture
+                </span>
+              </label>
+
+              <input
+                id="avatar"
+                name="avatar"
+                type="file"
+                className="hidden"
+                onChange={(event) => {
+                  setFieldValue("avatar", event.currentTarget.files[0]);
+                }}
+              />
+
+              <button
+                type="submit"
+                className="flex items-center  text-amber-950 font-bold justify-center mb-11 h-9 w-36 bg-amber-200 p-2 rounded-full hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-bg-amber-300 transition-all  "
+              >
+                Sign up
+              </button>
+            </Form>
+          )}
         </Formik>
       </div>
     </div>
