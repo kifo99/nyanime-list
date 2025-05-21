@@ -10,29 +10,23 @@ import { errorHandler } from "../util/helpers.js";
 export const signup = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-    const avatarFile = req.file;
-    // const name = req.body.name;
-    // const email = req.body.email;
-    // const password = req.body.password;
+    const avatar = req.file;
     const errors = validationResult(req);
 
-    // const { data } = await axios.get(
-    //   `https://api.dicebear.com/9.x/initials/svg?seed=${name}`
-    // );
-    // if (!data) errorHandler(null, "Fetching Initials avatar failed!", 404);
-
-    // const initialAvatar = `${data}`;
+    console.log("upload file: " + req.file);
 
     let avatarPath;
 
-    if (avatarFile) {
-      avatarPath = `/images/avatar/${avatarFile.filename}`;
+    if (avatar) {
+      avatarPath = `/images/avatar/${avatar.filename}`;
     }
 
     if (!errors.isEmpty()) {
       const message = errors.array().at(0).msg;
       errorHandler(errors, message, 422);
     }
+
+    console.log(avatarPath);
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
