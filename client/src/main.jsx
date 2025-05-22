@@ -13,6 +13,7 @@ import Signup from "./pages/Auth/Signup.jsx";
 import Watchlist from "./pages/Watchlist/Watchlist.jsx";
 import AddReview from "./pages/ReviewsPage/AddReview.jsx";
 import ProtectedRoutes from "./components/ProtectedRouts/ProtectedRoutes.jsx";
+import MyProfile from "./pages/Profile/MyProfile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -79,6 +80,16 @@ const router = createBrowserRouter([
       <ProtectedRoutes>
         <App>
           <AddReview />
+        </App>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/user/:userId/profile",
+    element: (
+      <ProtectedRoutes>
+        <App>
+          <MyProfile />
         </App>
       </ProtectedRoutes>
     ),
