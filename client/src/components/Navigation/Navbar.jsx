@@ -55,6 +55,16 @@ export default function Navbar() {
               </Link>
             </li>
           )}
+          {isAuth && (
+            <li className="mb-4 lg:mb-0 lg:pe-2">
+              <Link
+                className="text-amber-700 font-bold transition duration-200 hover:text-amber-950 hover:ease-in-out focus:text-amber-950 active:text-amber-950 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
+                to={`/user/${userId}/profile`}
+              >
+                My Profile
+              </Link>
+            </li>
+          )}
         </ul>
 
         <div className="flex items-center justify-center ">
