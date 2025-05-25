@@ -1,34 +1,49 @@
 export default function MyProfile() {
   return (
     <div className="grid grid-cols-[30%_70%] gap-3 w-[80%] my-8 mx-auto bg-indigo-200 rounded-2xl">
-      <div className="grid grid-rows-2 gap-2 border-r border-r-purple-950  my-8 ">
-        <div className="my-8 mx-auto">
+      <div className="flex flex-col gap-2 border-r border-r-purple-950  my-2 ">
+        <div className="my-2 mx-auto">
           <img
             src="https://i.pinimg.com/736x/b3/9d/79/b39d7959fb755a5461a6d7647c2b83b3.jpg"
             alt="Profile Picture"
             className="rounded-full w-[80%] m-auto"
           />
         </div>
-        <div className="my-8 mx-auto">
-          <h1 className="text-2xl text-start font-bold text-purple-950">
+
+        <div className="flex flex-col gap-1 my-2 mx-5">
+          <h1 className="text-2xl text-start font-bold text-purple-950 my-1">
             Gambit333
           </h1>
+          <h1 className="text-2xl text-start font-bold text-purple-950 my-1">
+            Custom Lists:
+          </h1>
+          <div>
+            {Array.from({ length: 5 }, (_, i) => `Watchlist ${i + 1}`).map(
+              (list, i) => (
+                <li
+                  className="list-none text-purple-950 font-bold border-b border-b-purple-950 py-2 my-1 hover:text-purple-700 hover:border-b-purple-700 hover:text-xl"
+                  key={i}
+                >
+                  {list}
+                </li>
+              )
+            )}
+          </div>
         </div>
       </div>
-      <div className="  my-8">
-        <div className="grid grid-rows-2 gap-4">
-          <h1 className="text- text-2xl font-bold text-purple-950">
-            Biography:
-          </h1>
-          <p className="font-mono w-full">
+      <div className="my-8 w-full">
+        <div className="flex flex-col gap-4 w-full">
+          <h1 className="text-2xl font-bold text-purple-950">Biography:</h1>
+          <p className="font-mono text-[13px] sm:text-[14px] md:text-[15px] tracking-tight leading-tight break-words whitespace-normal max-w-[90%]">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet
             blanditiis eveniet quo, doloremque, eaque totam nobis molestiae
             similique illum reprehenderit impedit ex possimus numquam est
             architecto ab laudantium modi atque.
           </p>
         </div>
-        <div>
-          <h1 className="text- text-2xl font-bold text-purple-950">Feed:</h1>
+
+        <div className="mt-6">
+          <h1 className="text-2xl font-bold text-purple-950">Feed:</h1>
         </div>
       </div>
     </div>
