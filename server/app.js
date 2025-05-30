@@ -40,7 +40,7 @@ app.use(bodyParser.json());
 
 app.use(
   "/images/avatar",
-  express.static(path.join(__dirname, "..", "images", "avatar"))
+  express.static(path.join(__dirname, "images", "avatar"))
 );
 
 app.use((req, res, next) => {
