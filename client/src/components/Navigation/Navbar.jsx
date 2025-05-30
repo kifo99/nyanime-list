@@ -26,77 +26,75 @@ export default function Navbar() {
   }, [userId]);
 
   return (
-    <nav className="flex-nowrap relative flex h-14 w-full items-center justify-between bg-amber-300 py-2 shadow-dark-mild dark:bg-amber-800 lg:flex-wrap lg:justify-start lg:py-4 ">
-      <div className="flex w-full justify-between items-center px-3 ">
-        <ul className="list-style-none me-auto flex flex-col ps-0 lg:flex-row">
+    <nav className="flex-nowrap relative flex w-full items-center justify-between bg-amber-300 py-2 shadow-dark-mild dark:bg-amber-800 px-3 ">
+      <ul className="flex gap-4 items-center">
+        <li className="mb-4 lg:mb-0 lg:pe-2">
+          <Link
+            className="text-amber-700 font-bold transition duration-200 hover:text-amber-950 hover:ease-in-out focus:text-amber-950 active:text-amber-950 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
+            to="/"
+          >
+            Home
+          </Link>
+        </li>
+        <li className="mb-4 lg:mb-0 lg:pe-2">
+          <Link
+            className="text-amber-700 font-bold transition duration-200 hover:text-amber-950 hover:ease-in-out focus:text-amber-950 active:text-amber-950 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
+            to="/browse"
+          >
+            Browse
+          </Link>
+        </li>
+        {isAuth && (
           <li className="mb-4 lg:mb-0 lg:pe-2">
             <Link
               className="text-amber-700 font-bold transition duration-200 hover:text-amber-950 hover:ease-in-out focus:text-amber-950 active:text-amber-950 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
-              to="/"
+              to="/watchlist"
             >
-              Home
+              My Watchlist
             </Link>
           </li>
+        )}
+        {isAuth && (
           <li className="mb-4 lg:mb-0 lg:pe-2">
             <Link
               className="text-amber-700 font-bold transition duration-200 hover:text-amber-950 hover:ease-in-out focus:text-amber-950 active:text-amber-950 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
-              to="/browse"
+              to={`/user/${userId}/profile`}
             >
-              Browse
+              My Profile
             </Link>
           </li>
-          {isAuth && (
-            <li className="mb-4 lg:mb-0 lg:pe-2">
-              <Link
-                className="text-amber-700 font-bold transition duration-200 hover:text-amber-950 hover:ease-in-out focus:text-amber-950 active:text-amber-950 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
-                to="/watchlist"
-              >
-                My Watchlist
-              </Link>
-            </li>
-          )}
-          {isAuth && (
-            <li className="mb-4 lg:mb-0 lg:pe-2">
-              <Link
-                className="text-amber-700 font-bold transition duration-200 hover:text-amber-950 hover:ease-in-out focus:text-amber-950 active:text-amber-950 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
-                to={`/user/${userId}/profile`}
-              >
-                My Profile
-              </Link>
-            </li>
-          )}
-        </ul>
+        )}
+      </ul>
 
-        <div className="flex items-center justify-center ">
-          {isAuth ? (
-            <div className="flex justify-center items-center w-40">
-              <InitialAvatar avatar={avatar} />
-              <button
-                className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
-                onClick={logout}
-              >
-                Logout
-              </button>
-            </div>
-          ) : (
-            <>
-              <Link
-                className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none 
+      <div className="flex items-center gap-3">
+        {isAuth ? (
+          <div className="flex items-center gap-3">
+            <InitialAvatar />
+            <button
+              className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
+              onClick={logout}
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <>
+            <Link
+              className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none 
               transition-all"
-                to="/signup"
-              >
-                Signin
-              </Link>
+              to="/signup"
+            >
+              Signin
+            </Link>
 
-              <Link
-                className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
-                to="/login"
-              >
-                Login
-              </Link>
-            </>
-          )}
-        </div>
+            <Link
+              className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
+              to="/login"
+            >
+              Login
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );
