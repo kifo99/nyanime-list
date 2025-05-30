@@ -38,6 +38,11 @@ app.use(limiter);
 
 app.use(bodyParser.json());
 
+app.use("/images/avatar", (req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  next();
+});
+
 app.use(
   "/images/avatar",
   express.static(path.join(__dirname, "images", "avatar"))
