@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import axios from "axios";
 
 import { User } from "../model/user.js";
+import { Profile } from "../model/userProfile.js";
 import { SECRET_KEY } from "../util/config.js";
 import { errorHandler } from "../util/helpers.js";
 
@@ -37,13 +38,21 @@ export const signup = async (req, res, next) => {
       avatar: avatarPath,
     });
 
-    console.log(user);
+    const newProfile = new Profile({
+      userId: user._id,
+      customLists: [],
+      aboutMe: "",
+      feed: [],
+    });
 
-    const result = await user.save();
+    user.profileId = newProfile._id;
+
+    await Promise.all([user.save(), newProfile.save()]);
 
     res.status(200).json({
       message: "user signed up",
-      user: result,
+      user: user,
+      profile: newProfile,
     });
   } catch (err) {
     res.status(err.statusCode || 500).json({
