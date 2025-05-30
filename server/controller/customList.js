@@ -2,6 +2,8 @@ import axios from "axios";
 
 import { errorHandler } from "../util/helpers.js";
 import { Watchlist } from "../model/watchlist.js";
+import { Profile } from "../model/userProfile.js";
+import { User } from "../model/user.js";
 
 export const createCustomList = async (req, res, next) => {
   try {
@@ -11,11 +13,17 @@ export const createCustomList = async (req, res, next) => {
     if (!userId || !name)
       throw errorHandler(null, "You did'nt provide user id or list name.", 400);
 
+    const user = await User.findById(userId);
+
+    if (!user) throw errorHandler(null, "User not found!", 404);
+
     const existing = await Watchlist.findOne({
       userId,
       name,
       type: "custom",
     });
+
+    // console.log(existing);
 
     if (existing) throw errorHandler(null, "Already existing list.", 409);
 
@@ -26,7 +34,23 @@ export const createCustomList = async (req, res, next) => {
       items: [],
     });
 
-    await newList.save();
+    const profile = await Profile.findById(user.profileId);
+
+    if (!profile) throw errorHandler(null, "Profile not found!", 404);
+
+    if (profile.customLists.length < 1) {
+      profile.customLists.push({ name: newList.name });
+    }
+
+    const listContains = profile.customLists.some(
+      (list) => list.name === newList.name
+    );
+
+    if (!listContains) {
+      profile.customLists.push({ name: newList.name });
+    }
+
+    await Promise.all([newList.save(), profile.save()]);
 
     res.status(200).json({
       message: `custom list: ${name} created`,
