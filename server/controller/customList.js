@@ -42,20 +42,13 @@ export const createCustomList = async (req, res, next) => {
       profile.customLists.push({ name: newList.name });
     }
 
-    // const listContains = profile.customLists.filter((list) => {
-    //   console.log(list);
+    const listContains = profile.customLists.some(
+      (list) => list.name === newList.name
+    );
 
-    //   // console.log(list.name, newList.name);
-
-    //   if (list.name === newList.name) return true;
-    //   return false;
-    // });
-
-    // console.log(listContains);
-
-    // if (!listContains) {
-    //   profile.customLists.push(newList.name);
-    // }
+    if (!listContains) {
+      profile.customLists.push({ name: newList.name });
+    }
 
     await Promise.all([newList.save(), profile.save()]);
 
