@@ -1,14 +1,28 @@
-import PropTypes from "prop-types";
+import { useUser } from "../../features/queries/user/useUserQueries.jsx";
 
-export default function InitialAvatar({ avatar }) {
+import useAuthStore from "../../features/auth/useAuthStore.js";
+
+export default function InitialAvatar() {
+  const { userId } = useAuthStore();
+  const { data: user, userIsLoading } = useUser(userId, {
+    enabled: !!userId,
+  });
+
+  if (userIsLoading) {
+    return <div>Loading...</div>;
+  }
+  if (!user) {
+    return <div>Error loading user or profile data.</div>;
+  }
   return (
-    <div
-      className="flex justify-center items-center w-8 h-8 rounded-full overflow-hidden"
-      dangerouslySetInnerHTML={{ __html: avatar }}
-    />
+    <div className="my-2 mx-auto">
+      {console.log(user.avatar)}
+      <img
+        crossOrigin="anonymous"
+        src={`http://localhost:8080${user.avatar}`}
+        alt="Profile Picture"
+        className="rounded-full w-10 h-10 m-auto"
+      />
+    </div>
   );
 }
-
-InitialAvatar.propTypes = {
-  avatar: PropTypes.string,
-};

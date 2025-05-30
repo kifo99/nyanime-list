@@ -30,6 +30,10 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Likes",
   },
+  profileId: {
+    type: Schema.Types.ObjectId,
+    ref: "Profile",
+  },
 });
 
 export const User = mongoose.model("User", userSchema);
