@@ -29,7 +29,7 @@ export default function MyProfile() {
         <div className="my-2 mx-auto">
           {console.log(user.avatar)}
           <img
-            src={`http://localhost:8080/${user.avatar}`}
+            src={`http://localhost:8080${user.avatar}`}
             alt="Profile Picture"
             className="rounded-full w-[80%] m-auto"
           />
