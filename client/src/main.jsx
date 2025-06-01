@@ -65,7 +65,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/watchlist",
+    path: "/list/:type/:name?",
     element: (
       <ProtectedRoutes>
         <App>

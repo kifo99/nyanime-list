@@ -2,34 +2,39 @@ import { useEffect } from "react";
 
 import WatchlistCard from "../../components/Anime/WatchlistCard";
 
-import { useUserWatchlist } from "../../features/queries/activity/watchlist/useWatchlistQueries.jsx";
+import { useList } from "../../features/queries/activity/watchlist/useWatchlistQueries.jsx";
 
 import useAuthStore from "../../features/auth/useAuthStore.js";
+import { useParams } from "react-router-dom";
 
 export default function Watchlist() {
-  const { token, userId, isAuth } = useAuthStore();
+  const { userId, isAuth } = useAuthStore();
+
+  const { type, listName = "" } = useParams();
+
+  console.log(type, listName);
 
   const {
-    data: watchlist,
-    watchlistIsLoading,
+    data: list,
+    listIsLoading,
     refetch,
-  } = useUserWatchlist(userId, token, {
-    enabled: !!userId && token,
+  } = useList(userId, type, listName, {
+    enabled: !!userId,
   });
 
   useEffect(() => {
     if (!isAuth) return;
   });
 
-  if (watchlistIsLoading) {
+  if (listIsLoading) {
     return (
       <div>
-        <p>Watchlist is loading</p>
+        <p>List is loading</p>
       </div>
     );
   }
 
-  if (!watchlist || watchlist.length === 0) {
+  if (!list || list.length === 0) {
     return (
       <div>
         <p>No anime in your watchlist yet.</p>
@@ -45,7 +50,7 @@ export default function Watchlist() {
         </h1>
       </div>
       <ul className="grid justify-center grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-6">
-        {watchlist.map((anime) => (
+        {list.map((anime) => (
           <li className="list-none" key={anime.animeId}>
             <WatchlistCard anime={anime} onRefetch={refetch} />
           </li>
