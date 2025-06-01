@@ -109,6 +109,37 @@ export const getWatchlist = async (req, res, next) => {
   }
 };
 
+export const getList = async (req, res, next) => {
+  try {
+    const { userId, type, name } = req.params;
+
+    if (!userId || !type) throw errorHandler(null, "Not valid", 404);
+
+    const query = { userId, type };
+
+    if (type === "custom") {
+      if (!name)
+        throw errorHandler(null, "Custom lists must have a name!", 404);
+      query.name = name;
+    }
+
+    const list = await Watchlist.findOne(query);
+
+    if (!list) throw errorHandler(null, "List not founded!", 404);
+
+    const animeList = list.items;
+
+    res.status(200).json({
+      message: "Watchlist found",
+      watchlist: animeList,
+    });
+  } catch (err) {
+    res.status(err.statusCode || 500).json({
+      message: err.message || "Something is wrong pleas try again later",
+    });
+  }
+};
+
 export const deleteFromWatchlist = async (req, res, next) => {
   try {
     const { userId, animeId } = req.params;
