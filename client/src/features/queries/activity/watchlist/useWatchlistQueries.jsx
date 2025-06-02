@@ -1,5 +1,7 @@
 import { useQuery } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
+import { Variable } from "lucide-react";
 
 const fetchUserWatchlist = async function ({ queryKey }) {
   // eslint-disable-next-line no-unused-vars
@@ -50,6 +52,28 @@ const fetchList = async function ({ queryKey }) {
   }
 };
 
+const deleteAnimeFromList = async function ({
+  userId,
+  animeId,
+  type,
+  listName,
+}) {
+  try {
+    if (!userId) throw new Error("userId is wrong or doesn't exist!");
+
+    const baseURL = `http://localhost:8080/watchlist/user/${userId}/${animeId}/list/${type}`;
+
+    const URL =
+      type === "custom" && listName
+        ? `${baseURL}/${encodeURIComponent(listName)}`
+        : baseURL;
+
+    await axios.delete(URL);
+  } catch (error) {
+    console.error("Error fetching watchlist:", error);
+    throw error;
+  }
+};
 const fetchAllCustomLists = async function ({ queryKey }) {
   // eslint-disable-next-line no-unused-vars
   const [_, userId] = queryKey;
@@ -89,6 +113,22 @@ export const useList = (userId, type = "default", listName = "") => {
   });
 };
 
+export const useDeleteAnimeFromList = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ userId, animeId, type, listName }) =>
+      deleteAnimeFromList({ userId, animeId, type, listName }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries([
+        "userList",
+        variables.userId,
+        variables.type,
+        variables.listName || "",
+      ]);
+    },
+  });
+};
 export const useAllCustomLists = (userId) =>
   useQuery({
     queryKey: ["allCustomLists", userId],

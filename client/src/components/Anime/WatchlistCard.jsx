@@ -2,35 +2,41 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import { useState } from "react";
 
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import { useDeleteAnimeFromList } from "../../features/queries/activity/watchlist/useWatchlistQueries.jsx";
 
 import { CircleX, MessageCirclePlus } from "lucide-react";
 import useAuthStore from "../../features/auth/useAuthStore.js";
 
 import Like from "../Like/Like.jsx";
 
-export default function WatchlistCard({ anime, onRefetch }) {
+export default function WatchlistCard({ anime, onRefetch, type, listName }) {
   const [showDeleteBtn, setShowDeleteBtn] = useState(false);
+  const { mutate: deleteAnime, isPending: isDeleting } =
+    useDeleteAnimeFromList();
 
   const { userId, token } = useAuthStore();
 
   const navigate = useNavigate();
 
   async function handelRemoveAnime() {
-    try {
-      await axios.delete(
-        `http://localhost:8080/watchlist/delete/${userId}/${anime.animeId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+    deleteAnime({
+      userId,
+      animeId: anime.animeId,
+      type,
+      listName,
+    });
 
-      onRefetch();
-    } catch (error) {
-      console.error(error);
-    }
+    onRefetch();
+  }
+
+  if (isDeleting) {
+    return (
+      <div>
+        <p>List is deleting</p>
+      </div>
+    );
   }
 
   return (
@@ -85,4 +91,6 @@ export default function WatchlistCard({ anime, onRefetch }) {
 WatchlistCard.propTypes = {
   anime: PropTypes.object,
   onRefetch: PropTypes.func,
+  type: PropTypes.string,
+  listName: PropTypes.string,
 };

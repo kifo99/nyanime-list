@@ -24,7 +24,7 @@ export default function Watchlist() {
   useEffect(() => {
     if (!isAuth) return;
   });
-  
+
   useEffect(() => {
     if (userId && (type === "default" || (type === "custom" && !!listName))) {
       refetch();
@@ -57,7 +57,12 @@ export default function Watchlist() {
       <ul className="grid justify-center grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-6">
         {list.map((anime) => (
           <li className="list-none" key={anime.animeId}>
-            <WatchlistCard anime={anime} onRefetch={refetch} />
+            <WatchlistCard
+              anime={anime}
+              onRefetch={refetch}
+              type={type}
+              listName={listName}
+            />
           </li>
         ))}
       </ul>
