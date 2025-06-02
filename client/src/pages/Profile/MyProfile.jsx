@@ -27,7 +27,6 @@ export default function MyProfile() {
     <div className="grid grid-cols-[30%_70%] gap-3 w-[80%] my-8 mx-auto bg-indigo-200 rounded-2xl">
       <div className="flex flex-col gap-2 border-r border-r-purple-950  my-2 ">
         <div className="my-2 mx-auto">
-          {console.log(user.avatar)}
           <img
             crossOrigin="anonymous"
             src={`http://localhost:8080${user.avatar}`}
@@ -49,7 +48,7 @@ export default function MyProfile() {
                   <li
                     className="list-none text-purple-950 font-bold border-b border-b-purple-950 py-2 my-1 hover:text-purple-700 hover:border-b-purple-700 hover:text-xl"
                     key={list._id}
-                    onClick={() => navigate(`/custom-list/${list.name}`)}
+                    onClick={() => navigate(`/list/custom/${list.name}`)}
                   >
                     {list.name}
                   </li>

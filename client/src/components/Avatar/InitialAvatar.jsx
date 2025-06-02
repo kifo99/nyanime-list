@@ -16,7 +16,6 @@ export default function InitialAvatar() {
   }
   return (
     <div className="my-2 mx-auto">
-      {console.log(user.avatar)}
       <img
         crossOrigin="anonymous"
         src={`http://localhost:8080${user.avatar}`}

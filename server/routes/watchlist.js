@@ -6,6 +6,8 @@ import {
   addToWatchList,
   getWatchlist,
   deleteFromWatchlist,
+  deleteFromList,
+  getList,
 } from "../controller/watchlist.js";
 
 import {
@@ -20,9 +22,11 @@ const router = express.Router();
 router.get("/get/:userId", tokenAuthentication, getWatchlist);
 router.post("/add/:userId/:animeId", tokenAuthentication, addToWatchList);
 router.get("/users/:userId/custom-lists", getAllCustomLists);
+router.get("/user/:userId/list/:type/:name?", getList);
 router.get("/users/:userId/custom-list/:listName", getCustomList);
 router.post("/users/:userId/custom-list", createCustomList);
 router.post("/users/:userId/custom-list/:listName/:animeId", addToCustomList);
+router.delete("/user/:userId/:animeId/list/:type/:listName?", deleteFromList);
 router.delete(
   "/delete/:userId/:animeId",
   tokenAuthentication,
