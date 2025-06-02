@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import { useState } from "react";
 
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
 import { CircleX, MessageCirclePlus } from "lucide-react";
 import useAuthStore from "../../features/auth/useAuthStore.js";
@@ -34,42 +34,50 @@ export default function WatchlistCard({ anime, onRefetch }) {
   }
 
   return (
-    <div
-      className="relative p-4 group"
-      onMouseEnter={() => setShowDeleteBtn(true)}
-      onMouseLeave={() => setShowDeleteBtn(false)}
-    >
-      <div className=" flex-row gap-1.5 ">
-        <Link to={`/anime/${anime.animeId}`}>
+    <div className="relative p-4 group">
+      <div className="flex flex-col gap-1.5">
+        <div
+          className="relative w-fit m-auto"
+          onMouseEnter={() => setShowDeleteBtn(true)}
+          onMouseLeave={() => setShowDeleteBtn(false)}
+        >
           <img
             src={anime.image}
-            className="border border-transparent hover:border-solid hover:border-gray-600 hover:border-2 hover:rounded-lg m-auto w-24 h-36 hover:w-32 hover:h-44"
-            onMouseEnter={() => setShowDeleteBtn(false)}
-            onMouseLeave={() => setShowDeleteBtn(true)}
+            className={`border border-transparent transition-all duration-300 
+          ${
+            showDeleteBtn
+              ? "border-gray-600 border-2 rounded-lg w-32 h-44"
+              : "w-24 h-36"
+          }`}
           />
-        </Link>
-        <h1 className="text-gray-600 font-extrabold text-xl m-auto text-center">
+          {showDeleteBtn && (
+            <div className="absolute bottom-0 left-0 right-0 bg-black/50 flex justify-around items-center py-1">
+              <MessageCirclePlus
+                size={24}
+                stroke="#4287f5"
+                className="hover:stroke-blue-800 cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/addReview/${anime.animeId}`);
+                }}
+              />
+              <Like userId={userId} animeId={anime.animeId} />
+              <CircleX
+                size={24}
+                stroke="#ff6d05"
+                className="hover:stroke-orange-700 cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handelRemoveAnime();
+                }}
+              />
+            </div>
+          )}
+        </div>
+        <h1 className="text-gray-600 font-extrabold text-xl text-center">
           {anime.title || anime.titleJapanese}
         </h1>
       </div>
-
-      {showDeleteBtn && (
-        <div className="flex justify-center items-center">
-          <MessageCirclePlus
-            size={32}
-            stroke="#4287f5"
-            className="hover:stroke-blue-800"
-            onClick={() => navigate(`/addReview/${anime.animeId}`)}
-          />
-          <Like userId={userId} animeId={anime.animeId} />
-          <CircleX
-            size={32}
-            stroke="#ff6d05"
-            className="hover:stroke-orange-700"
-            onClick={handelRemoveAnime}
-          />
-        </div>
-      )}
     </div>
   );
 }

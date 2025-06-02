@@ -48,7 +48,7 @@ export default function MyProfile() {
                   <li
                     className="list-none text-purple-950 font-bold border-b border-b-purple-950 py-2 my-1 hover:text-purple-700 hover:border-b-purple-700 hover:text-xl"
                     key={list._id}
-                    onClick={() => navigate(`/list/${"custom"}/${list.name}`)}
+                    onClick={() => navigate(`/list/custom/${list.name}`)}
                   >
                     {list.name}
                   </li>

@@ -30,6 +30,8 @@ const fetchList = async function ({ queryKey }) {
 
     if (!userId) throw new Error("userId is wrong or doesn't exist!");
 
+    console.log(type, "Triggerd");
+
     const baseURL = `http://localhost:8080/watchlist/user/${userId}/list/${type}`;
 
     const URL =
@@ -65,7 +67,7 @@ const fetchAllCustomLists = async function ({ queryKey }) {
 
 export const useUserWatchlist = (userId, token) =>
   useQuery({
-    queryKey: ["userList", userId, token],
+    queryKey: ["userWatchlist", userId, token],
     queryFn: fetchUserWatchlist,
     staleTime: 1000 * 10 * 5,
     cacheTime: 1000 * 10 * 10,
@@ -73,16 +75,19 @@ export const useUserWatchlist = (userId, token) =>
     enabled: !!userId && !!token,
   });
 
-export const useList = (userId, type = "default", listName = "") =>
-  useQuery({
-    queryKey: ["userWatchlist", userId, type, listName],
+export const useList = (userId, type = "default", listName = "") => {
+  return useQuery({
+    queryKey: ["userList", userId, type, listName],
     queryFn: fetchList,
     staleTime: 1000 * 10 * 5,
     cacheTime: 1000 * 10 * 10,
     retry: 1,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
     enabled:
       !!userId && (type === "default" || (type === "custom" && !!listName)),
   });
+};
 
 export const useAllCustomLists = (userId) =>
   useQuery({

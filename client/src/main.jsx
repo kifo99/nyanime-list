@@ -65,7 +65,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/list/:type/:name?",
+    path: "/list/:type/:listName?",
     element: (
       <ProtectedRoutes>
         <App>

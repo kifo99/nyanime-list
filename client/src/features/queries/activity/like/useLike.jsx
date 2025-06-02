@@ -6,8 +6,6 @@ const isLiked = async function ({ queryKey }) {
   try {
     const [_, userId, animeId] = queryKey;
 
-    console.log(userId, animeId);
-
     const { data } = await axios.get(
       `http://localhost:8080/activity/isLiked/${userId}/${animeId}`
     );

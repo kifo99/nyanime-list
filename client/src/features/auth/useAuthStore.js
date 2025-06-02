@@ -46,7 +46,6 @@ const useAuthStore = create(
       },
 
       logout: () => {
-        console.log("log-out triggered");
 
         const oldTimer = get().logoutTimer;
         if (oldTimer) clearTimeout(oldTimer);
@@ -56,7 +55,6 @@ const useAuthStore = create(
           isAuth: false,
           logoutTimer: null,
         });
-        console.log(useAuthStore.getState());
 
         useAuthStore.persist.clearStorage();
 

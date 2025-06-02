@@ -12,19 +12,24 @@ export default function Watchlist() {
 
   const { type, listName = "" } = useParams();
 
-  console.log(type, listName);
-
   const {
     data: list,
     listIsLoading,
     refetch,
   } = useList(userId, type, listName, {
-    enabled: !!userId,
+    enabled:
+      !!userId && (type === "default" || (type === "custom" && !!listName)),
   });
 
   useEffect(() => {
     if (!isAuth) return;
   });
+  
+  useEffect(() => {
+    if (userId && (type === "default" || (type === "custom" && !!listName))) {
+      refetch();
+    }
+  }, [userId, type, listName]);
 
   if (listIsLoading) {
     return (
