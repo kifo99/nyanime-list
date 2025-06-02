@@ -140,6 +140,50 @@ export const getList = async (req, res, next) => {
   }
 };
 
+export const deleteFromList = async (req, res, next) => {
+  try {
+    const { userId, animeId, type, listName } = req.params;
+
+    if (!userId || !animeId || !type)
+      throw errorHandler(null, "Not valid", 404);
+
+    const query = { userId, type };
+
+    if (type === "custom") {
+      if (!listName)
+        throw errorHandler(null, "Custom lists must have a name!", 404);
+      query.name = listName;
+    }
+
+    const list = await Watchlist.findOne(query);
+
+    if (!list) throw errorHandler(null, "List not founded!", 404);
+
+    const deleteAnime = list.items.filter((item) => {
+      if (item.animeId.toString() === animeId) {
+        return item;
+      }
+    });
+
+    if (deleteAnime.length < 1)
+      throw errorHandler(null, "Anime is not in list!", 404);
+
+    const index = list.items.indexOf(deleteAnime[0]);
+
+    list.items.splice(index, 1);
+    await list.save();
+
+    res.status(200).json({
+      message: "Deleting anime from list is finished!",
+      anime: list,
+    });
+  } catch (err) {
+    res.status(err.statusCode || 500).json({
+      message: err.message || "Something is wrong pleas try again later",
+    });
+  }
+};
+
 export const deleteFromWatchlist = async (req, res, next) => {
   try {
     const { userId, animeId } = req.params;
