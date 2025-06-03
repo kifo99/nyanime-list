@@ -5,6 +5,8 @@ import useAuthStore from "../../features/auth/useAuthStore.js";
 
 import { useNavigate } from "react-router-dom";
 
+import { Pencil } from "lucide-react";
+
 export default function MyProfile() {
   const { userId } = useAuthStore();
   const { data: profile, profileIsLoading } = useProfile(userId, {
@@ -61,11 +63,22 @@ export default function MyProfile() {
         <div className="flex flex-col gap-4 w-full">
           <h1 className="text-2xl font-bold text-purple-950">Biography:</h1>
           <p className="font-mono text-[13px] sm:text-[14px] md:text-[15px] tracking-tight leading-tight break-words whitespace-normal max-w-[90%]">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet
-            blanditiis eveniet quo, doloremque, eaque totam nobis molestiae
-            similique illum reprehenderit impedit ex possimus numquam est
-            architecto ab laudantium modi atque.
+            {profile.aboutMe || (
+              <span className="flex items-center mx-auto">
+                <p className="text-purple-950 font-bold mx-2">
+                  Add something interesting about you
+                </p>
+                <Pencil
+                  className="stroke-purple-950 hover:size-8 hover:stroke-purple-800 hover:stroke-1"
+                  size={16}
+                />
+              </span>
+            )}
           </p>
+          <Pencil
+            className="stroke-purple-950 hover:size-8 hover:stroke-purple-800 hover:stroke-1"
+            size={16}
+          />
         </div>
 
         <div className="mt-6">

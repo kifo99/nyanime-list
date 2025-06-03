@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import axios from "axios";
 import { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
@@ -16,7 +15,7 @@ export default function WatchlistCard({ anime, onRefetch, type, listName }) {
   const { mutate: deleteAnime, isPending: isDeleting } =
     useDeleteAnimeFromList();
 
-  const { userId, token } = useAuthStore();
+  const { userId } = useAuthStore();
 
   const navigate = useNavigate();
 
