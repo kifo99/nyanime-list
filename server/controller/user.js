@@ -19,3 +19,33 @@ export const getUser = async (req, res, next) => {
     });
   }
 };
+
+export const updateProfilePic = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const newProfilePic = req.file;
+
+    let profilePicPath;
+    if (newProfilePic) {
+      profilePicPath = `/images/avatar/${newProfilePic.filename}`;
+    }
+
+    const user = await User.findById(userId);
+    if (!user) errorHandler(null, "User not found!", 404);
+
+    console.log(user.avatar);
+
+    user.avatar = profilePicPath;
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Profile picture updated.",
+      user: user,
+    });
+  } catch (err) {
+    res.status(err.statusCode || 500).json({
+      message: err.message,
+    });
+  }
+};
