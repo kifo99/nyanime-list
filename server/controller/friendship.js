@@ -10,7 +10,7 @@ export const getRequestList = async (req, res, next) => {
 
     const requests = await Friendship.find({
       recipient: userId,
-    }).select("requester");
+    });
 
     if (!requests)
       throw errorHandler(
@@ -57,6 +57,43 @@ export const sendRequest = async (req, res, next) => {
     res.status(200).json({
       message: "Friend request sent.",
       friendship: newFriendship,
+    });
+  } catch (err) {
+    res.status(err.statusCode || 500).json({
+      message: err.message || "Something is wrong pleas try again later",
+    });
+  }
+};
+
+export const acceptDeclineRequest = async (req, res, next) => {
+  try {
+    const { userId, requesterId, isAccepted } = req.params;
+
+    if (!userId || !requesterId)
+      throw errorHandler(null, "You did'nt provide user id", 400);
+
+    const friendship = await Friendship.findOne({
+      recipient: userId,
+      requester: requesterId,
+      status: "pending",
+    });
+
+    if (isAccepted === "false") {
+      friendship.status = "rejected";
+
+      await friendship.save();
+
+      return res.status(200).json({
+        message: "Friendship request rejected",
+        friendship: friendship,
+      });
+    }
+
+    friendship.status = "accepted";
+    await friendship.save();
+    res.status(200).json({
+      message: "Friendship request accepted",
+      friendship: friendship,
     });
   } catch (err) {
     res.status(err.statusCode || 500).json({

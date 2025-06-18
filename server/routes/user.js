@@ -1,11 +1,16 @@
 import express from "express";
 
-import { getUser, updateProfilePic } from "../controller/user.js";
+import {
+  getUser,
+  searchUserByName,
+  updateProfilePic,
+} from "../controller/user.js";
 import imageUpload from "../middleware/imageUpload.js";
 
 const router = express.Router();
 
 router.get("/profile/:userId", getUser);
+router.get("/search-user", searchUserByName);
 router.put(
   "/:userId/profile-picture",
   imageUpload.single("newProfilePic"),
