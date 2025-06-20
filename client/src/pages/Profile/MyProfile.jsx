@@ -65,9 +65,9 @@ export default function MyProfile() {
           <p className="font-mono text-[13px] sm:text-[14px] md:text-[15px] tracking-tight leading-tight break-words whitespace-normal max-w-[90%]">
             {profile.aboutMe || (
               <span className="flex items-center mx-auto">
-                <p className="text-purple-950 font-bold mx-2">
+                <span className="text-purple-950 font-bold mx-2">
                   Add something interesting about you
-                </p>
+                </span>
                 <Pencil
                   className="stroke-purple-950 hover:size-8 hover:stroke-purple-800 hover:stroke-1"
                   size={16}

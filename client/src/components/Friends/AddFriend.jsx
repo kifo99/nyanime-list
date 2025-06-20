@@ -1,14 +1,22 @@
 import { useState } from "react";
+import { useDebounce } from "use-debounce";
 import { motion, AnimatePresence } from "framer-motion";
+import { CirclePlus, CircleX } from "lucide-react";
+
 import useFriendshipStore from "../../features/friends/useFriendshipStore";
+import useAuthStore from "../../features/auth/useAuthStore.js";
 import { useUserByName } from "../../features/queries/friendship/useFriendshipQuery.jsx";
+
+import InitialAvatar from "../Avatar/InitialAvatar";
 
 export default function AddFriend() {
   const { isOpened } = useFriendshipStore();
+  const { userId } = useAuthStore;
   const [searchName, setSearchName] = useState("");
+  const [debouncedSearchName] = useDebounce(searchName, 500);
 
-  const { data: user, isUserLoading } = useUserByName(searchName, {
-    enabled: !!searchName,
+  const { data: user, isUserLoading } = useUserByName(debouncedSearchName, {
+    enabled: !!debouncedSearchName,
   });
 
   if (isUserLoading) {
@@ -34,16 +42,26 @@ export default function AddFriend() {
               className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
-          <div className="mb-4 text-center">
-            <button className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
-              Add Friend
-            </button>
-          </div>
 
           {/* Search results */}
-          <div className="bg-white p-4 rounded-lg min-h-[100px]">
-            {/* Example result slot */}
-          </div>
+          {user && (
+            <div className="grid grid-cols-2 items-center bg-white p-6 rounded-lg min-h-[100px] gap-4">
+              {/* Left half: Avatar + Name */}
+              <div className="flex items-center gap-4">
+                <InitialAvatar userId={user._id} />
+                <h1 className="text-xl font-semibold text-purple-900">
+                  {user.name}
+                </h1>
+              </div>
+
+              {/* Right half: Accept + Decline Buttons */}
+              <div className="flex justify-end gap-4">
+                <button className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
+                  Add <CirclePlus size={20} />
+                </button>
+              </div>
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

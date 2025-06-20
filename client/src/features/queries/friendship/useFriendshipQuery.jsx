@@ -3,13 +3,18 @@ import { useQuery } from "react-query";
 import axios from "axios";
 
 const fetchUserByName = async function ({ queryKey }) {
-  const [_, username] = queryKey;
+  try {
+    const [_, username] = queryKey;
 
-  const { data } = axios.get(`http://localhost:8080/user/search-user`, {
-    username,
-  });
+    const { data } = await axios.get(
+      `http://localhost:8080/user/${username}/search-user`
+    );
 
-  console.log(data);
+    return data.user;
+  } catch (error) {
+    if (error.response?.status === 404) return null;
+    throw error;
+  }
 };
 
 export const useUserByName = (username) =>
