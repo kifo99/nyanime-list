@@ -52,7 +52,7 @@ export const updateProfilePic = async (req, res, next) => {
 
 export const searchUserByName = async (req, res, next) => {
   try {
-    const { username } = req.body;
+    const { username } = req.params;
     if (!username) errorHandler(null, "Username not found!", 404);
 
     const user = await User.findOne({
