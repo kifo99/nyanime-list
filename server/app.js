@@ -14,6 +14,7 @@ import watchlistRouter from "./routes/watchlist.js";
 import reviewsRouter from "./routes/reviews.js";
 import activityRouter from "./routes/activity.js";
 import profileRouter from "./routes/profile.js";
+import friendRequestRouter from "./routes/friendship.js";
 import { MONGODB_URL } from "./util/config.js";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -55,6 +56,7 @@ app.use("/watchlist", watchlistRouter);
 app.use("/reviews", reviewsRouter);
 app.use("/activity", activityRouter);
 app.use("/profile", profileRouter);
+app.use("/friend", friendRequestRouter);
 
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;

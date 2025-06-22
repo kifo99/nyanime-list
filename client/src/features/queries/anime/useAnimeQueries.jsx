@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import { useQuery } from "react-query";
 import axios from "axios";
 

@@ -69,7 +69,7 @@ export default function Navbar() {
       <div className="flex items-center gap-3">
         {isAuth ? (
           <div className="flex items-center gap-3">
-            <InitialAvatar />
+            <InitialAvatar userId={userId} />
             <button
               className="text-amber-700 font-bold m-2 hover:text-amber-950 outline-none focus:outline-none transition-all "
               onClick={logout}

@@ -1,9 +1,6 @@
 import { useUser } from "../../features/queries/user/useUserQueries.jsx";
 
-import useAuthStore from "../../features/auth/useAuthStore.js";
-
-export default function InitialAvatar() {
-  const { userId } = useAuthStore();
+export default function InitialAvatar({ userId }) {
   const { data: user, userIsLoading } = useUser(userId, {
     enabled: !!userId,
   });

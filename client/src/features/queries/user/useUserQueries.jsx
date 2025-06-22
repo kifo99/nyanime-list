@@ -1,9 +1,10 @@
-import { useQuery } from "react-query";
+import { useQueries, useQuery } from "react-query";
 import axios from "axios";
 
 const fetchUser = async function ({ queryKey }) {
   try {
     const [_, userId] = queryKey;
+    console.log(userId);
 
     const { data } = await axios.get(
       `http://localhost:8080/user/profile/${userId}`
@@ -20,10 +21,22 @@ const fetchUser = async function ({ queryKey }) {
 
 export const useUser = (userId) =>
   useQuery({
-    queryKey: ["getUSer", userId],
+    queryKey: ["getUser", userId],
     queryFn: fetchUser,
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 10,
     retry: 1,
     enabled: !!userId,
   });
+
+export const useUsers = (userIds = []) =>
+  useQueries(
+    userIds.map((id) => ({
+      queryKey: ["getUsers", id],
+      queryFn: fetchUser,
+      staleTime: 1000 * 60 * 5,
+      cacheTime: 1000 * 60 * 10,
+      retry: 1,
+      enabled: !!id,
+    }))
+  );
