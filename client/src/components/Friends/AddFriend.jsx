@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useDebounce } from "use-debounce";
+import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { CirclePlus, CircleX } from "lucide-react";
+import { CirclePlus } from "lucide-react";
 
 import useFriendshipStore from "../../features/friends/useFriendshipStore";
 import useAuthStore from "../../features/auth/useAuthStore.js";
@@ -11,16 +12,29 @@ import InitialAvatar from "../Avatar/InitialAvatar";
 
 export default function AddFriend() {
   const { isOpened } = useFriendshipStore();
-  const { userId } = useAuthStore;
+  const { userId } = useAuthStore();
   const [searchName, setSearchName] = useState("");
   const [debouncedSearchName] = useDebounce(searchName, 500);
 
   const { data: user, isUserLoading } = useUserByName(debouncedSearchName, {
     enabled: !!debouncedSearchName,
   });
+  async function handleAddFriend() {
+    try {
+      console.log(user);
+      console.log(userId);
+
+      if (!userId || !user) throw new Error("Something is wrong!");
+      await axios.post(
+        `http://localhost:8080/friend/user/${userId}/${user._id}/send-request`
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   if (isUserLoading) {
-    return <div>User is still loading</div>;
+    return <div>Still loading</div>;
   }
 
   return (
@@ -56,7 +70,10 @@ export default function AddFriend() {
 
               {/* Right half: Accept + Decline Buttons */}
               <div className="flex justify-end gap-4">
-                <button className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
+                <button
+                  className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition"
+                  onClick={handleAddFriend}
+                >
                   Add <CirclePlus size={20} />
                 </button>
               </div>

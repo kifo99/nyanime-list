@@ -17,6 +17,19 @@ const fetchUserByName = async function ({ queryKey }) {
   }
 };
 
+const fetchRequests = async function ({ queryKey }) {
+  try {
+    const [_, userId] = queryKey;
+    const { data } = await axios.get(
+      `http://localhost:8080/friend/user/${userId}/friend-request`
+    );
+
+    return data.requests;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const useUserByName = (username) =>
   useQuery({
     queryKey: ["userByName", username],
@@ -25,4 +38,14 @@ export const useUserByName = (username) =>
     cacheTime: 1000 * 60 * 10,
     retry: 1,
     enabled: !!username,
+  });
+
+export const useRequests = (userId) =>
+  useQuery({
+    queryKey: ["useRequests", userId],
+    queryFn: fetchRequests,
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
+    retry: 1,
+    enabled: !!userId,
   });
