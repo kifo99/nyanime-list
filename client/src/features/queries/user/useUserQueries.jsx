@@ -4,7 +4,6 @@ import axios from "axios";
 const fetchUser = async function ({ queryKey }) {
   try {
     const [_, userId] = queryKey;
-    console.log(userId);
 
     const { data } = await axios.get(
       `http://localhost:8080/user/profile/${userId}`

@@ -3,6 +3,9 @@ import { useUser } from "../../features/queries/user/useUserQueries.jsx";
 
 import useAuthStore from "../../features/auth/useAuthStore.js";
 
+import { useFriendsList } from "../../features/queries/friendship/useFriendshipQuery.jsx";
+import { useUsers } from "../../features/queries/user/useUserQueries.jsx";
+
 import { useNavigate } from "react-router-dom";
 
 import { Pencil } from "lucide-react";
@@ -16,7 +19,14 @@ export default function MyProfile() {
     enabled: !!userId,
   });
 
+  const { data: friends, isLoadingFriends } = useFriendsList(userId, {
+    enabled: !!userId,
+  });
+
   const navigate = useNavigate();
+
+  const userIds = friends?.map((req) => req.requester);
+  const friendsQueries = useUsers(userIds);
 
   if (profileIsLoading || userIsLoading) {
     return <div>Loading...</div>;
@@ -24,6 +34,11 @@ export default function MyProfile() {
   if (!user || !profile) {
     return <div>Error loading user or profile data.</div>;
   }
+
+  if (isLoadingFriends) {
+    return <div>Loading...</div>;
+  }
+  if (!friends || friends.length === 0) return <div>No friends</div>;
 
   return (
     <div className="grid grid-cols-[30%_70%] gap-3 w-[80%] my-8 mx-auto bg-indigo-200 rounded-2xl">
@@ -85,6 +100,12 @@ export default function MyProfile() {
           <h1 className="text-2xl font-bold text-purple-950">Feed:</h1>
         </div>
       </div>
+
+      {friends.map((friend, index) => {
+        const user = friendsQueries[index]?.data;
+
+        return <div key={user._id}>{user.name}</div>;
+      })}
     </div>
   );
 }
