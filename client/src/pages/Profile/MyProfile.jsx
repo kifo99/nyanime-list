@@ -103,7 +103,7 @@ export default function MyProfile() {
 
       {friends.map((friend, index) => {
         const user = friendsQueries[index]?.data;
-
+        if (!user) return <div key={friend._id}>User not found</div>;
         return <div key={user._id}>{user.name}</div>;
       })}
     </div>
