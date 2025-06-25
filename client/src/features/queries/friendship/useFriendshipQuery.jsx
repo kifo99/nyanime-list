@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useQuery } from "react-query";
+import { useQuery, useQueries } from "react-query";
 import axios from "axios";
 
 const fetchUserByName = async function ({ queryKey }) {
@@ -15,6 +15,15 @@ const fetchUserByName = async function ({ queryKey }) {
     if (error.response?.status === 404) return null;
     throw error;
   }
+};
+
+const fetchFriendsList = async function ({ queryKey }) {
+  const [_, userId] = queryKey;
+  const { data } = await axios.get(
+    `http://localhost:8080/friend/user/${userId}/friends-list`
+  );
+
+  return data.friendsList || [];
 };
 
 const fetchRequests = async function ({ queryKey }) {
@@ -44,6 +53,16 @@ export const useRequests = (userId) =>
   useQuery({
     queryKey: ["useRequests", userId],
     queryFn: fetchRequests,
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
+    retry: 1,
+    enabled: !!userId,
+  });
+
+export const useFriendsList = (userId) =>
+  useQuery({
+    queryKey: ["useRequests", userId],
+    queryFn: fetchFriendsList,
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 10,
     retry: 1,
