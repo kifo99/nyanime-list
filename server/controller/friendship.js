@@ -46,8 +46,6 @@ export const getFriendshipList = async (req, res, next) => {
         404
       );
     }
-
-    // Extract list of *friend IDs* (excluding self)
     const friendIds = friendships.map((friendship) => {
       return String(friendship.recipient) === userId
         ? friendship.requester
@@ -73,6 +71,9 @@ export const sendRequest = async (req, res, next) => {
         "You did'nt provide user id or recipient id",
         400
       );
+
+    if (recipientId === userId)
+      throw errorHandler(null, "User cant befriend himself.", 400);
 
     const existingRequest = await Friendship.findOne({
       requester: userId,
