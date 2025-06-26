@@ -32,29 +32,38 @@ export const getFriendshipList = async (req, res, next) => {
   try {
     const { userId } = req.params;
 
-    if (!userId) throw errorHandler(null, "You did'nt provide user id", 400);
+    if (!userId) throw errorHandler(null, "You didn't provide user id", 400);
 
-    const friendsList = await Friendship.find({
+    const friendships = await Friendship.find({
       status: "accepted",
       $or: [{ recipient: userId }, { requester: userId }],
     });
 
-    if (!friendsList)
+    if (!friendships || friendships.length === 0) {
       throw errorHandler(
         null,
-        "Friendship list was not fetched or user does'nt have any friends "
+        "No friends found or friendship list was not fetched",
+        404
       );
+    }
+
+    // Extract list of *friend IDs* (excluding self)
+    const friendIds = friendships.map((friendship) => {
+      return String(friendship.recipient) === userId
+        ? friendship.requester
+        : friendship.recipient;
+    });
+
     res.status(200).json({
       message: "Friends list fetched",
-      friendsList: friendsList,
+      friendsList: friendIds,
     });
   } catch (err) {
     res.status(err.statusCode || 500).json({
-      message: err.message || "Something is wrong pleas try again later",
+      message: err.message || "Something went wrong, please try again later",
     });
   }
 };
-
 export const sendRequest = async (req, res, next) => {
   try {
     const { userId, recipientId } = req.params;
