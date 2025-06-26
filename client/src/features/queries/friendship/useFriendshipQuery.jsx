@@ -23,6 +23,8 @@ const fetchFriendsList = async function ({ queryKey }) {
     `http://localhost:8080/friend/user/${userId}/friends-list`
   );
 
+  console.log(data);
+
   return data.friendsList || [];
 };
 

@@ -12,7 +12,7 @@ export default function FriendsList() {
     enabled: !!userId,
   });
 
-  const userIds = friends?.map((req) => req.requester);
+  const userIds = friends?.map((req) => req);
   const friendsQueries = useUsers(userIds);
 
   if (isLoadingFriends) {
