@@ -35,8 +35,8 @@ export const getFriendshipList = async (req, res, next) => {
     if (!userId) throw errorHandler(null, "You did'nt provide user id", 400);
 
     const friendsList = await Friendship.find({
-      recipient: userId,
       status: "accepted",
+      $or: [{ recipient: userId }, { requester: userId }],
     });
 
     if (!friendsList)
