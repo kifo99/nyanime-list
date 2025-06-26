@@ -61,7 +61,7 @@ export const useRequests = (userId) =>
 
 export const useFriendsList = (userId) =>
   useQuery({
-    queryKey: ["useRequests", userId],
+    queryKey: ["useFriendsList", userId],
     queryFn: fetchFriendsList,
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 10,

@@ -1,10 +1,8 @@
 import { useProfile } from "../../features/queries/profile/useProfileQueries";
 import { useUser } from "../../features/queries/user/useUserQueries.jsx";
+import { Link } from "react-router-dom";
 
 import useAuthStore from "../../features/auth/useAuthStore.js";
-
-import { useFriendsList } from "../../features/queries/friendship/useFriendshipQuery.jsx";
-import { useUsers } from "../../features/queries/user/useUserQueries.jsx";
 
 import { useNavigate } from "react-router-dom";
 
@@ -19,14 +17,7 @@ export default function MyProfile() {
     enabled: !!userId,
   });
 
-  const { data: friends, isLoadingFriends } = useFriendsList(userId, {
-    enabled: !!userId,
-  });
-
   const navigate = useNavigate();
-
-  const userIds = friends?.map((req) => req.requester);
-  const friendsQueries = useUsers(userIds);
 
   if (profileIsLoading || userIsLoading) {
     return <div>Loading...</div>;
@@ -35,21 +26,22 @@ export default function MyProfile() {
     return <div>Error loading user or profile data.</div>;
   }
 
-  if (isLoadingFriends) {
-    return <div>Loading...</div>;
-  }
-  if (!friends || friends.length === 0) return <div>No friends</div>;
-
   return (
     <div className="grid grid-cols-[30%_70%] gap-3 w-[80%] my-8 mx-auto bg-indigo-200 rounded-2xl">
       <div className="flex flex-col gap-2 border-r border-r-purple-950  my-2 ">
-        <div className="my-2 mx-auto">
+        <div className="flex-row my-2 mx-auto">
           <img
             crossOrigin="anonymous"
             src={`http://localhost:8080${user.avatar}`}
             alt="Profile Picture"
             className="rounded-full w-28 h-28 mx-auto"
           />
+          <Link
+            className="mx-auto font-bold text-l text-purple-800 hover:text-purple-950 hover:text-xl"
+            to={`/friends-list`}
+          >
+            Friends
+          </Link>
         </div>
 
         <div className="flex flex-col gap-1 my-2 mx-5">
@@ -100,12 +92,6 @@ export default function MyProfile() {
           <h1 className="text-2xl font-bold text-purple-950">Feed:</h1>
         </div>
       </div>
-
-      {friends.map((friend, index) => {
-        const user = friendsQueries[index]?.data;
-        if (!user) return <div key={friend._id}>User not found</div>;
-        return <div key={user._id}>{user.name}</div>;
-      })}
     </div>
   );
 }
