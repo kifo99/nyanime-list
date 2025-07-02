@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,9 +9,10 @@ import useAuthStore from "../../features/auth/useAuthStore.js";
 import { useUserByName } from "../../features/queries/friendship/useFriendshipQuery.jsx";
 
 import InitialAvatar from "../Avatar/InitialAvatar";
+import LoadingSpinner from "../Loader/LoadingSpinner.jsx";
 
 export default function AddFriend() {
-  const { isOpened } = useFriendshipStore();
+  const { isOpened, setIsOpened } = useFriendshipStore();
   const { userId } = useAuthStore();
   const [searchName, setSearchName] = useState("");
   const [debouncedSearchName] = useDebounce(searchName, 500);
@@ -21,21 +22,20 @@ export default function AddFriend() {
   });
   async function handleAddFriend() {
     try {
-      console.log(user);
-      console.log(userId);
-
       if (!userId || !user) throw new Error("Something is wrong!");
       await axios.post(
         `http://localhost:8080/friend/user/${userId}/${user._id}/send-request`
       );
+      setSearchName("");
+      setIsOpened(false);
     } catch (error) {
       console.log(error);
     }
   }
 
-  if (isUserLoading) {
-    return <div>Still loading</div>;
-  }
+  useEffect(() => {
+    setSearchName("");
+  }, [isOpened]);
 
   return (
     <AnimatePresence>
@@ -56,28 +56,30 @@ export default function AddFriend() {
               className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
+          {isUserLoading ? (
+            <LoadingSpinner
+              message={"Search results still loading please wait."}
+            />
+          ) : (
+            user && (
+              <div className="grid grid-cols-2 items-center bg-white p-6 rounded-lg min-h-[100px] gap-4">
+                <div className="flex items-center gap-4">
+                  <InitialAvatar userId={user._id} />
+                  <h1 className="text-xl font-semibold text-purple-900">
+                    {user.name}
+                  </h1>
+                </div>
 
-          {/* Search results */}
-          {user && (
-            <div className="grid grid-cols-2 items-center bg-white p-6 rounded-lg min-h-[100px] gap-4">
-              {/* Left half: Avatar + Name */}
-              <div className="flex items-center gap-4">
-                <InitialAvatar userId={user._id} />
-                <h1 className="text-xl font-semibold text-purple-900">
-                  {user.name}
-                </h1>
+                <div className="flex justify-end gap-4">
+                  <button
+                    className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition"
+                    onClick={handleAddFriend}
+                  >
+                    Add <CirclePlus size={20} />
+                  </button>
+                </div>
               </div>
-
-              {/* Right half: Accept + Decline Buttons */}
-              <div className="flex justify-end gap-4">
-                <button
-                  className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition"
-                  onClick={handleAddFriend}
-                >
-                  Add <CirclePlus size={20} />
-                </button>
-              </div>
-            </div>
+            )
           )}
         </motion.div>
       )}

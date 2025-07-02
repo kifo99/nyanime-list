@@ -96,7 +96,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/friends-list",
+    path: "/:userId/friends-list",
     element: (
       <ProtectedRoutes>
         <App>

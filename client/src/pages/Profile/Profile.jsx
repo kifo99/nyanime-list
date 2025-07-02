@@ -1,18 +1,15 @@
 import { useProfile } from "../../features/queries/profile/useProfileQueries";
 import { useUser } from "../../features/queries/user/useUserQueries.jsx";
 import { Link, useParams } from "react-router-dom";
-import { useEffect } from "react";
+
 import useAuthStore from "../../features/auth/useAuthStore.js";
 
 import { useNavigate } from "react-router-dom";
 
 import { Pencil } from "lucide-react";
 
-export default function MyProfile() {
-  const { userId: loggedInUser } = useAuthStore();
-  const { userId: profileId } = useParams();
-
-  const userId = profileId ?? loggedInUser;
+export default function Profile() {
+  const profileId = useParams();
   const { data: profile, profileIsLoading } = useProfile(userId, {
     enabled: !!userId,
   });
@@ -21,10 +18,6 @@ export default function MyProfile() {
   });
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log("Active userId:", userId);
-  }, [userId]);
 
   if (profileIsLoading || userIsLoading) {
     return <div>Loading...</div>;
@@ -45,7 +38,7 @@ export default function MyProfile() {
           />
           <Link
             className="mx-auto font-bold text-l text-purple-800 hover:text-purple-950 hover:text-xl"
-            to={`/${userId}/friends-list`}
+            to={`/friends-list`}
           >
             Friends
           </Link>

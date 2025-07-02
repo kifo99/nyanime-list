@@ -1,12 +1,11 @@
 import { useFriendsList } from "../../features/queries/friendship/useFriendshipQuery.jsx";
 import { useUsers } from "../../features/queries/user/useUserQueries.jsx";
-
-import useAuthStore from "../../features/auth/useAuthStore.js";
+import { Link, useParams } from "react-router-dom";
 
 import InitialAvatar from "../../components/Avatar/InitialAvatar.jsx";
 
 export default function FriendsList() {
-  const { userId } = useAuthStore();
+  const { userId } = useParams();
 
   const { data: friends, isLoadingFriends } = useFriendsList(userId, {
     enabled: !!userId,
@@ -29,17 +28,18 @@ export default function FriendsList() {
             if (!user) return <li key={friend._id}>User not found</li>;
 
             return (
-              <li
-                key={user._id}
-                className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl shadow-sm hover:bg-gray-100"
-              >
-                {/* ✅ Avatar first */}
-                <div className="flex-shrink-0">
-                  <InitialAvatar userId={user._id} />
-                </div>
-                <div className="text-purple-600 font-medium text-lg">
-                  {user.name}
-                </div>
+              <li key={user._id}>
+                <Link
+                  className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl shadow-sm hover:bg-gray-100"
+                  to={`/user/${user._id}/profile`}
+                >
+                  <div className="flex-shrink-0">
+                    <InitialAvatar userId={user._id} />
+                  </div>
+                  <div className="text-purple-600 font-medium text-lg">
+                    {user.name}
+                  </div>
+                </Link>
               </li>
             );
           })}
