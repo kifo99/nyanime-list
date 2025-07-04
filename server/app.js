@@ -4,9 +4,6 @@ import cors from "cors";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 import bodyParser from "body-parser";
-import mongoose from "mongoose";
-
-import { PORT } from "./util/config.js";
 import animeRouter from "./routes/anime.js";
 import authRouter from "./routes/auth.js";
 import userRouter from "./routes/user.js";
@@ -15,7 +12,6 @@ import reviewsRouter from "./routes/reviews.js";
 import activityRouter from "./routes/activity.js";
 import profileRouter from "./routes/profile.js";
 import friendRequestRouter from "./routes/friendship.js";
-import { MONGODB_URL } from "./util/config.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -73,16 +69,4 @@ app.use((error, req, res, next) => {
   });
 });
 
-const startServer = async function () {
-  try {
-    await mongoose.connect(MONGODB_URL);
-    console.log("Connected");
-    app.listen(PORT || 8000, () =>
-      console.log(`🚀 Server running on port ${PORT || 8000}`)
-    );
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-startServer();
+export default app;
