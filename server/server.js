@@ -22,10 +22,39 @@ io.on("connection", (socket) => {
 
   socket.on("message", async (data) => {
     try {
-      const { members, message: text, name, isGroup, createdAt } = data;
+      const { members, message: text, createdAt } = data;
+
+      const chatRoom = await ChatRoom.findOne({
+        members: { $all: members, $size: members.length },
+      });
+
+      if (!chatRoom) {
+        return socket.emit("error", { message: "Chat room not found." });
+      }
+
+      const newMessage = new Message({
+        chatRoomId: chatRoom._id,
+        message: text,
+        sentAt: createdAt,
+      });
+
+      await newMessage.save();
+
+      io.to(chatRoom._id.toString()).emit("newMessage", newMessage);
+    } catch (err) {
+      console.error(err);
+      socket.emit("error", {
+        message: err.message || "Something went wrong. Please try again later.",
+      });
+    }
+  });
+
+  socket.on("startChat", async (data, callback) => {
+    try {
+      const { members, name, isGroup, createdAt } = data;
 
       let chatRoom = await ChatRoom.findOne({
-        members: members,
+        members: { $all: members, $size: members.length },
       });
 
       if (!chatRoom) {
@@ -38,22 +67,23 @@ io.on("connection", (socket) => {
         await chatRoom.save();
       }
 
-      const newMessage = new Message({
-        chatRoomId: chatRoom._id,
-        message: text,
-        sentAt: createdAt,
-      });
+      socket.join(chatRoom._id.toString());
 
-      await newMessage.save();
-      console.log(newMessage);
-
-      io.emit("message", `${socket.id.substring(0, 2)}: ${text}`);
+      if (callback) callback({ success: true, chatRoom });
     } catch (err) {
       console.error(err);
-      socket.emit("error", {
-        message: err.message || "Something went wrong. Please try again later.",
-      });
+      if (callback) {
+        callback({ success: false, message: err.message });
+      } else {
+        socket.emit("error", {
+          message: err.message || "StartChat failed.",
+        });
+      }
     }
+  });
+
+  socket.on("joinChat", (chatRoomId) => {
+    socket.join(chatRoomId);
   });
 });
 
