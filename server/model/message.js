@@ -8,6 +8,11 @@ const messageSchema = new Schema({
     ref: "ChatRoom",
     required: true,
   },
+  senderId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 
   message: {
     type: String,

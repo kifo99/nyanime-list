@@ -7,7 +7,6 @@ import app from "./app.js";
 import mongoose from "mongoose";
 import { MONGODB_URL } from "./util/config.js";
 import { PORT } from "./util/config.js";
-import { errorHandler } from "./util/helpers.js";
 
 const httpServer = createServer(app);
 
@@ -22,7 +21,7 @@ io.on("connection", (socket) => {
 
   socket.on("message", async (data) => {
     try {
-      const { members, message: text, createdAt } = data;
+      const { members, sender, message: text, createdAt } = data;
 
       const chatRoom = await ChatRoom.findOne({
         members: { $all: members, $size: members.length },
@@ -34,6 +33,7 @@ io.on("connection", (socket) => {
 
       const newMessage = new Message({
         chatRoomId: chatRoom._id,
+        senderId: sender,
         message: text,
         sentAt: createdAt,
       });

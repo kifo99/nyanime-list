@@ -12,6 +12,7 @@ import reviewsRouter from "./routes/reviews.js";
 import activityRouter from "./routes/activity.js";
 import profileRouter from "./routes/profile.js";
 import friendRequestRouter from "./routes/friendship.js";
+import chatRouter from "./routes/chat.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -53,6 +54,7 @@ app.use("/reviews", reviewsRouter);
 app.use("/activity", activityRouter);
 app.use("/profile", profileRouter);
 app.use("/friend", friendRequestRouter);
+app.use("/chat", chatRouter);
 
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
