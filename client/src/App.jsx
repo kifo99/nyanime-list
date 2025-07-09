@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 
-import { CirclePlus, Users } from "lucide-react";
+import { CirclePlus, Users, MessageCircleMore } from "lucide-react";
 
 import Navbar from "./components/Navigation/Navbar";
 import Footer from "./components/Footer/Footer";
@@ -9,13 +9,17 @@ import Footer from "./components/Footer/Footer";
 import AddFriend from "./components/Friends/AddFriend";
 import FriendRequests from "./components/Friends/FriendRequests";
 import PopUpButton from "./components/Button/PopUpButton";
+import ChatPopup from "./components/Message/ChatPopup";
 
 import useAuthStore from "./features/auth/useAuthStore";
 import useFriendshipStore from "./features/friends/useFriendshipStore";
+import useMessageStore from "./features/message/useMessageStore";
 
 export default function App({ children }) {
   const { isOpened, setIsOpened, requestListIsOpened, setRequestListIsOpened } =
     useFriendshipStore();
+
+  const { chatIsOpen, setChatIsOpen } = useMessageStore();
 
   const rehydrate = useAuthStore((state) => state.rehydrate);
   const { isAuth } = useAuthStore();
@@ -28,10 +32,24 @@ export default function App({ children }) {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow">{children}</main>
+      <ChatPopup />
       <AddFriend />
       <FriendRequests />
       {isAuth && (
         <div className="fixed bottom-4 right-4 z-50">
+          <div className="mb-1">
+            <PopUpButton
+              onClick={() => {
+                setChatIsOpen(!chatIsOpen);
+              }}
+              className="rounded-full bg-purple-600 hover:bg-purple-800 flex items-center justify-center w-12 h-12"
+            >
+              <MessageCircleMore
+                size={37}
+                className="stroke-white  w-fit h-fit m-0 p-0"
+              />{" "}
+            </PopUpButton>
+          </div>
           <div className="mb-1">
             <PopUpButton
               onClick={() => {
