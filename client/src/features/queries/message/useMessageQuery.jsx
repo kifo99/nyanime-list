@@ -9,6 +9,7 @@ const fetchChats = async ({ queryKey }) => {
     `http://localhost:8080/chat/user/${userId}/chat-rooms`
   );
 
+  
   return data.chatRooms;
 };
 

@@ -22,16 +22,6 @@ export default function ChatPopup() {
   const chatIds = chatRoomList?.map((chatRoom) => chatRoom._id);
   const chatQueries = useChatRoom(chatIds);
 
-  let chatFriend = [];
-
-  console.log(chatFriend);
-
-  const { data: friend, friendIsLoading } = useUser(chatFriend.at(0), {
-    enabled: !!chatFriend.at(0),
-  });
-
-  console.log(friend);
-
   if (chatRoomListIsLoading) {
     return <div>Loading</div>;
   }
@@ -66,27 +56,26 @@ export default function ChatPopup() {
                     );
                   }
 
-                  chatFriend = chat.members.filter(
-                    (member) => member !== userId
+                  const friend = chat.members.filter(
+                    (member) => member.id !== userId
                   );
 
-                  if (friendIsLoading || friend) {
-                    return (
-                      <li
+                  if (friend.length > 1) {
+                    return friend.map((f) => (
+                      <ul
                         key={item._id}
                         className="bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
                       >
-                        Nothing in chat
-                      </li>
-                    );
+                        <li>{f.name}</li>
+                      </ul>
+                    ));
                   }
-
                   return (
                     <li
                       key={item._id}
                       className="bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
                     >
-                      {friend.name}
+                      {friend[0].name}
                     </li>
                   );
                 })}
