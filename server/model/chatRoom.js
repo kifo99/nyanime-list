@@ -5,9 +5,9 @@ const Schema = mongoose.Schema;
 const chatRoomSchema = new Schema({
   members: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+      id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+      name: String,
+      avatar: String,
     },
   ],
 
