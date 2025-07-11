@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useQuery, useQueries } from "react-query";
+import { useQuery} from "react-query";
 import axios from "axios";
 
 const fetchUserByName = async function ({ queryKey }) {
