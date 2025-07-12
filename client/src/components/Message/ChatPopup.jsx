@@ -1,13 +1,15 @@
 import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
 import useMessageStore from "../../features/message/useMessageStore";
 
 import useAuthStore from "../../features/auth/useAuthStore";
+
+import InitialAvatar from "../Avatar/InitialAvatar";
 
 import {
   useChatRoomList,
   useChatRoom,
 } from "../../features/queries/message/useMessageQuery";
-import { useUser } from "../../features/queries/user/useUserQueries";
 
 export default function ChatPopup() {
   const { chatIsOpen } = useMessageStore();
@@ -21,6 +23,14 @@ export default function ChatPopup() {
 
   const chatIds = chatRoomList?.map((chatRoom) => chatRoom._id);
   const chatQueries = useChatRoom(chatIds);
+
+  async function handleMessages(chatId) {
+    const { data } = await axios.get(
+      `http://localhost:8080/chat/chatRoom/${chatId}/messages`
+    );
+
+    console.log(data);
+  }
 
   if (chatRoomListIsLoading) {
     return <div>Loading</div>;
@@ -44,8 +54,9 @@ export default function ChatPopup() {
               <ul className="overflow-y-auto flex-1 space-y-2">
                 {chatRoomList.map((item, i) => {
                   const chat = chatQueries[i]?.data;
+                  console.log(chat._id);
 
-                  if (chat.isGroup === false) {
+                  if (chat.isGroup === true) {
                     return (
                       <li
                         key={item._id}
@@ -70,12 +81,15 @@ export default function ChatPopup() {
                       </ul>
                     ));
                   }
+                  console.log(friend[0].id);
                   return (
                     <li
                       key={item._id}
-                      className="bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
+                      className="grid grid-cols-[30%_70%] items-center bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
+                      onClick={() => handleMessages(chat._id)}
                     >
-                      {friend[0].name}
+                      <InitialAvatar userId={friend[0].id} />
+                      <span>{friend[0].name}</span>
                     </li>
                   );
                 })}
