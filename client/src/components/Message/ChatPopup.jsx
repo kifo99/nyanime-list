@@ -1,18 +1,33 @@
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import { io } from "socket.io-client";
 import useMessageStore from "../../features/message/useMessageStore";
 
 import useAuthStore from "../../features/auth/useAuthStore";
+import { useUser } from "../../features/queries/user/useUserQueries";
 
 import InitialAvatar from "../Avatar/InitialAvatar";
 
 import {
   useChatRoomList,
+  useChat,
   useChatRoom,
 } from "../../features/queries/message/useMessageQuery";
+import { useState } from "react";
+
+const socket = io("http://localhost:8080");
 
 export default function ChatPopup() {
-  const { chatIsOpen } = useMessageStore();
+  const [text, setText] = useState("");
+  const {
+    chatIsOpen,
+    friendId,
+    messages,
+    chatRoomId,
+    setFriendId,
+    setMessages,
+    setChatRoomId,
+  } = useMessageStore();
   const { userId } = useAuthStore();
   const { data: chatRoomList, chatRoomListIsLoading } = useChatRoomList(
     userId,
@@ -21,18 +36,63 @@ export default function ChatPopup() {
     }
   );
 
+  const { data: chat, chatIsLoading } = useChat(chatRoomId, {
+    enabled: !!chatRoomId,
+  });
+  const { data: friend, friendIsLoading } = useUser(friendId, {
+    enabled: !!friendId,
+  });
+  const { data: user, userIsLoading } = useUser(userId, { enabled: userId });
   const chatIds = chatRoomList?.map((chatRoom) => chatRoom._id);
   const chatQueries = useChatRoom(chatIds);
 
-  async function handleMessages(chatId) {
+  async function handleOpenChat(chatId, friendId) {
+    setChatRoomId(chatId);
+    setFriendId(friendId);
     const { data } = await axios.get(
       `http://localhost:8080/chat/chatRoom/${chatId}/messages`
     );
 
     console.log(data);
   }
+  function handleSendMessage(e) {
+    e.preventDefault();
+    if (!chat) {
+      alert("Start chat first");
+      return;
+    }
+
+    if (!user || !friend) {
+      console.log("Missing user and friend");
+      return;
+    }
+
+    socket.emit("message", {
+      members: [
+        {
+          id: friend._id,
+          name: friend.name,
+          avatar: friend.avatar,
+        },
+        {
+          id: user._id,
+          name: user.name,
+          avatar: user.avatar,
+        },
+      ],
+      sender: userId,
+      message: text,
+      sentAt: Date.now(),
+    });
+  }
 
   if (chatRoomListIsLoading) {
+    return <div>Loading</div>;
+  }
+  if (chatIsLoading) {
+    return <div>Loading</div>;
+  }
+  if (friendIsLoading || userIsLoading) {
     return <div>Loading</div>;
   }
 
@@ -81,12 +141,11 @@ export default function ChatPopup() {
                       </ul>
                     ));
                   }
-                  console.log(friend[0].id);
                   return (
                     <li
                       key={item._id}
                       className="grid grid-cols-[30%_70%] items-center bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
-                      onClick={() => handleMessages(chat._id)}
+                      onClick={() => handleOpenChat(chat._id, friend[0].id)}
                     >
                       <InitialAvatar userId={friend[0].id} />
                       <span>{friend[0].name}</span>
@@ -104,13 +163,17 @@ export default function ChatPopup() {
                   <p>This is your message</p>
                 </div>
               </div>
-              <div className="w-full pt-2">
+              <form
+                className="w-full pt-2"
+                onSubmit={(e) => handleSendMessage(e)}
+              >
                 <input
                   type="text"
                   placeholder="Type your message..."
                   className="w-full border-2 border-purple-400 rounded-2xl bg-purple-50 p-3 focus:outline-none focus:ring-2 focus:ring-purple-300 text-purple-400 font-bold"
+                  onChange={(e) => setText(e.target.value)}
                 />
-              </div>
+              </form>
             </div>
           </div>
         </motion.div>

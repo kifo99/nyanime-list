@@ -9,7 +9,6 @@ const fetchChats = async ({ queryKey }) => {
     `http://localhost:8080/chat/user/${userId}/chat-rooms`
   );
 
-  
   return data.chatRooms;
 };
 
@@ -31,6 +30,16 @@ export const useChatRoomList = (userId) =>
     staleTime: 1000 * 60 * 5,
     retry: 1,
     enabled: !!userId,
+  });
+
+export const useChat = (chatId) =>
+  useQuery({
+    queryKey: ["chatRoom", chatId],
+    queryFn: fetchChat,
+    cacheTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
+    enabled: !!chatId,
   });
 
 export const useChatRoom = (chatIds = []) =>
