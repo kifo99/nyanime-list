@@ -8,7 +8,7 @@ export const getChatRooms = async (req, res, next) => {
     const { userId } = req.params;
 
     const chatRooms = await ChatRoom.find({
-      members: userId,
+      "members.id": userId,
       isGroup: false,
     }).select("_id");
 

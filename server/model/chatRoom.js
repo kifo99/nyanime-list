@@ -6,8 +6,8 @@ const chatRoomSchema = new Schema({
   members: [
     {
       id: { type: Schema.Types.ObjectId, ref: "User", required: true },
-      name: String,
-      avatar: String,
+      name: { type: String },
+      avatar: { type: String },
     },
   ],
 
