@@ -25,7 +25,9 @@ io.on("connection", (socket) => {
 
       const chatRoom = await ChatRoom.findOne({
         "members.id": {
-          $all: members.map((id) => new mongoose.Types.ObjectId(id)),
+          $all: members.map((id) =>
+            mongoose.Types.ObjectId.createFromHexString(id)
+          ),
         },
         members: { $size: members.length },
       });
