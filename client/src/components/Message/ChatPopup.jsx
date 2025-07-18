@@ -53,6 +53,7 @@ export default function ChatPopup() {
       `http://localhost:8080/chat/chatRoom/${chatId}/messages`
     );
 
+    socket.emit("joinChat", chatId);
     console.log(data);
   }
   function handleSendMessage(e) {
@@ -61,12 +62,10 @@ export default function ChatPopup() {
       alert("Start chat first");
       return;
     }
-
     if (!user || !friend) {
       console.log("Missing user and friend");
       return;
     }
-
     socket.emit("message", {
       members: [
         {
@@ -153,6 +152,8 @@ export default function ChatPopup() {
                   );
                 })}
               </ul>
+
+              {/*Add list of friends you have and with whom you can start chat use fetchFriendList and user queries*/}
             </div>
             <div className="h-full grid grid-rows-[80%_20%] px-6">
               <div className="border-2 border-purple-400 rounded-2xl p-4 flex flex-col gap-2 overflow-y-auto bg-purple-50">
