@@ -4,7 +4,8 @@ import { io } from "socket.io-client";
 import useMessageStore from "../../features/message/useMessageStore";
 
 import useAuthStore from "../../features/auth/useAuthStore";
-import { useUser } from "../../features/queries/user/useUserQueries";
+import { useUser, useUsers } from "../../features/queries/user/useUserQueries";
+import { useFriendsList } from "../../features/queries/friendship/useFriendshipQuery";
 
 import InitialAvatar from "../Avatar/InitialAvatar";
 
@@ -42,11 +43,23 @@ export default function ChatPopup() {
   const { data: friend, friendIsLoading } = useUser(friendId, {
     enabled: !!friendId,
   });
+
+  const { data: friendList, friendListIsLoading } = useFriendsList(userId, {
+    enabled: !!userId,
+  });
+
   const { data: user, userIsLoading } = useUser(userId, { enabled: userId });
+
   const chatIds = chatRoomList?.map((chatRoom) => chatRoom._id);
   const chatQueries = useChatRoom(chatIds);
 
+  const friendIds = friendList?.map((friend) => friend);
+  const userQueries = useUsers(friendIds);
+
   async function handleOpenChat(chatId, friendId) {
+    if (!chatId) {
+      console.log("Chat is'nt started");
+    }
     setChatRoomId(chatId);
     setFriendId(friendId);
     const { data } = await axios.get(
@@ -94,7 +107,9 @@ export default function ChatPopup() {
   if (friendIsLoading || userIsLoading) {
     return <div>Loading</div>;
   }
-
+  if (friendListIsLoading || userIsLoading) {
+    return <div>Loading</div>;
+  }
   return (
     <AnimatePresence>
       {chatIsOpen && (
@@ -107,53 +122,85 @@ export default function ChatPopup() {
         >
           <div className="h-full grid grid-cols-[3fr_7fr] gap-0">
             <div className="h-full flex flex-col border-2 border-purple-400 rounded-2xl p-4 bg-gray-50 overflow-hidden px-6">
-              <h1 className="text-xl font-semibold mb-4 text-center text-purple-700">
-                Messages
-              </h1>
-              <ul className="overflow-y-auto flex-1 space-y-2">
-                {chatRoomList.map((item, i) => {
-                  const chat = chatQueries[i]?.data;
-                  console.log(chat._id);
+              {/*Show messages if you have any */}
+              {chatRoomList.length > 0 && (
+                <div>
+                  <h1 className="text-xl font-semibold mb-4 text-center text-purple-700">
+                    Messages
+                  </h1>
+                  <ul className="overflow-y-auto flex-1 space-y-2">
+                    {chatRoomList.map((item, i) => {
+                      const chat = chatQueries[i]?.data;
 
-                  if (chat.isGroup === true) {
-                    return (
-                      <li
-                        key={item._id}
-                        className="bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
-                      >
-                        {chat.name}
-                      </li>
-                    );
-                  }
+                      if (chat.isGroup === true) {
+                        return (
+                          <li
+                            key={item._id}
+                            className="bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
+                          >
+                            {chat.name}
+                          </li>
+                        );
+                      }
 
-                  const friend = chat.members.filter(
-                    (member) => member.id !== userId
-                  );
+                      const friend = chat.members.filter(
+                        (member) => member.id !== userId
+                      );
 
-                  if (friend.length > 1) {
-                    return friend.map((f) => (
-                      <ul
-                        key={item._id}
-                        className="bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
-                      >
-                        <li>{f.name}</li>
-                      </ul>
-                    ));
-                  }
-                  return (
-                    <li
-                      key={item._id}
-                      className="grid grid-cols-[30%_70%] items-center bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
-                      onClick={() => handleOpenChat(chat._id, friend[0].id)}
-                    >
-                      <InitialAvatar userId={friend[0].id} />
-                      <span>{friend[0].name}</span>
-                    </li>
-                  );
-                })}
-              </ul>
+                      if (friend.length > 1) {
+                        return friend.map((f) => (
+                          <ul
+                            key={item._id}
+                            className="bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
+                          >
+                            <li>{f.name}</li>
+                          </ul>
+                        ));
+                      }
+                      return (
+                        <li
+                          key={item._id}
+                          className="grid grid-cols-[30%_70%] items-center bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
+                          onClick={() => handleOpenChat(chat._id, friend[0].id)}
+                        >
+                          <InitialAvatar userId={friend[0].id} />
+                          <span>{friend[0].name}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
 
-              {/*Add list of friends you have and with whom you can start chat use fetchFriendList and user queries*/}
+              {/*Show suggested friend from friend list that can be messaged */}
+
+              {
+                <div>
+                  <h1 className="text-xl font-semibold mb-4 text-center text-purple-700">
+                    Friends you can message
+                  </h1>
+                  <ul className="overflow-y-auto flex-1 space-y-2">
+                    {friendList.map((item, i) => {
+                      const friend = userQueries[i]?.data;
+
+                      if (friendId === friend._id) {
+                        return;
+                      }
+
+                      return (
+                        <li
+                          key={item}
+                          className="grid grid-cols-[30%_70%] items-center bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
+                          onClick={() => handleOpenChat(null, friend._id)}
+                        >
+                          <InitialAvatar userId={friend._id} />
+                          <span>{friend.name}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              }
             </div>
             <div className="h-full grid grid-rows-[80%_20%] px-6">
               <div className="border-2 border-purple-400 rounded-2xl p-4 flex flex-col gap-2 overflow-y-auto bg-purple-50">

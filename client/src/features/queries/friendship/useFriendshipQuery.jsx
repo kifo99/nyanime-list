@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useQuery} from "react-query";
+import { useQuery } from "react-query";
 import axios from "axios";
 
 const fetchUserByName = async function ({ queryKey }) {
@@ -22,8 +22,6 @@ const fetchFriendsList = async function ({ queryKey }) {
   const { data } = await axios.get(
     `http://localhost:8080/friend/user/${userId}/friends-list`
   );
-
-  console.log(data);
 
   return data.friendsList || [];
 };
