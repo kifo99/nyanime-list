@@ -183,7 +183,24 @@ export default function ChatPopup() {
                     {friendList.map((item, i) => {
                       const friend = userQueries[i]?.data;
 
-                      if (friendId === friend._id) {
+                      const chats = chatQueries.map((chat) => {
+                        return chat?.data;
+                      });
+
+                      const members = chats.map((chat) => chat.members[0]);
+
+                      console.log(members);
+
+                      const hasChat = members.map((member) => {
+                        // console.log(friend._id);
+                        // console.log(member);
+
+                        if (member._id === friend._id) return true;
+                        return false;
+                      });
+                      // console.log(hasChat);
+
+                      if (hasChat === true) {
                         return;
                       }
 
