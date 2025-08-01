@@ -187,18 +187,21 @@ export default function ChatPopup() {
                         return chat?.data;
                       });
 
-                      const members = chats.map((chat) => chat.members[0]);
+                      const allMembers = chats.flatMap((chat) => chat.members);
 
-                      console.log(members);
+                      console.log(allMembers);
 
-                      const hasChat = members.map((member) => {
+                      const hasChat = allMembers.some((member) => {
                         // console.log(friend._id);
-                        // console.log(member);
+                        console.log(member);
 
-                        if (member._id === friend._id) return true;
-                        return false;
+                        console.log(
+                          `This is your friend: ${friend._id} this is member of chat: ${member.id}`
+                        );
+
+                        return member.id === friend._id;
                       });
-                      // console.log(hasChat);
+                      console.log(hasChat);
 
                       if (hasChat === true) {
                         return;
