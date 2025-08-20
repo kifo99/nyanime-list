@@ -21,16 +21,9 @@ io.on("connection", (socket) => {
 
   socket.on("message", async (data) => {
     try {
-      const { members, sender, message: text, createdAt } = data;
+      const { chatRoomId, sender, message: text, sentAt } = data;
 
-      const chatRoom = await ChatRoom.findOne({
-        "members.id": {
-          $all: members.map((id) =>
-            mongoose.Types.ObjectId.createFromHexString(id)
-          ),
-        },
-        members: { $size: members.length },
-      });
+      const chatRoom = await ChatRoom.findById(chatRoomId);
 
       if (!chatRoom) {
         return socket.emit("error", { message: "Chat room not found." });
@@ -40,7 +33,7 @@ io.on("connection", (socket) => {
         chatRoomId: chatRoom._id,
         senderId: sender,
         message: text,
-        sentAt: createdAt,
+        sentAt: sentAt,
       });
 
       await newMessage.save();
