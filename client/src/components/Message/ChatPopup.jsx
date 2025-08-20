@@ -23,9 +23,11 @@ export default function ChatPopup() {
   const {
     chatIsOpen,
     friendId,
+    _friend,
     messages,
     chatRoomId,
     setFriendId,
+    setFriend,
     setMessages,
     setChatRoomId,
   } = useMessageStore();
@@ -56,35 +58,78 @@ export default function ChatPopup() {
   const friendIds = friendList?.map((friend) => friend);
   const userQueries = useUsers(friendIds);
 
-  async function handleOpenChat(chatId, friendId) {
-    if (!chatId) {
-      console.log("Chat is'nt started");
-    }
-    setChatRoomId(chatId);
-    setFriendId(friendId);
+  async function _getMessages(chatId) {
     const { data } = await axios.get(
       `http://localhost:8080/chat/chatRoom/${chatId}/messages`
     );
+    setMessages(data.messages);
+    return data.messages;
+  }
+
+  async function handleOpenChat(chatId, friend) {
+    let _chatId;
+    let _messages;
+    setFriendId(friend._id);
+    setFriend(friend);
+
+    if (!chatId) {
+      const members = [
+        {
+          id: user._id,
+          name: user.name,
+          avatar: user.avatar,
+        },
+        {
+          id: friend._id,
+          name: friend.name,
+          avatar: friend.name,
+        },
+      ];
+      socket.emit(
+        "startChat",
+        { members, name: "", isGroup: false, sentAt: Date.now() },
+        (response) => {
+          if (response.success) {
+            _chatId = response.chatRoom._id;
+            console.log("Chat room ready!", response.chatRoom);
+          } else {
+            console.log("Failed to create chat room!");
+          }
+        }
+      );
+
+      _messages = await _getMessages(_chatId);
+    }
+    setChatRoomId(chatId);
+
+    _messages = await _getMessages(chatId || _chatId);
 
     socket.emit("joinChat", chatId);
-    console.log(data);
+    console.log(_messages);
   }
   function handleSendMessage(e) {
+    console.log(friend, friendId, user);
+
     e.preventDefault();
+    if (!chatRoomId) {
+      alert("Start chat first");
+      return;
+    }
     if (!chat) {
       alert("Start chat first");
       return;
     }
-    if (!user || !friend) {
-      console.log("Missing user and friend");
+    if (!user || !_friend) {
+      console.log("Missing user and _friend");
       return;
     }
     socket.emit("message", {
+      chatRoomId: chatRoomId,
       members: [
         {
-          id: friend._id,
-          name: friend.name,
-          avatar: friend.avatar,
+          id: _friend._id,
+          name: _friend.name,
+          avatar: _friend.avatar,
         },
         {
           id: user._id,
@@ -189,19 +234,9 @@ export default function ChatPopup() {
 
                       const allMembers = chats.flatMap((chat) => chat.members);
 
-                      console.log(allMembers);
-
                       const hasChat = allMembers.some((member) => {
-                        // console.log(friend._id);
-                        console.log(member);
-
-                        console.log(
-                          `This is your friend: ${friend._id} this is member of chat: ${member.id}`
-                        );
-
                         return member.id === friend._id;
                       });
-                      console.log(hasChat);
 
                       if (hasChat === true) {
                         return;
@@ -211,7 +246,7 @@ export default function ChatPopup() {
                         <li
                           key={item}
                           className="grid grid-cols-[30%_70%] items-center bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
-                          onClick={() => handleOpenChat(null, friend._id)}
+                          onClick={() => handleOpenChat(null, friend)}
                         >
                           <InitialAvatar userId={friend._id} />
                           <span>{friend.name}</span>
@@ -223,25 +258,47 @@ export default function ChatPopup() {
               }
             </div>
             <div className="h-full grid grid-rows-[80%_20%] px-6">
-              <div className="border-2 border-purple-400 rounded-2xl p-4 flex flex-col gap-2 overflow-y-auto bg-purple-50">
-                <div className="self-start bg-purple-300 rounded-xl px-4 py-2 max-w-[75%] shadow">
-                  <p>This is the friend message</p>
+              {messages.length > 0 ? (
+                <div className="border-2 border-purple-400 rounded-2xl p-4 flex flex-col gap-2 overflow-y-auto bg-purple-50">
+                  {messages.map((message) => {
+                    if (message.senderId !== userId)
+                      return (
+                        <div
+                          key={message.senderId}
+                          className="self-start bg-purple-300 rounded-xl px-4 py-2 max-w-[75%] shadow"
+                        >
+                          <p>{message.message}</p>
+                        </div>
+                      );
+                    else
+                      return (
+                        <div
+                          key={userId}
+                          className="self-end bg-purple-200 rounded-xl px-4 py-2 max-w-[75%] shadow"
+                        >
+                          <p>{message.message}</p>
+                        </div>
+                      );
+                  })}
                 </div>
-                <div className="self-end bg-purple-200 rounded-xl px-4 py-2 max-w-[75%] shadow">
-                  <p>This is your message</p>
-                </div>
-              </div>
-              <form
-                className="w-full pt-2"
-                onSubmit={(e) => handleSendMessage(e)}
-              >
-                <input
-                  type="text"
-                  placeholder="Type your message..."
-                  className="w-full border-2 border-purple-400 rounded-2xl bg-purple-50 p-3 focus:outline-none focus:ring-2 focus:ring-purple-300 text-purple-400 font-bold"
-                  onChange={(e) => setText(e.target.value)}
-                />
-              </form>
+              ) : (
+                <div></div>
+              )}
+              {chatRoomId ? (
+                <form
+                  className="w-full pt-2"
+                  onSubmit={(e) => handleSendMessage(e)}
+                >
+                  <input
+                    type="text"
+                    placeholder="Type your message..."
+                    className="w-full border-2 border-purple-400 rounded-2xl bg-purple-50 p-3 focus:outline-none focus:ring-2 focus:ring-purple-300 text-purple-400 font-bold"
+                    onChange={(e) => setText(e.target.value)}
+                  />
+                </form>
+              ) : (
+                <div></div>
+              )}
             </div>
           </div>
         </motion.div>
