@@ -14,7 +14,7 @@ import {
   useChat,
   useChatRoom,
 } from "../../features/queries/message/useMessageQuery";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const socket = io("http://localhost:8080");
 
@@ -57,6 +57,15 @@ export default function ChatPopup() {
 
   const friendIds = friendList?.map((friend) => friend);
   const userQueries = useUsers(friendIds);
+  useEffect(() => {
+    socket.on("message", (newMessage) => {
+      setMessages((prev) => [...prev, newMessage]);
+    });
+
+    return () => {
+      socket.off("message"); // cleanup when component unmounts
+    };
+  }, []);
 
   async function _getMessages(chatId) {
     const { data } = await axios.get(
@@ -104,8 +113,7 @@ export default function ChatPopup() {
 
     _messages = await _getMessages(chatId || _chatId);
 
-    socket.emit("joinChat", chatId);
-    console.log(_messages);
+    socket.emit("joinChat", chatId || _chatId);
   }
   function handleSendMessage(e) {
     console.log(friend, friendId, user);
@@ -264,7 +272,7 @@ export default function ChatPopup() {
                     if (message.senderId !== userId)
                       return (
                         <div
-                          key={message.senderId}
+                          key={message._id}
                           className="self-start bg-purple-300 rounded-xl px-4 py-2 max-w-[75%] shadow"
                         >
                           <p>{message.message}</p>
@@ -273,7 +281,7 @@ export default function ChatPopup() {
                     else
                       return (
                         <div
-                          key={userId}
+                          key={message._id}
                           className="self-end bg-purple-200 rounded-xl px-4 py-2 max-w-[75%] shadow"
                         >
                           <p>{message.message}</p>
