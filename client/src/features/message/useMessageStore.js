@@ -10,7 +10,13 @@ const useMessageStore = create((set) => ({
   setChatIsOpen: (chatIsOpen) => set(() => ({ chatIsOpen: chatIsOpen })),
   setFriendId: (friendId) => set(() => ({ friendId: friendId })),
   setFriend: (friend) => set(() => ({ friend: friend })),
-  setMessages: (messages) => set(() => ({ messages: messages })),
+  setMessages: (messagesOrUpdater) =>
+    set((state) => ({
+      messages:
+        typeof messagesOrUpdater === "function"
+          ? messagesOrUpdater(state.messages)
+          : messagesOrUpdater,
+    })),
   setChatRoomId: (chatRoomId) => set(() => ({ chatRoomId: chatRoomId })),
 }));
 

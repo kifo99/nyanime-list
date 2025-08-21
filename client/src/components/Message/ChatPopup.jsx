@@ -57,27 +57,19 @@ export default function ChatPopup() {
 
   const friendIds = friendList?.map((friend) => friend);
   const userQueries = useUsers(friendIds);
-  useEffect(() => {
-    socket.on("message", (newMessage) => {
-      setMessages((prev) => [...prev, newMessage]);
-    });
-
-    return () => {
-      socket.off("message"); // cleanup when component unmounts
-    };
-  }, []);
 
   async function _getMessages(chatId) {
     const { data } = await axios.get(
       `http://localhost:8080/chat/chatRoom/${chatId}/messages`
     );
+
     setMessages(data.messages);
     return data.messages;
   }
 
   async function handleOpenChat(chatId, friend) {
     let _chatId;
-    let _messages;
+    let _messages = [];
     setFriendId(friend._id);
     setFriend(friend);
 
@@ -100,9 +92,6 @@ export default function ChatPopup() {
         (response) => {
           if (response.success) {
             _chatId = response.chatRoom._id;
-            console.log("Chat room ready!", response.chatRoom);
-          } else {
-            console.log("Failed to create chat room!");
           }
         }
       );
@@ -115,22 +104,12 @@ export default function ChatPopup() {
 
     socket.emit("joinChat", chatId || _chatId);
   }
-  function handleSendMessage(e) {
-    console.log(friend, friendId, user);
 
+  function handleSendMessage(e) {
     e.preventDefault();
-    if (!chatRoomId) {
-      alert("Start chat first");
-      return;
-    }
-    if (!chat) {
-      alert("Start chat first");
-      return;
-    }
-    if (!user || !_friend) {
-      console.log("Missing user and _friend");
-      return;
-    }
+
+    if (!chatRoomId || !chat || !user || !_friend) return;
+
     socket.emit("message", {
       chatRoomId: chatRoomId,
       members: [
@@ -149,7 +128,19 @@ export default function ChatPopup() {
       message: text,
       sentAt: Date.now(),
     });
+
+    setText("");
   }
+
+  useEffect(() => {
+    socket.on("newMessage", (newMessage) => {
+      setMessages((prev) => [...prev, newMessage]);
+    });
+
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [messages, setMessages]);
 
   if (chatRoomListIsLoading) {
     return <div>Loading</div>;
@@ -268,26 +259,28 @@ export default function ChatPopup() {
             <div className="h-full grid grid-rows-[80%_20%] px-6">
               {messages.length > 0 ? (
                 <div className="border-2 border-purple-400 rounded-2xl p-4 flex flex-col gap-2 overflow-y-auto bg-purple-50">
-                  {messages.map((message) => {
-                    if (message.senderId !== userId)
-                      return (
-                        <div
-                          key={message._id}
-                          className="self-start bg-purple-300 rounded-xl px-4 py-2 max-w-[75%] shadow"
-                        >
-                          <p>{message.message}</p>
-                        </div>
-                      );
-                    else
-                      return (
-                        <div
-                          key={message._id}
-                          className="self-end bg-purple-200 rounded-xl px-4 py-2 max-w-[75%] shadow"
-                        >
-                          <p>{message.message}</p>
-                        </div>
-                      );
-                  })}
+                  {messages
+                    .sort((a, b) => new Date(a.sentAt) - new Date(b.sentAt))
+                    .map((message) => {
+                      if (message.senderId !== userId)
+                        return (
+                          <div
+                            key={message._id}
+                            className="self-start bg-purple-300 rounded-xl px-4 py-2 max-w-[75%] shadow"
+                          >
+                            <p>{message.message}</p>
+                          </div>
+                        );
+                      else
+                        return (
+                          <div
+                            key={message._id}
+                            className="self-end bg-purple-200 rounded-xl px-4 py-2 max-w-[75%] shadow"
+                          >
+                            <p>{message.message}</p>
+                          </div>
+                        );
+                    })}
                 </div>
               ) : (
                 <div></div>
@@ -301,6 +294,7 @@ export default function ChatPopup() {
                     type="text"
                     placeholder="Type your message..."
                     className="w-full border-2 border-purple-400 rounded-2xl bg-purple-50 p-3 focus:outline-none focus:ring-2 focus:ring-purple-300 text-purple-400 font-bold"
+                    value={text}
                     onChange={(e) => setText(e.target.value)}
                   />
                 </form>
