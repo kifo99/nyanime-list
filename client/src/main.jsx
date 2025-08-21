@@ -14,6 +14,7 @@ import Watchlist from "./pages/Watchlist/Watchlist.jsx";
 import AddReview from "./pages/ReviewsPage/AddReview.jsx";
 import ProtectedRoutes from "./components/ProtectedRouts/ProtectedRoutes.jsx";
 import MyProfile from "./pages/Profile/MyProfile.jsx";
+import FriendsList from "./pages/Friend/FriendsList.jsx";
 
 const router = createBrowserRouter([
   {
@@ -90,6 +91,16 @@ const router = createBrowserRouter([
       <ProtectedRoutes>
         <App>
           <MyProfile />
+        </App>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/:userId/friends-list",
+    element: (
+      <ProtectedRoutes>
+        <App>
+          <FriendsList />
         </App>
       </ProtectedRoutes>
     ),

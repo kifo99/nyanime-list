@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useQuery, useQueries } from "react-query";
+import { useQuery } from "react-query";
 import axios from "axios";
 
 const fetchUserByName = async function ({ queryKey }) {
@@ -61,7 +61,7 @@ export const useRequests = (userId) =>
 
 export const useFriendsList = (userId) =>
   useQuery({
-    queryKey: ["useRequests", userId],
+    queryKey: ["useFriendsList", userId],
     queryFn: fetchFriendsList,
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 10,

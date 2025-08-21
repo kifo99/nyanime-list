@@ -9,6 +9,7 @@ import { useRequests } from "../../features/queries/friendship/useFriendshipQuer
 import { useUsers } from "../../features/queries/user/useUserQueries.jsx";
 
 import InitialAvatar from "../Avatar/InitialAvatar";
+import LoadingSpinner from "../Loader/LoadingSpinner.jsx";
 
 export default function FriendRequests() {
   const { requestListIsOpened } = useFriendshipStore();
@@ -33,7 +34,6 @@ export default function FriendRequests() {
   if (isLoadingRequests) {
     return <div>Loading requests</div>;
   }
-  if (!requests || requests.length === 0) return <div>No friend requests</div>;
 
   return (
     <AnimatePresence>
@@ -48,39 +48,43 @@ export default function FriendRequests() {
           <div className="mb-4">
             <h1>Friend Requests</h1>
           </div>
-          {requests.map((request, index) => {
-            const user = userQueries[index]?.data;
+          {!requests || requests.length === 0 ? (
+            <LoadingSpinner message={"No friend requests!"} />
+          ) : (
+            requests.map((request, index) => {
+              const user = userQueries[index]?.data;
 
-            return (
-              <div
-                key={request._id}
-                className="grid grid-cols-2 items-center bg-white p-6 rounded-lg min-h-[100px] gap-4"
-              >
-                <div className="flex items-center gap-4">
-                  <InitialAvatar userId={user._id} />
-                  <h1 className="text-xl font-semibold text-purple-900">
-                    {user.name}
-                  </h1>
+              return (
+                <div
+                  key={request._id}
+                  className="grid grid-cols-2 items-center bg-white p-6 rounded-lg min-h-[100px] gap-4"
+                >
+                  <div className="flex items-center gap-4">
+                    <InitialAvatar userId={user._id} />
+                    <h1 className="text-xl font-semibold text-purple-900">
+                      {user.name}
+                    </h1>
+                  </div>
+
+                  <div className="flex justify-end gap-4">
+                    <button
+                      className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                      onClick={() => handleFriendRequest(true, user._id)}
+                    >
+                      Accept <CirclePlus size={20} />
+                    </button>
+
+                    <button
+                      className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+                      onClick={() => handleFriendRequest(false, user._id)}
+                    >
+                      Decline <CircleX size={20} />
+                    </button>
+                  </div>
                 </div>
-
-                <div className="flex justify-end gap-4">
-                  <button
-                    className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
-                    onClick={() => handleFriendRequest(true, user._id)}
-                  >
-                    Accept <CirclePlus size={20} />
-                  </button>
-
-                  <button
-                    className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
-                    onClick={() => handleFriendRequest(false, user._id)}
-                  >
-                    Decline <CircleX size={20} />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </motion.div>
       )}
     </AnimatePresence>
