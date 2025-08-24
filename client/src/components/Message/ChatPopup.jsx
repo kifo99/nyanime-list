@@ -22,10 +22,12 @@ export default function ChatPopup() {
   const [text, setText] = useState("");
   const {
     chatIsOpen,
+    hasMore,
     friendId,
     _friend,
     messages,
     chatRoomId,
+    setHasMore,
     setFriendId,
     setFriend,
     setMessages,
@@ -58,13 +60,22 @@ export default function ChatPopup() {
   const friendIds = friendList?.map((friend) => friend);
   const userQueries = useUsers(friendIds);
 
-  async function _getMessages(chatId) {
+  async function _getMessages(chatId, before = Date.now(), limit = 20) {
     const { data } = await axios.get(
-      `http://localhost:8080/chat/chatRoom/${chatId}/messages`
+      `http://localhost:8080/chat/chatRoom/${chatId}/messages`,
+      { params: { before, limit } }
     );
 
-    setMessages(data.messages);
     return data.messages;
+  }
+  async function loadOlderMessages(chatId) {
+    if (!hasMore && messages.length === 0) return;
+
+    const oldestMessage = messages.at(0).sentAt;
+    const olderMessages = await _getMessages(chatId, oldestMessage, 6);
+
+    if (olderMessages.length === 0) setHasMore(false);
+    else setMessages((prev) => [...olderMessages, ...prev]);
   }
 
   async function handleOpenChat(chatId, friend) {
@@ -101,6 +112,7 @@ export default function ChatPopup() {
     setChatRoomId(chatId);
 
     _messages = await _getMessages(chatId || _chatId);
+    setMessages(_messages);
 
     socket.emit("joinChat", chatId || _chatId);
   }
@@ -257,8 +269,16 @@ export default function ChatPopup() {
               }
             </div>
             <div className="h-full grid grid-rows-[80%_20%] px-6">
+              {console.log(messages)}
               {messages.length > 0 ? (
-                <div className="border-2 border-purple-400 rounded-2xl p-4 flex flex-col gap-2 overflow-y-auto bg-purple-50">
+                <div
+                  className="border-2 border-purple-400 rounded-2xl p-4 flex flex-col gap-2 overflow-y-auto bg-purple-50"
+                  onScroll={(e) => {
+                    if (e.target.scrollTop === 0) {
+                      loadOlderMessages(chatRoomId);
+                    }
+                  }}
+                >
                   {messages
                     .sort((a, b) => new Date(a.sentAt) - new Date(b.sentAt))
                     .map((message) => {
