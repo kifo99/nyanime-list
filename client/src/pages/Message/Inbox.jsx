@@ -3,28 +3,14 @@ import ConversationList from "../../components/Inbox/ConversationList";
 import MessageInput from "../../components/Inbox/MessageInput";
 
 import useAuthStore from "../../features/auth/useAuthStore";
-import useMessageStore from "../../features/message/useMessageStore";
 import { useUser, useUsers } from "../../features/queries/user/useUserQueries";
 import {
-  useChat,
-  useChatRoom,
   useChatRoomList,
+  useChatRoom,
 } from "../../features/queries/message/useMessageQuery";
 import { useFriendsList } from "../../features/queries/friendship/useFriendshipQuery";
+
 export default function Inbox() {
-  const {
-    chatIsOpen,
-    hasMore,
-    friendId,
-    _friend,
-    messages,
-    chatRoomId,
-    setHasMore,
-    setFriendId,
-    setFriend,
-    setMessages,
-    setChatRoomId,
-  } = useMessageStore();
   const { userId } = useAuthStore();
   const { data: chatRoomList, chatRoomListIsLoading } = useChatRoomList(
     userId,
@@ -33,21 +19,17 @@ export default function Inbox() {
     }
   );
 
-  const { data: chat, chatIsLoading } = useChat(chatRoomId, {
-    enabled: !!chatRoomId,
-  });
-
   const { data: friendList, friendListIsLoading } = useFriendsList(userId, {
     enabled: !!userId,
   });
 
   const { data: user, userIsLoading } = useUser(userId, { enabled: userId });
 
-  const chatIds = chatRoomList?.map((chatRoom) => chatRoom._id);
-  const chatQueries = useChatRoom(chatIds);
+  const chatIds = chatRoomList?.map((chatRoom) => chatRoom._id) ?? [];
+  const chatQueries = useChatRoom(chatIds, { enabled: !!chatIds }) ?? [];
 
   const friendIds = friendList?.map((friend) => friend);
-  const userQueries = useUsers(friendIds);
+  const userQueries = useUsers(friendIds, { enabled: !!friendIds });
 
   if (
     !userId ||
@@ -62,9 +44,10 @@ export default function Inbox() {
       <div className="border-2 border-purple-400 rounded-2xl">
         <ConversationList
           user={user}
-          chat={chat}
           chatRoomList={chatRoomList}
           friendList={friendList}
+          chatQueries={chatQueries}
+          userQueries={userQueries}
         />
       </div>
       <div>

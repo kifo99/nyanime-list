@@ -15,3 +15,6 @@ dist/
 
 # Ignore log files
 *.log
+
+# Ignore uploaded avatars
+/images/avatar/

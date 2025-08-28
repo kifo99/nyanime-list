@@ -1,34 +1,26 @@
 import { io } from "socket.io-client";
 import axios from "axios";
+import PropTypes from "prop-types";
 
 import useAuthStore from "../../features/auth/useAuthStore";
-import {
-  useChatRoomList,
-  useChatRoom,
-} from "../../features/queries/message/useMessageQuery";
+
 import useMessageStore from "../../features/message/useMessageStore";
-import { useFriendsList } from "../../features/queries/friendship/useFriendshipQuery";
-import { useUser, useUsers } from "../../features/queries/user/useUserQueries";
 
 import InitialAvatar from "../Avatar/InitialAvatar";
+import ConversationListItem from "./ConversationListItem";
 
 const socket = io("http://localhost:8080");
 
 export default function ConversationList({
   user,
-  chat,
   chatRoomList,
   friendList,
+  chatQueries,
+  userQueries,
 }) {
   const { userId } = useAuthStore();
   const { setChatRoomId, setMessages, setFriendId, setFriend } =
     useMessageStore();
-
-  const chatIds = chatRoomList?.map((chatRoom) => chatRoom._id) ?? [];
-  const chatQueries = useChatRoom(chatIds, { enabled: !!chatIds }) ?? [];
-
-  const friendIds = friendList?.map((friend) => friend);
-  const userQueries = useUsers(friendIds, { enabled: !!friendIds });
 
   async function fetchMessages(chatId, before = Date.now(), limit = 20) {
     const { data } = await axios.get(
@@ -78,14 +70,6 @@ export default function ConversationList({
     socket.emit("joinChat", chatId || _chatId);
   }
 
-  if (
-    !userId ||
-    chatRoomListIsLoading ||
-    friendListIsLoading ||
-    userIsLoading
-  ) {
-    return <div>Loading...</div>;
-  }
   return (
     <div className="w-full h-full">
       {chatRoomList?.length > 0 &&
@@ -100,42 +84,27 @@ export default function ConversationList({
               <ul className="overflow-y-auto flex-1 space-y-2">
                 {chatRoomList.map((item, i) => {
                   const chat = chatQueries[i]?.data;
-                  if (!chat) return null;
 
-                  if (chat.isGroup === true) {
-                    return (
-                      <li
-                        key={item._id}
-                        className="bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
-                      >
-                        {chat.name}
-                      </li>
-                    );
+                  if (!chat) {
+                    return <li key={`${item._id}-loading`}>Loading</li>;
                   }
 
                   const friend = chat.members.filter(
                     (member) => member.id !== userId
                   );
 
-                  if (friend.length > 1) {
-                    return friend.map((f) => (
-                      <ul
-                        key={item._id}
-                        className="bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
-                      >
-                        <li>{f.name}</li>
-                      </ul>
-                    ));
+                  if (!friend) {
+                    return <li key={`${item._id}-loading`}>Loading</li>;
                   }
+
                   return (
-                    <li
+                    <ConversationListItem
                       key={item._id}
-                      className="grid grid-cols-[30%_70%] items-center bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
-                      onClick={() => handleOpenChat(chat._id, friend[0].id)}
-                    >
-                      <InitialAvatar userId={friend[0].id} />
-                      <span>{friend[0].name}</span>
-                    </li>
+                      item={item}
+                      chat={chat}
+                      friend={friend}
+                      onHandleOpenChat={handleOpenChat}
+                    />
                   );
                 })}
               </ul>
@@ -147,7 +116,13 @@ export default function ConversationList({
               </h1>
               <ul className="overflow-y-auto flex-1 space-y-2">
                 {friendList.map((item, i) => {
+                  console.log(userQueries[i].data);
+
                   const friend = userQueries[i]?.data;
+
+                  if (!friend) {
+                    return null;
+                  }
 
                   const chats = chatQueries.map((chat) => {
                     return chat?.data;
@@ -165,7 +140,7 @@ export default function ConversationList({
 
                   return (
                     <li
-                      key={item}
+                      key={item._id}
                       className="grid grid-cols-[30%_70%] items-center bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
                       onClick={() => handleOpenChat(null, friend)}
                     >
@@ -181,3 +156,11 @@ export default function ConversationList({
     </div>
   );
 }
+
+ConversationList.propTypes = {
+  user: PropTypes.object,
+  chatRoomList: PropTypes.array,
+  friendList: PropTypes.array,
+  chatQueries: PropTypes.array,
+  userQueries: PropTypes.array,
+};
