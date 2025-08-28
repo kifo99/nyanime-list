@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { CirclePlus, Users, MessageCircleMore } from "lucide-react";
 
@@ -16,13 +17,15 @@ import useFriendshipStore from "./features/friends/useFriendshipStore";
 import useMessageStore from "./features/message/useMessageStore";
 
 export default function App({ children }) {
+  const navigate = useNavigate();
+
   const { isOpened, setIsOpened, requestListIsOpened, setRequestListIsOpened } =
     useFriendshipStore();
 
   const { chatIsOpen, setChatIsOpen } = useMessageStore();
 
   const rehydrate = useAuthStore((state) => state.rehydrate);
-  const { isAuth } = useAuthStore();
+  const { userId, isAuth } = useAuthStore();
 
   useEffect(() => {
     rehydrate();
@@ -40,7 +43,8 @@ export default function App({ children }) {
           <div className="mb-1">
             <PopUpButton
               onClick={() => {
-                setChatIsOpen(!chatIsOpen);
+                // setChatIsOpen(!chatIsOpen);
+                navigate(`/inbox`);
               }}
               className="rounded-full bg-purple-600 hover:bg-purple-800 flex items-center justify-center w-12 h-12"
             >

@@ -15,6 +15,7 @@ import AddReview from "./pages/ReviewsPage/AddReview.jsx";
 import ProtectedRoutes from "./components/ProtectedRouts/ProtectedRoutes.jsx";
 import MyProfile from "./pages/Profile/MyProfile.jsx";
 import FriendsList from "./pages/Friend/FriendsList.jsx";
+import Inbox from "./pages/Message/Inbox.jsx";
 
 const router = createBrowserRouter([
   {
@@ -101,6 +102,16 @@ const router = createBrowserRouter([
       <ProtectedRoutes>
         <App>
           <FriendsList />
+        </App>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/inbox",
+    element: (
+      <ProtectedRoutes>
+        <App>
+          <Inbox />
         </App>
       </ProtectedRoutes>
     ),
