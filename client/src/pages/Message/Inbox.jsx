@@ -12,12 +12,13 @@ import { useFriendsList } from "../../features/queries/friendship/useFriendshipQ
 
 export default function Inbox() {
   const { userId } = useAuthStore();
-  const { data: chatRoomList, chatRoomListIsLoading } = useChatRoomList(
-    userId,
-    {
-      enabled: !!userId,
-    }
-  );
+  const {
+    data: chatRoomList,
+    chatRoomListIsLoading,
+    refetch: refetchChatRooms,
+  } = useChatRoomList(userId, {
+    enabled: !!userId,
+  });
 
   const { data: friendList, friendListIsLoading } = useFriendsList(userId, {
     enabled: !!userId,
@@ -48,6 +49,7 @@ export default function Inbox() {
           friendList={friendList}
           chatQueries={chatQueries}
           userQueries={userQueries}
+          onRefetch={refetchChatRooms}
         />
       </div>
       <div>
