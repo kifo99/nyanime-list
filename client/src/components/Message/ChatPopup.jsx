@@ -79,12 +79,12 @@ export default function ChatPopup() {
   }
 
   async function handleOpenChat(chatId, friend) {
-    let _chatId;
+    let _chatId = chatId;
     let _messages = [];
     setFriendId(friend._id);
     setFriend(friend);
 
-    if (!chatId) {
+    if (!_chatId) {
       const members = [
         {
           id: user._id,
@@ -97,24 +97,28 @@ export default function ChatPopup() {
           avatar: friend.name,
         },
       ];
-      socket.emit(
-        "startChat",
-        { members, name: "", isGroup: false, sentAt: Date.now() },
-        (response) => {
-          if (response.success) {
-            _chatId = response.chatRoom._id;
+      _chatId = await new Promise((resolve, reject) => {
+        socket.emit(
+          "startChat",
+          { members, name: "", isGroup: false, sentAt: Date.now() },
+          (response) => {
+            if (response.success) {
+              resolve(response.chatRoom._id);
+            } else {
+              reject(new Error("Failed to start chat"));
+            }
           }
-        }
-      );
+        );
+      });
 
       _messages = await _getMessages(_chatId);
     }
     setChatRoomId(chatId);
 
-    _messages = await _getMessages(chatId || _chatId);
+    _messages = await _getMessages(_chatId);
     setMessages(_messages);
 
-    socket.emit("joinChat", chatId || _chatId);
+    socket.emit("joinChat", _chatId);
   }
 
   function handleSendMessage(e) {

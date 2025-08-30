@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import axios from "axios";
+import axios, { all } from "axios";
 import PropTypes from "prop-types";
 
 import useAuthStore from "../../features/auth/useAuthStore";
@@ -17,6 +17,7 @@ export default function ConversationList({
   friendList,
   chatQueries,
   userQueries,
+  onRefetch,
 }) {
   const { userId } = useAuthStore();
   const { setChatRoomId, setMessages, setFriendId, setFriend } =
@@ -32,12 +33,12 @@ export default function ConversationList({
   }
 
   async function handleOpenChat(chatId, friend) {
-    let _chatId;
+    let _chatId = chatId;
     let _messages = [];
     setFriendId(friend._id);
     setFriend(friend);
 
-    if (!chatId) {
+    if (!_chatId) {
       const members = [
         {
           id: user._id,
@@ -50,24 +51,28 @@ export default function ConversationList({
           avatar: friend.name,
         },
       ];
-      socket.emit(
-        "startChat",
-        { members, name: "", isGroup: false, sentAt: Date.now() },
-        (response) => {
-          if (response.success) {
-            _chatId = response.chatRoom._id;
+      _chatId = await new Promise((resolve, reject) => {
+        socket.emit(
+          "startChat",
+          { members, name: "", isGroup: false, sentAt: Date.now() },
+          (response) => {
+            if (response.success) {
+              resolve(response.chatRoom._id);
+            } else {
+              reject(new Error("Failed to start new chat"));
+            }
           }
-        }
-      );
+        );
+      });
 
-      _messages = await fetchMessages(_chatId);
+      await onRefetch();
     }
     setChatRoomId(chatId);
 
-    _messages = await fetchMessages(chatId || _chatId);
+    _messages = await fetchMessages(_chatId);
     setMessages(_messages);
 
-    socket.emit("joinChat", chatId || _chatId);
+    socket.emit("joinChat", _chatId);
   }
 
   return (
@@ -116,17 +121,16 @@ export default function ConversationList({
               </h1>
               <ul className="overflow-y-auto flex-1 space-y-2">
                 {friendList.map((item, i) => {
-                  console.log(userQueries[i].data);
-
                   const friend = userQueries[i]?.data;
 
                   if (!friend) {
                     return null;
                   }
 
-                  const chats = chatQueries.map((chat) => {
-                    return chat?.data;
-                  });
+                  const chats = chatQueries
+                    .map((chat) => chat?.data)
+                    .filter(Boolean);
+                  console.log(chats);
 
                   const allMembers = chats.flatMap((chat) => chat.members);
 
@@ -163,4 +167,5 @@ ConversationList.propTypes = {
   friendList: PropTypes.array,
   chatQueries: PropTypes.array,
   userQueries: PropTypes.array,
+  onRefetch: PropTypes.func,
 };
