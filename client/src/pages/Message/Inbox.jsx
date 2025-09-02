@@ -1,17 +1,25 @@
+import { useEffect } from "react";
+import { socket } from "../../lib/socket";
 import ConversationView from "../../components/Inbox/ConversationView";
 import ConversationList from "../../components/Inbox/ConversationList";
 import MessageInput from "../../components/Inbox/MessageInput";
-
 import useAuthStore from "../../features/auth/useAuthStore";
+import useMessageStore from "../../features/message/useMessageStore";
 import { useUser, useUsers } from "../../features/queries/user/useUserQueries";
 import {
   useChatRoomList,
   useChatRoom,
+  useChat,
 } from "../../features/queries/message/useMessageQuery";
 import { useFriendsList } from "../../features/queries/friendship/useFriendshipQuery";
+import { useState } from "react";
 
 export default function Inbox() {
   const { userId } = useAuthStore();
+
+  const [text, setText] = useState("");
+
+  const { messages, _friend, chatRoomId, setMessages } = useMessageStore();
   const {
     data: chatRoomList,
     chatRoomListIsLoading,
@@ -23,6 +31,9 @@ export default function Inbox() {
   const { data: friendList, friendListIsLoading } = useFriendsList(userId, {
     enabled: !!userId,
   });
+  const { data: chat, chatIsLoading } = useChat(chatRoomId, {
+    enabled: !!chatRoomId,
+  });
 
   const { data: user, userIsLoading } = useUser(userId, { enabled: userId });
 
@@ -32,8 +43,46 @@ export default function Inbox() {
   const friendIds = friendList?.map((friend) => friend);
   const userQueries = useUsers(friendIds, { enabled: !!friendIds });
 
+  function handleSendMessage(e) {
+    e.preventDefault();
+
+    if (!chatRoomId || !chat || !user || !_friend) return;
+
+    socket.emit("message", {
+      chatRoomId: chatRoomId,
+      members: [
+        {
+          id: _friend._id,
+          name: _friend.name,
+          avatar: _friend.avatar,
+        },
+        {
+          id: user._id,
+          name: user.name,
+          avatar: user.avatar,
+        },
+      ],
+      sender: userId,
+      message: text,
+      sentAt: Date.now(),
+    });
+
+    setText("");
+  }
+
+  useEffect(() => {
+    socket.on("newMessage", (newMessage) => {
+      setMessages((prev) => [...prev, newMessage]);
+    });
+
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [setMessages]);
+
   if (
     !userId ||
+    chatIsLoading ||
     chatRoomListIsLoading ||
     friendListIsLoading ||
     userIsLoading
@@ -57,7 +106,11 @@ export default function Inbox() {
           <ConversationView />
         </div>
         <div>
-          <MessageInput />
+          <MessageInput
+            text={text}
+            onSetText={setText}
+            onHandleSendMessage={handleSendMessage}
+          />
         </div>
       </div>
     </div>
