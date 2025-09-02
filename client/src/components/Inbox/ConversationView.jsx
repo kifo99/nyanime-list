@@ -1,5 +1,7 @@
+
 import useMessageStore from "../../features/message/useMessageStore";
 import useAuthStore from "../../features/auth/useAuthStore";
+
 
 export default function ConversationView() {
   const { messages } = useMessageStore();
@@ -33,7 +35,11 @@ export default function ConversationView() {
             })}
         </div>
       ) : (
-        <div></div>
+        <div className="border-2 border-purple-400 rounded-2xl p-4 flex flex-col gap-2 overflow-y-auto bg-purple-50">
+          <h1 className="m-auto font-bold text-2xl text-purple-400">
+            No messages
+          </h1>
+        </div>
       )}
     </div>
   );

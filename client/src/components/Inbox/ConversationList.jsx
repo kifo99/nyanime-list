@@ -1,16 +1,12 @@
-import { io } from "socket.io-client";
-import axios, { all } from "axios";
+import axios from "axios";
 import PropTypes from "prop-types";
-
+import { socket } from "../../lib/socket";
 import useAuthStore from "../../features/auth/useAuthStore";
 
 import useMessageStore from "../../features/message/useMessageStore";
 
 import InitialAvatar from "../Avatar/InitialAvatar";
 import ConversationListItem from "./ConversationListItem";
-
-const socket = io("http://localhost:8080");
-
 export default function ConversationList({
   user,
   chatRoomList,
@@ -130,7 +126,6 @@ export default function ConversationList({
                   const chats = chatQueries
                     .map((chat) => chat?.data)
                     .filter(Boolean);
-                  console.log(chats);
 
                   const allMembers = chats.flatMap((chat) => chat.members);
 
