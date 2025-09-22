@@ -227,8 +227,6 @@ export const getAnimeByGenre = async (req, res, next) => {
 };
 
 const filterData = function (data) {
-  console.log(data);
-
   if (!data || !Array.isArray(data.data)) {
     console.error("Unexpected API response", data);
     return [];
