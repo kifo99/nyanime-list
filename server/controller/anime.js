@@ -116,7 +116,7 @@ export const getSeasonAnime = async (req, res, next) => {
 
       if (month >= 3 && month <= 5) return "spring";
       if (month >= 6 && month <= 8) return "summer";
-      if (month >= 9 && month <= 11) return "autumn";
+      if (month >= 9 && month <= 11) return "fall";
       return "winter";
     };
 
@@ -227,6 +227,12 @@ export const getAnimeByGenre = async (req, res, next) => {
 };
 
 const filterData = function (data) {
+  console.log(data);
+
+  if (!data || !Array.isArray(data.data)) {
+    console.error("Unexpected API response", data);
+    return [];
+  }
   const seenIds = new Set();
 
   const animeList = data.data.filter((anime) => {
