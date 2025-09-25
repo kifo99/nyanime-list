@@ -77,26 +77,22 @@ export default function ConversationList({
         friendList?.length > 0 &&
         chatQueries?.length > 0 &&
         userQueries?.length > 0 && (
-          <div>
+          <div className="w-full h-full flex flex-col gap-6 p-2 overflow-hidden">
             <div>
-              <h1 className="text-xl font-semibold mb-4 text-center text-purple-700">
+              <h1 className="text-lg font-semibold mb-2 text-center text-purple-700">
                 Messages
               </h1>
-              <ul className="overflow-y-auto flex-1 space-y-2">
+              <ul className="overflow-y-auto max-h-full space-y-1 pr-1">
                 {chatRoomList.map((item, i) => {
                   const chat = chatQueries[i]?.data;
-
-                  if (!chat) {
+                  if (!chat)
                     return <li key={`${item._id}-loading`}>Loading</li>;
-                  }
 
                   const friend = chat.members.filter(
                     (member) => member.id !== userId
                   );
-
-                  if (!friend) {
+                  if (!friend)
                     return <li key={`${item._id}-loading`}>Loading</li>;
-                  }
 
                   return (
                     <ConversationListItem
@@ -112,39 +108,34 @@ export default function ConversationList({
             </div>
 
             <div>
-              <h1 className="text-xl font-semibold mb-4 text-center text-purple-700">
+              <h1 className="text-lg font-semibold mb-2 text-center text-purple-700">
                 Friends you can message
               </h1>
-              <ul className="overflow-y-auto flex-1 space-y-2">
+              <ul className="overflow-y-auto max-h-full space-y-1 pr-1">
                 {friendList.map((item, i) => {
                   const friend = userQueries[i]?.data;
-
-                  if (!friend) {
-                    return null;
-                  }
+                  if (!friend) return null;
 
                   const chats = chatQueries
                     .map((chat) => chat?.data)
                     .filter(Boolean);
-
                   const allMembers = chats.flatMap((chat) => chat.members);
+                  const hasChat = allMembers.some(
+                    (member) => member.id === friend._id
+                  );
 
-                  const hasChat = allMembers.some((member) => {
-                    return member.id === friend._id;
-                  });
-
-                  if (hasChat === true) {
-                    return;
-                  }
+                  if (hasChat) return null;
 
                   return (
                     <li
                       key={item._id}
-                      className="grid grid-cols-[30%_70%] items-center bg-purple-200 hover:bg-purple-400  transition rounded-xl p-2 shadow-sm border border-purple-400 text-purple-700 cursor-pointer"
+                      className="grid grid-cols-[20%_80%] items-center bg-purple-200 
+                       hover:bg-purple-400 transition rounded-lg p-1.5 shadow-sm 
+                       border border-purple-400 text-purple-700 cursor-pointer text-sm"
                       onClick={() => handleOpenChat(null, friend)}
                     >
                       <InitialAvatar userId={friend._id} />
-                      <span>{friend.name}</span>
+                      <span className="truncate">{friend.name}</span>
                     </li>
                   );
                 })}
