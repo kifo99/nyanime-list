@@ -90,28 +90,36 @@ export default function Inbox() {
     return <div>Loading...</div>;
   }
   return (
-    <div className="w-full h-full grid grid-cols-[30%_70%]">
-      <div className="border-2 border-purple-400 rounded-2xl">
-        <ConversationList
-          user={user}
-          chatRoomList={chatRoomList}
-          friendList={friendList}
-          chatQueries={chatQueries}
-          userQueries={userQueries}
-          onRefetch={refetchChatRooms}
-        />
-      </div>
-      <div>
-        <div>
-          <ConversationView />
-        </div>
-        <div>
-          <MessageInput
-            text={text}
-            onSetText={setText}
-            onHandleSendMessage={handleSendMessage}
+    <div className="w-full h-full p-2 box-border">
+      <div className="w-full h-full grid grid-cols-[30%_70%] gap-2 min-h-0 p-2">
+        <div className="border-2 border-purple-400 rounded-2xl overflow-hidden">
+          <ConversationList
+            user={user}
+            chatRoomList={chatRoomList}
+            friendList={friendList}
+            chatQueries={chatQueries}
+            userQueries={userQueries}
+            onRefetch={refetchChatRooms}
           />
         </div>
+        {chatRoomId ? (
+          <div className="flex flex-col border-2 border-purple-400 rounded-2xl h-screen min-w-0">
+            <div className="flex-1 min-h-0 flex flex-col">
+              <ConversationView />
+            </div>
+            <div className="border-t border-purple-400 p-2">
+              <MessageInput
+                text={text}
+                onSetText={setText}
+                onHandleSendMessage={handleSendMessage}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="flex-1 min-h-0 flex items-center justify-center">
+            <p className="text-gray-500">Select a chat to start messaging</p>
+          </div>
+        )}
       </div>
     </div>
   );
