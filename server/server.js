@@ -1,25 +1,53 @@
-import { createServer } from "http";
+import fs from "fs";
+import http from "http";
+import https from "https";
+import path from "path";
+import { fileURLToPath } from "url";
 import { Server } from "socket.io";
 import { ChatRoom } from "./model/chatRoom.js";
 import { Message } from "./model/message.js";
 
 import app from "./app.js";
 import mongoose from "mongoose";
-import { MONGODB_URL } from "./util/config.js";
+import { MONGODB_URL, NODE_ENV } from "./util/config.js";
 import { PORT } from "./util/config.js";
 
-const httpServer = createServer(app);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const certPath = path.join(__dirname, "../certs");
+
+let httpServer;
+
+if (NODE_ENV === "development") {
+  try {
+    const options = {
+      key: fs.readFileSync(path.join(certPath, "server.key")),
+      cert: fs.readFileSync(path.join(certPath, "server.cert")),
+    };
+
+    httpServer = https.createServer(options, app);
+    console.log("🔐 Using Https (self signed) for local development");
+  } catch (err) {
+    console.warn("No ssl certs found, falling back to Http");
+    httpServer = http.createServer(app);
+  }
+} else {
+  console.log("🌍 Using Http (platform provides Https in production");
+  httpServer = http.createServer(app);
+}
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:3000",
+    origin:
+      NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "http://my-frontend-domain.com",
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
 
 io.on("connection", (socket) => {
-  //socket logic
   console.log("User is connected!", socket.id);
 
   socket.on("message", async (data) => {
@@ -93,7 +121,13 @@ const startServer = async function () {
     await mongoose.connect(MONGODB_URL);
     console.log("Connected");
     httpServer.listen(PORT || 8000, () =>
-      console.log(`🚀 Server running on port ${PORT || 8000}`)
+      console.log(
+        `🚀 Server running on  ${
+          NODE_ENV === "development"
+            ? `https://localhost:${PORT || 8000}`
+            : `http://0.0.0.0:${PORT || 8000}`
+        }`
+      )
     );
   } catch (err) {
     console.error(err);
