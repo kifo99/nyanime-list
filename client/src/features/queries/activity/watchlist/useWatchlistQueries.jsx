@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
-import { Variable } from "lucide-react";
+import { protocol, host } from "../../../../config/env";
 
 const fetchUserWatchlist = async function ({ queryKey }) {
   // eslint-disable-next-line no-unused-vars
@@ -34,7 +34,7 @@ const fetchList = async function ({ queryKey }) {
 
     console.log(type, "Triggerd");
 
-    const baseURL = `http://localhost:8080/watchlist/user/${userId}/list/${type}`;
+    const baseURL = `${protocol}:${host}/watchlist/user/${userId}/list/${type}`;
 
     const URL =
       type === "custom" && listName
@@ -61,7 +61,7 @@ const deleteAnimeFromList = async function ({
   try {
     if (!userId) throw new Error("userId is wrong or doesn't exist!");
 
-    const baseURL = `http://localhost:8080/watchlist/user/${userId}/${animeId}/list/${type}`;
+    const baseURL = `${protocol}:${host}/watchlist/user/${userId}/${animeId}/list/${type}`;
 
     const URL =
       type === "custom" && listName
@@ -80,7 +80,7 @@ const fetchAllCustomLists = async function ({ queryKey }) {
 
   try {
     const { data } = await axios.get(
-      `http://localhost:8080/watchlist/users/${userId}/custom-lists`
+      `${protocol}:${host}/watchlist/users/${userId}/custom-lists`
     );
 
     return data.lists || [];

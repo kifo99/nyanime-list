@@ -10,11 +10,8 @@ import Footer from "./components/Footer/Footer";
 import AddFriend from "./components/Friends/AddFriend";
 import FriendRequests from "./components/Friends/FriendRequests";
 import PopUpButton from "./components/Button/PopUpButton";
-import ChatPopup from "./components/Message/ChatPopup";
-
 import useAuthStore from "./features/auth/useAuthStore";
 import useFriendshipStore from "./features/friends/useFriendshipStore";
-import useMessageStore from "./features/message/useMessageStore";
 
 export default function App({ children }) {
   const navigate = useNavigate();
@@ -22,10 +19,8 @@ export default function App({ children }) {
   const { isOpened, setIsOpened, requestListIsOpened, setRequestListIsOpened } =
     useFriendshipStore();
 
-  const { chatIsOpen, setChatIsOpen } = useMessageStore();
-
   const rehydrate = useAuthStore((state) => state.rehydrate);
-  const { userId, isAuth } = useAuthStore();
+  const { isAuth } = useAuthStore();
 
   useEffect(() => {
     rehydrate();
@@ -35,7 +30,6 @@ export default function App({ children }) {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow">{children}</main>
-      <ChatPopup />
       <AddFriend />
       <FriendRequests />
       {isAuth && (
