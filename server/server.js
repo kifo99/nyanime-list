@@ -41,7 +41,7 @@ const io = new Server(httpServer, {
     origin:
       NODE_ENV === "development"
         ? "http://localhost:3000"
-        : "http://my-frontend-domain.com",
+        : "https://my-frontend-domain.com",
     methods: ["GET", "POST"],
     credentials: true,
   },
