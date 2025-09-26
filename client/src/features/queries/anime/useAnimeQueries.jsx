@@ -2,10 +2,10 @@
 
 import { useQuery } from "react-query";
 import axios from "axios";
-
+import { protocol, host } from "../../../config/env";
 const fetchSeasonAnime = async function () {
   try {
-    const { data } = await axios.get(`http://localhost:8080/anime/seasonAnime`);
+    const { data } = await axios.get(`${protocol}:${host}/anime/seasonAnime`);
 
     return data || [];
   } catch (error) {
@@ -17,7 +17,7 @@ const fetchSeasonAnime = async function () {
 const fetchRecommendationAnime = async function () {
   try {
     const { data } = await axios.get(
-      `http://localhost:8080/anime/animeRecommendation`
+      `${protocol}:${host}/anime/animeRecommendation`
     );
 
     return data?.animeList || [];
@@ -29,7 +29,7 @@ const fetchRecommendationAnime = async function () {
 
 const fetchGenres = async function () {
   try {
-    const { data } = await axios.get(`http://localhost:8080/anime/genres`);
+    const { data } = await axios.get(`${protocol}:${host}/anime/genres`);
 
     return data?.data || [];
   } catch (error) {
@@ -43,7 +43,7 @@ const fetchAnimeById = async function ({ queryKey }) {
     const [_, animeId] = queryKey;
 
     const { data } = await axios.get(
-      `http://localhost:8080/anime/getAnime/${animeId}`
+      `${protocol}:${host}/anime/getAnime/${animeId}`
     );
 
     return data?.anime || null;

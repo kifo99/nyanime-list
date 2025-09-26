@@ -1,13 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { useQuery } from "react-query";
 import axios from "axios";
-
+import { protocol, host } from "../../../config/env";
 const fetchUserByName = async function ({ queryKey }) {
   try {
     const [_, username] = queryKey;
 
     const { data } = await axios.get(
-      `http://localhost:8080/user/${username}/search-user`
+      `${protocol}:${host}/user/${username}/search-user`
     );
 
     return data.user;
@@ -20,7 +20,7 @@ const fetchUserByName = async function ({ queryKey }) {
 const fetchFriendsList = async function ({ queryKey }) {
   const [_, userId] = queryKey;
   const { data } = await axios.get(
-    `http://localhost:8080/friend/user/${userId}/friends-list`
+    `${protocol}:${host}/friend/user/${userId}/friends-list`
   );
 
   return data.friendsList || [];
@@ -30,7 +30,7 @@ const fetchRequests = async function ({ queryKey }) {
   try {
     const [_, userId] = queryKey;
     const { data } = await axios.get(
-      `http://localhost:8080/friend/user/${userId}/friend-request`
+      `${protocol}:${host}/friend/user/${userId}/friend-request`
     );
 
     return data.requests;

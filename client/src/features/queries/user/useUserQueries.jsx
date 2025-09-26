@@ -1,12 +1,12 @@
 import { useQueries, useQuery } from "react-query";
 import axios from "axios";
-
+import { protocol, host } from "../../../config/env";
 const fetchUser = async function ({ queryKey }) {
   try {
     const [_, userId] = queryKey;
 
     const { data } = await axios.get(
-      `http://localhost:8080/user/profile/${userId}`
+      `${protocol}:${host}/user/profile/${userId}`
     );
 
     if (!data)

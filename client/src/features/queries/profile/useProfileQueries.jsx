@@ -1,11 +1,11 @@
 import { useQuery } from "react-query";
 import axios from "axios";
-
+import { protocol, host } from "../../../config/env";
 const fetchProfiles = async function ({ queryKey }) {
   try {
     const [_, userId] = queryKey;
 
-    const { data } = await axios.get(`http://localhost:8080/profile/${userId}`);
+    const { data } = await axios.get(`${protocol}:${host}/profile/${userId}`);
 
     if (!data)
       throw new Error("Something went wrong data was not fetched properly");

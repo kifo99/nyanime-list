@@ -1,13 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { useQuery } from "react-query";
 import axios from "axios";
-
+import { protocol, host } from "../../../../config/env";
 const isLiked = async function ({ queryKey }) {
   try {
     const [_, userId, animeId] = queryKey;
 
     const { data } = await axios.get(
-      `http://localhost:8080/activity/isLiked/${userId}/${animeId}`
+      `${protocol}:${host}/activity/isLiked/${userId}/${animeId}`
     );
 
     return data.isLiked;

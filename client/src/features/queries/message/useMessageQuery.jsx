@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 import { useQuery, useQueries } from "react-query";
 import axios from "axios";
-
+import { protocol, host } from "../../../config/env";
 const fetchChats = async ({ queryKey }) => {
   const [_, userId] = queryKey;
 
   const { data } = await axios.get(
-    `http://localhost:8080/chat/user/${userId}/chat-rooms`
+    `${protocol}:${host}/chat/user/${userId}/chat-rooms`
   );
 
   return data.chatRooms;
@@ -16,7 +16,7 @@ const fetchChat = async ({ queryKey }) => {
   const [_, chatId] = queryKey;
 
   const { data } = await axios.get(
-    `http://localhost:8080/chat/chatRoom/${chatId}/chat-room`
+    `${protocol}:${host}/chat/chatRoom/${chatId}/chat-room`
   );
 
   return data.chatRoom;
