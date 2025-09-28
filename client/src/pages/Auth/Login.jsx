@@ -2,7 +2,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import axios from "axios";
-
+import { protocol, host } from "../../config/env.js";
 import useAuthStore from "../../features/auth/useAuthStore.js";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -21,7 +21,7 @@ export default function Login() {
   async function handleLogin(values, { resetForm }) {
     try {
       const { data } = await axios.post(
-        `http://localhost:8080/admin/login`,
+        `${protocol}:${host}/admin/login`,
         values,
         {
           headers: {

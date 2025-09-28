@@ -1,9 +1,9 @@
-import { useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import useAuthStore from "../../features/auth/useAuthStore";
 import useActivityStore from "../../features/activity/useActivityStore";
 import { CircleX } from "lucide-react";
+import { protocol, host } from "../../config/env";
 
 export default function CustomList({ onSetShowCustom, onRefetchCustomList }) {
   const { listName, setListName, resetListName } = useActivityStore();
@@ -12,7 +12,7 @@ export default function CustomList({ onSetShowCustom, onRefetchCustomList }) {
   async function handleCreateList() {
     try {
       await axios.post(
-        `http://localhost:8080/watchlist/users/${userId}/custom-list`,
+        `${protocol}:${host}/watchlist/users/${userId}/custom-list`,
         {
           name: listName,
         }

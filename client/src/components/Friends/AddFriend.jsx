@@ -3,7 +3,7 @@ import { useDebounce } from "use-debounce";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { CirclePlus } from "lucide-react";
-
+import { protocol, host } from "../../config/env.js";
 import useFriendshipStore from "../../features/friends/useFriendshipStore";
 import useAuthStore from "../../features/auth/useAuthStore.js";
 import { useUserByName } from "../../features/queries/friendship/useFriendshipQuery.jsx";
@@ -24,7 +24,7 @@ export default function AddFriend() {
     try {
       if (!userId || !user) throw new Error("Something is wrong!");
       await axios.post(
-        `http://localhost:8080/friend/user/${userId}/${user._id}/send-request`
+        `${protocol}:${host}/friend/user/${userId}/${user._id}/send-request`
       );
       setSearchName("");
       setIsOpened(false);

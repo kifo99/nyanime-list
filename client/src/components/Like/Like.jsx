@@ -1,7 +1,7 @@
 import { Heart } from "lucide-react";
 import axios from "axios";
 import PropTypes from "prop-types";
-
+import { protocol, host } from "../../config/env.js";
 import { useIsLiked } from "../../features/queries/activity/like/useLike";
 
 export default function Like({ userId, animeId }) {
@@ -12,17 +12,17 @@ export default function Like({ userId, animeId }) {
   } = useIsLiked(userId, animeId, {
     enabled: !!userId && !!animeId,
   });
-  
+
   async function handleLike() {
     if (!isLiked) {
       console.log("entered");
 
       await axios.post(
-        `http://localhost:8080/activity/like/${userId}/${animeId}`
+        `${protocol}:${host}/activity/like/${userId}/${animeId}`
       );
     } else {
       await axios.delete(
-        `http://localhost:8080/activity/unlike/${userId}/${animeId}`
+        `${protocol}:${host}/activity/unlike/${userId}/${animeId}`
       );
     }
 

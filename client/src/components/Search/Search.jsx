@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
-
+import { protocol,host } from "../../config/env";
 import SearchIcon from "../../assets/icons/search/search.svg";
 
 export default function Search({ onSetAnimeList }) {
@@ -41,7 +41,7 @@ export default function Search({ onSetAnimeList }) {
         try {
           if (!animeName.length < 1) {
             const { data } = await axios.get(
-              `http://localhost:8080/anime/search/anime/${animeName}`,
+              `${protocol}:${host}/anime/search/anime/${animeName}`,
               {
                 cancelToken: source.token,
               }

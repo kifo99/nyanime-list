@@ -2,7 +2,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
+import { protocol, host } from "../../config/env.js";
 import useAuthStore from "../../features/auth/useAuthStore.js";
 
 import CustomList from "../../components/CustomList/CustomList.jsx";
@@ -33,7 +33,7 @@ export default function AnimeDetails({ inWatchlist = false }) {
 
       if (!isAuth) throw new Error("Not authenticated!");
       await axios.post(
-        `http://localhost:8080/watchlist/add/${userId}/${id}`,
+        `${protocol}:${host}/watchlist/add/${userId}/${id}`,
         {},
         {
           headers: {
@@ -51,7 +51,7 @@ export default function AnimeDetails({ inWatchlist = false }) {
       try {
         if (!id) throw new Error("Id not valid");
         const { data } = await axios.get(
-          `http://localhost:8080/anime/select/${id}`
+          `${protocol}:${host}/anime/select/${id}`
         );
 
         if (!data) throw new Error("No data fetched");

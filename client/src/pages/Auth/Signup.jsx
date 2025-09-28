@@ -4,7 +4,7 @@ import { Plus } from "lucide-react";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-
+import { protocol, host } from "../../config/env.js";
 import useAuthStore from "../../features/auth/useAuthStore.js";
 
 export default function Signup() {
@@ -34,7 +34,7 @@ export default function Signup() {
         formData.append("avatar", values.avatar);
       }
 
-      await axios.post(`http://localhost:8080/admin/signup`, formData);
+      await axios.post(`${protocol}:${host}/admin/signup`, formData);
       navigate("/login");
       setIsAuth(false);
     } catch (error) {
