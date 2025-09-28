@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { protocol, host } from "../../config/env.js";
 import StarRating from "../../components/Star/StarRating";
 import Like from "../../components/Like/Like.jsx";
 
@@ -42,7 +42,7 @@ export default function AddReview() {
       if (body.watchedBefore) body.watchedOn = "";
 
       await axios.post(
-        `http://localhost:8080/reviews/add/${userId}/${animeId}`,
+        `${protocol}:${host}/reviews/add/${userId}/${animeId}`,
         body,
         {
           headers: {

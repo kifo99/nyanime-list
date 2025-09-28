@@ -9,8 +9,7 @@ import { Message } from "./model/message.js";
 
 import app from "./app.js";
 import mongoose from "mongoose";
-import { MONGODB_URL, NODE_ENV } from "./util/config.js";
-import { PORT } from "./util/config.js";
+import { MONGODB_URL, NODE_ENV, PORT } from "./util/config.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

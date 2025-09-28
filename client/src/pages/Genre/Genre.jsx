@@ -1,15 +1,15 @@
 import { useQuery } from "react-query";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-
 import AnimeCard from "../../components/Anime/AnimeCard";
+import { protocol, host } from "../../config/env.js";
 
 export default function Genre() {
   const id = useParams();
   const fetchAnime = async function () {
     try {
       const { data } = await axios.get(
-        `http://localhost:8080/anime/searchByGenre/${id.id}`
+        `${protocol}:${host}/anime/searchByGenre/${id.id}`
       );
 
       return data.data;

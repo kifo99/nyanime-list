@@ -2,7 +2,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { socket } from "../../lib/socket";
 import useAuthStore from "../../features/auth/useAuthStore";
-
+import { protocol, host } from "../../config/env";
 import useMessageStore from "../../features/message/useMessageStore";
 
 import InitialAvatar from "../Avatar/InitialAvatar";
@@ -21,7 +21,7 @@ export default function ConversationList({
 
   async function fetchMessages(chatId, before = Date.now(), limit = 20) {
     const { data } = await axios.get(
-      `http://localhost:8080/chat/chatRoom/${chatId}/messages`,
+      `${protocol}:${host}/chat/chatRoom/${chatId}/messages`,
       { params: { before, limit } }
     );
 

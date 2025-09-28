@@ -1,7 +1,7 @@
 import { useProfile } from "../../features/queries/profile/useProfileQueries";
 import { useUser } from "../../features/queries/user/useUserQueries.jsx";
 import { Link, useParams } from "react-router-dom";
-
+import { protocol, host } from "../../config/env.js";
 import useAuthStore from "../../features/auth/useAuthStore.js";
 
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,7 @@ import { Pencil } from "lucide-react";
 
 export default function Profile() {
   const profileId = useParams();
+  const { userId } = useAuthStore();
   const { data: profile, profileIsLoading } = useProfile(userId, {
     enabled: !!userId,
   });
@@ -32,7 +33,7 @@ export default function Profile() {
         <div className="flex-row my-2 mx-auto">
           <img
             crossOrigin="anonymous"
-            src={`http://localhost:8080${user.avatar}`}
+            src={`${protocol}:${host}${user.avatar}`}
             alt="Profile Picture"
             className="rounded-full w-28 h-28 mx-auto"
           />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
+import { protocol, host } from "../../config/env.js";
 import InitialAvatar from "../Avatar/InitialAvatar";
 
 import useAuthStore from "../../features/auth/useAuthStore.js";
@@ -15,7 +15,7 @@ export default function Navbar() {
     async function fetchUser() {
       if (!userId) return;
       const { data } = await axios.get(
-        `http://localhost:8080/user/profile/${userId}`
+        `${protocol}:${host}/user/profile/${userId}`
       );
       const { user } = data;
 

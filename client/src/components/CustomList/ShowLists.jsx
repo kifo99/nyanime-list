@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import useAuthStore from "../../features/auth/useAuthStore";
 import { useAllCustomLists } from "../../features/queries/activity/watchlist/useWatchlistQueries";
-
+import { protocol, host } from "../../config/env";
 import useActivityStore from "../../features/activity/useActivityStore";
 
 import { CircleX } from "lucide-react";
@@ -22,7 +22,7 @@ export default function ShowLists({ onSetShowLists, animeId }) {
   async function handleSelectList() {
     try {
       await axios.post(
-        `http://localhost:8080/watchlist/users/${userId}/custom-list/${
+        `${protocol}:${host}/watchlist/users/${userId}/custom-list/${
           listName || name
         }/${animeId}`
       );

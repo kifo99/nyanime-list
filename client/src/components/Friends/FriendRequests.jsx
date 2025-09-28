@@ -1,7 +1,7 @@
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { CirclePlus, CircleX } from "lucide-react";
-
+import { protocol, host } from "../../config/env.js";
 import useFriendshipStore from "../../features/friends/useFriendshipStore";
 import useAuthStore from "../../features/auth/useAuthStore.js";
 
@@ -22,7 +22,7 @@ export default function FriendRequests() {
   async function handleFriendRequest(status, requesterId) {
     try {
       await axios.post(
-        `http://localhost:8080/friend/user/${userId}/${requesterId}/${status}/accept-decline-request`
+        `${protocol}:${host}/friend/user/${userId}/${requesterId}/${status}/accept-decline-request`
       );
     } catch (error) {
       console.log(error);
