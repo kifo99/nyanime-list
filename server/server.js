@@ -20,8 +20,8 @@ let httpServer;
 if (NODE_ENV === "development") {
   try {
     const options = {
-      key: fs.readFileSync(path.join(certPath, "server.key")),
-      cert: fs.readFileSync(path.join(certPath, "server.cert")),
+      key: fs.readFileSync(path.join(certPath, "secret.key")),
+      cert: fs.readFileSync(path.join(certPath, "secret.cert")),
     };
 
     httpServer = https.createServer(options, app);
