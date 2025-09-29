@@ -15,6 +15,10 @@ dist/
 
 # Ignore log files
 *.log
+# Ignore uploaded avatars
+/images/avatar/
 
 # Environment & config files (local secrets, API keys, DB URLs)
 config.js
+certs/
+server.key
